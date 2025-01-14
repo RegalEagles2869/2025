@@ -5,26 +5,26 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.MotorConfiguration;
 
-public class ElevatorSubsystem extends SubsystemBase {
+public class CoralPivotSubsystem extends SubsystemBase {
 
   private TalonFX motor;
   private double position;
+  
+  private static CoralIntakeSubsystem instance;
 
-  private static ElevatorSubsystem instance;
-
-  public static ElevatorSubsystem getInstance() {
-    if (instance == null) instance = new ElevatorSubsystem();
+  public static CoralIntakeSubsystem getInstance() {
+    if (instance == null) instance = new CoralIntakeSubsystem();
     return instance;
   }
-  /** Creates a new ElevatorSubsystem. */
-  public ElevatorSubsystem() {
-    motor = new TalonFX(Constants.MotorIDs.elevator);
-    MotorConfiguration.configureMotor(motor, Constants.ElevatorConstants.config);
-    position = Constants.ElevatorConstants.floorPosition;
+  /** Creates a new CoralPivotSubsystem. */
+  public CoralPivotSubsystem() {
+    motor = new TalonFX(Constants.MotorIDs.CoralPivot);
+    MotorConfiguration.configureMotor(motor, Constants.PivotConstants.config);
   }
 
   public void setPosition(double pos) {
@@ -37,7 +37,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (position >= Constants.ElevatorConstants.floorPosition && position < Constants.ElevatorConstants.maxPosition) {
+    if (position >= Constants.PivotConstants.floorPosition && position < Constants.PivotConstants.maxPosition) {
       motor.setPosition(position);
     }
   }
