@@ -51,6 +51,7 @@ public final class Constants {
     public static final double l2Position = 0;
     public static final double l3Position = 0;
     public static final double l4Position = 0;
+    public static final double error = 0;
   }
   public static class BallGrabberConstants {
     public static final MotorConfiguration config1 = new MotorConfiguration(1, -1, 40, true, false);

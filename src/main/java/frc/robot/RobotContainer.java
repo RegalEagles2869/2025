@@ -5,6 +5,9 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.BasePosition;
+import frc.robot.commands.ChangeElevatorPosition;
+import frc.robot.commands.SetPivotPosition;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -39,7 +42,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
+    Inputs.getAdjustElevatorDown().whileTrue(new ChangeElevatorPosition(-.1));
+    Inputs.getAdjustElevatorUp().whileTrue(new ChangeElevatorPosition(.1));
+    Inputs.getElevatorFloorPosition().onTrue(new BasePosition());
   }
 
   /**

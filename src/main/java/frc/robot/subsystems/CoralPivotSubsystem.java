@@ -35,7 +35,13 @@ public class CoralPivotSubsystem extends SubsystemBase {
     position += changePos;
   }
 
+  public double getPosition() {
+    return motor.getPosition().getValueAsDouble();
+  }
+
   public boolean isAtPosition() {
+    if ((getPosition() >= (position - Constants.PivotConstants.error)) && (getPosition() <= (position + Constants.PivotConstants.error)))
+      return true;
     return false;
   }
 

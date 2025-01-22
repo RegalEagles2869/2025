@@ -35,8 +35,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     position += changePos;
   }
 
+  public double getPosition() {
+    return motor.getPosition().getValueAsDouble();
+  }
+
   public boolean isAtPosition() {
-    if ((motor.getPosition() >= (position - Constants.ElevatorConstants.error)) && (motor.getPosition() <= (position + Constants.ElevatorConstants.error)))
+    if ((getPosition() >= (position - Constants.ElevatorConstants.error)) && (getPosition() <= (position + Constants.ElevatorConstants.error)))
       return true;
     return false;
   }
