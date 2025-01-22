@@ -15,38 +15,5 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int kOperatorControllerPort = 0;
   }
-  public static class FieldConstants {
-
-  }
-  public static class MotorIDs {
-    public static final int ballGrabber1 = 0;
-    public static final int ballGrabber2 = 0;
-    public static final int elevator = 0;
-    public static final int elevatorEncoder = 0;
-    public static final int climberID = 0;
-    public static final int coralIntake = 0;
-    public static final int CoralPivot = 0;
-  }
-  public static class ElevatorConstants {
-    public static final double floorPosition = 0;
-    public static final double maxPosition = 0;
-    public static final MotorConfiguration config = new MotorConfiguration(1, -1, 40, true, false);
-  }
-  public static class PivotConstants {
-    public static final double floorPosition = 0;
-    public static final double maxPosition = 0;
-    public static final MotorConfiguration config = new MotorConfiguration(1, -1, 40, true, false);
-  }
-  public static class BallGrabberConstants {
-    public static final MotorConfiguration config1 = new MotorConfiguration(1, -1, 40, true, false);
-    public static final MotorConfiguration config2 = new MotorConfiguration(1, -1, 40, true, false);
-  }
-  public static class ClimberConstants {
-    public static final MotorConfiguration config = new MotorConfiguration(1, -1, 40, true, false);
-  }
-  public static class CoralConstants {
-    public static final MotorConfiguration config = new MotorConfiguration(1, -1, 40, true, false);
-  }  
 }
