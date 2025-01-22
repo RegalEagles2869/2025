@@ -35,10 +35,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     position += changePos;
   }
 
-  public boolean isAtPosition() {
-    return true;
-  }
-
   @Override
   public void periodic() {
     if (position >= Constants.ElevatorConstants.floorPosition && position < Constants.ElevatorConstants.maxPosition) {
