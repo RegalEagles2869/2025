@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.BallGrabberSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class IntakeBall extends Command {
+public class SetBallIntakeSpeed extends Command {
   private BallGrabberSubsystem ballGrabber = BallGrabberSubsystem.getInstance();
   private double speed;
   /** Creates a new IntakeBallCommand. */
-  public IntakeBall(double speed) {
+  public SetBallIntakeSpeed(double speed) {
     addRequirements(ballGrabber);
     this.speed = speed;
   }

@@ -36,7 +36,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean isAtPosition() {
-    return true;
+    if ((motor.getPosition() >= (position - Constants.ElevatorConstants.error)) && (motor.getPosition() <= (position + Constants.ElevatorConstants.error)))
+      return true;
+    return false;
   }
 
   @Override
