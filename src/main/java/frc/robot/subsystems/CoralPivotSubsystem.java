@@ -25,7 +25,6 @@ public class CoralPivotSubsystem extends SubsystemBase {
   public CoralPivotSubsystem() {
     motor = new TalonFX(Constants.MotorIDs.CoralPivot);
     MotorConfiguration.configureMotor(motor, Constants.PivotConstants.config);
-    position = Constants.PivotConstants.basePosition;
   }
 
   public void setPosition(double pos) {
@@ -37,12 +36,12 @@ public class CoralPivotSubsystem extends SubsystemBase {
   }
 
   public boolean isAtPosition() {
-    return true;
+    return false;
   }
-  
+
   @Override
   public void periodic() {
-    if (position >= Constants.PivotConstants.basePosition && position < Constants.PivotConstants.maxPosition) {
+    if (position >= Constants.PivotConstants.floorPosition && position < Constants.PivotConstants.maxPosition) {
       motor.setPosition(position);
     }
   }
