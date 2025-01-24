@@ -21,7 +21,31 @@ public class Inputs {
     public static Trigger getAdjustElevatorDown() {
         return operatorBoard.button(2);
     }
-    public static Trigger getElevatorFloorPosition() {
+    public static Trigger getFloorPosition() {
         return operatorBoard.button(3);
+    }
+    public static Trigger getL1Coral() {
+        return operatorBoard.button(4);
+    }
+    public static Trigger getL2Coral() {
+        return operatorBoard.button(5);
+    }
+    public static Trigger getL3Coral() {
+        return operatorBoard.button(6);
+    }
+    public static Trigger getL4Coral() {
+        return operatorBoard.button(7);
+    }
+    public static Trigger getBallIntake() {
+        return operatorBoard.button(8);
+    }
+    public static Trigger getBallOuttake() {
+        return operatorBoard.button(9);
+    }
+    public static Trigger getAdjustPivotUp() {
+        return operatorBoard.button(10);
+    }
+    public static Trigger getAdjustPivotDown() {
+        return operatorBoard.button(11);
     }
 }
