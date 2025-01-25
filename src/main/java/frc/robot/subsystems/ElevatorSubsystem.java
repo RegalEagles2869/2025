@@ -27,6 +27,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     motorFollow = new TalonFX(Constants.MotorIDs.elevatorFollow);
     MotorConfiguration.configureMotor(motor, Constants.ElevatorConstants.config);
     position = Constants.ElevatorConstants.floorPosition;
+    motorFollow.follow(motor);
+    motorFollow.setInverted(true);
   }
 
   public void setPosition(double pos) {
