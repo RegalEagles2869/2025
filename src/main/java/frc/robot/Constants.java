@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.io.ObjectInputFilter.Config;
+
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -33,7 +37,8 @@ public final class Constants {
   public static class ElevatorConstants {
     public static final double floorPosition = 0;
     public static final double maxPosition = 0;
-    public static final MotorConfiguration config = new MotorConfiguration(1, -1, 40, true, false);
+    // config.encoder.positionConversionFactor(1000).velocityConversionFactor(1000);
+    // config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
 
     public static final double basePosition = 0;
     public static final double l1Position = 0;

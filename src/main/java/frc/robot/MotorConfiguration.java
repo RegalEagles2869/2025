@@ -5,6 +5,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class MotorConfiguration {
     private double P;
@@ -149,9 +154,9 @@ public class MotorConfiguration {
         this.inverted = inverted;
     }
 
-    // public static RelativeEncoder configureMotor(CANSparkBase motor, MotorConfiguration config){
-    //     motor.restoreFactoryDefaults();
-    //     var pid = motor.getPIDController();
+    // public static RelativeEncoder configureMotor(SparkMax motor, MotorConfiguration config){
+    //     // motor.restoreFactoryDefaults();
+    //     SparkClosedLoopController pid = motor.getClosedLoopController();
     //     pid.setP(config.getP());
     //     pid.setI(config.getI());
     //     pid.setD(config.getD());

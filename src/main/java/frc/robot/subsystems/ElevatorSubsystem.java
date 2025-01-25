@@ -4,16 +4,22 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.MotorConfiguration;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-  private TalonFX motor;
-  private TalonFX motorFollow;
+  private SparkMax motor;
+  private SparkMax motorFollow;
   private double position;
+  private SparkMaxConfig config;
+  private SparkMaxConfig config2;
 
   private static ElevatorSubsystem instance;
 
@@ -23,12 +29,21 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
   /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
-    motor = new TalonFX(Constants.MotorIDs.elevator);
-    motorFollow = new TalonFX(Constants.MotorIDs.elevatorFollow);
-    MotorConfiguration.configureMotor(motor, Constants.ElevatorConstants.config);
+    motor = new SparkMax(Constants.MotorIDs.elevator, MotorType.kBrushless);
+    motorFollow = new SparkMax(Constants.MotorIDs.elevatorFollow, MotorType.kBrushless);
     position = Constants.ElevatorConstants.floorPosition;
-    motorFollow.follow(motor);
-    motorFollow.setInverted(true);
+
+    config = new SparkMaxConfig();
+    config.inverted(false).idleMode(IdleMode.kBrake);
+    config.encoder.positionConversionFactor(1000).velocityConversionFactor(1000);
+    config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
+
+    config2 = new SparkMaxConfig();
+    config2.follow(Constants.MotorIDs.elevator);
+    config2.inverted(true).idleMode(IdleMode.kBrake);
+    config2.encoder.positionConversionFactor(1000).velocityConversionFactor(1000);
+    config2.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
+
   }
 
   public void setPosition(double pos) {
@@ -40,7 +55,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public double getPosition() {
-    return motor.getPosition().getValueAsDouble();
+    return motor.getAbsoluteEncoder().getPosition();
   }
 
   public boolean isAtPosition() {
@@ -52,7 +67,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (position >= Constants.ElevatorConstants.floorPosition && position < Constants.ElevatorConstants.maxPosition) {
-      motor.setPosition(position);
+      // motor.setPosition(position);
+      // motorFollow.setPosition(-position);
     }
   }
 }
