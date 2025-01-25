@@ -12,6 +12,7 @@ import frc.robot.MotorConfiguration;
 public class ElevatorSubsystem extends SubsystemBase {
 
   private TalonFX motor;
+  private TalonFX motorFollow;
   private double position;
 
   private static ElevatorSubsystem instance;
@@ -23,6 +24,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
     motor = new TalonFX(Constants.MotorIDs.elevator);
+    motorFollow = new TalonFX(Constants.MotorIDs.elevatorFollow);
     MotorConfiguration.configureMotor(motor, Constants.ElevatorConstants.config);
     position = Constants.ElevatorConstants.floorPosition;
   }

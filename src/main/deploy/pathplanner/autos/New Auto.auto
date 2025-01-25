@@ -9,48 +9,6 @@
           "data": {
             "pathName": null
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L1Coral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeCoralSource"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L2Coral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeCoralSource"
-          }
         }
       ]
     }

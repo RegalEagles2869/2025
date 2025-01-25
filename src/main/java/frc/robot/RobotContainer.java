@@ -22,11 +22,14 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
+
+import choreo.trajectory.Trajectory;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -37,7 +40,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private enum Autos {
-    Nothing
+    Nothing, Something
   }
   
   private double MaxSpeed = 5.5;
@@ -49,6 +52,8 @@ public class RobotContainer {
   private SendableChooser<Autos> newautopick;
   private Command autoCommand;
 
+  ArrayList<Trajectory> autoTraj = new ArrayList<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -58,6 +63,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("L4Coral", new L4Coral());
     newautopick = new SendableChooser<>();
     newautopick.addOption("Nothing", Autos.Nothing);
+    newautopick.addOption("SillySix", Autos.Something);
 
     Shuffleboard.getTab("auto").add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
     configureBindings();
@@ -98,7 +104,7 @@ public class RobotContainer {
 
   
   public void generateTrajectories(String name){
-    List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile("5PieceWingCenterSub");
+    List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
     for(PathPlannerPath path:paths){
       autoTraj.add(TrajectoryGenerator.generateTrajectory(path.getPathPoses(), new TrajectoryConfig(MaxSpeed, MaxAngularRate)));
       // autoTraj.add(path.getPathPoses());   

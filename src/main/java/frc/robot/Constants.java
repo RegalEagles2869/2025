@@ -24,6 +24,7 @@ public final class Constants {
     public static final int ballGrabber1 = 0;
     public static final int ballGrabber2 = 0;
     public static final int elevator = 0;
+    public static final int elevatorFollow = 0;
     public static final int elevatorEncoder = 0;
     public static final int climberID = 0;
     public static final int coralIntake = 0;
