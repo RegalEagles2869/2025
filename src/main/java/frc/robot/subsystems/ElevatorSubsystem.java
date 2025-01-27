@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -37,13 +40,14 @@ public class ElevatorSubsystem extends SubsystemBase {
     config.inverted(false).idleMode(IdleMode.kBrake);
     config.encoder.positionConversionFactor(1000).velocityConversionFactor(1000);
     config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
+    motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     config2 = new SparkMaxConfig();
     config2.follow(Constants.MotorIDs.elevator);
     config2.inverted(true).idleMode(IdleMode.kBrake);
     config2.encoder.positionConversionFactor(1000).velocityConversionFactor(1000);
     config2.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
-
+    motorFollow.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public void setPosition(double pos) {
@@ -67,8 +71,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (position >= Constants.ElevatorConstants.floorPosition && position < Constants.ElevatorConstants.maxPosition) {
-      // motor.setPosition(position);
-      // motorFollow.setPosition(-position);
+      motor.getClosedLoopController().setReference(position, ControlType.kPosition);
     }
   }
 }
