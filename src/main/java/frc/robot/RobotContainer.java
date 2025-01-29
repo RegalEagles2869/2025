@@ -12,6 +12,7 @@ import frc.robot.commands.L2Coral;
 import frc.robot.commands.L3Coral;
 import frc.robot.commands.L4Coral;
 import frc.robot.commands.SetPivotPosition;
+import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -45,7 +46,7 @@ import choreo.trajectory.Trajectory;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private enum Autos {
-    Nothing, Something
+    Nothing, Silly6
   }
   
   private double MaxSpeed = 5.5;
@@ -62,13 +63,13 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    NamedCommands.registerCommand("L1Coral", new L1Coral());
-    NamedCommands.registerCommand("L2Coral", new L2Coral());
-    NamedCommands.registerCommand("L3Coral", new L3Coral());
-    NamedCommands.registerCommand("L4Coral", new L4Coral());
+    NamedCommands.registerCommand("L1", new L1Coral());
+    NamedCommands.registerCommand("L2", new L2Coral());
+    NamedCommands.registerCommand("L3", new L3Coral());
+    NamedCommands.registerCommand("L4", new L4Coral());
     newautopick = new SendableChooser<>();
     newautopick.addOption("Nothing", Autos.Nothing);
-    newautopick.addOption("SillySix", Autos.Something);
+    newautopick.addOption("TheSillySix", Autos.Silly6);
 
     Shuffleboard.getTab("auto").add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
     configureBindings();
@@ -106,11 +107,21 @@ public class RobotContainer {
     }
     return autoCommand;
   }
+
+  public void generateTrajectories(String name){
+    List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
+    for(PathPlannerPath path:paths){
+      autoTraj.add(TrajectoryGenerator.generateTrajectory(path.getPathPoses(), new TrajectoryConfig(MaxSpeed, MaxAngularRate)));
+    }
+  }
   
   private Command generateAutoCommand(){
     switch(newautopick.getSelected()){
       case Nothing:
         return new SequentialCommandGroup(new WaitCommand(50000));
+      case Silly6:
+        generateTrajectories("TheSillySix");
+        return SwerveSubsystem.getInstance().getAuto("TheSillySix");
       default:
         return new WaitCommand(100);
     }
