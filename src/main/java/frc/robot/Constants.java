@@ -45,6 +45,7 @@ public final class Constants {
     public static final double l2Position = 0;
     public static final double l3Position = 0;
     public static final double l4Position = 0;
+    public static final double sourcePosition = 0;
     public static final double error = 0;
   }
   public static class PivotConstants {
@@ -57,6 +58,7 @@ public final class Constants {
     public static final double l2Position = 0;
     public static final double l3Position = 0;
     public static final double l4Position = 0;
+    public static final double sourcePosition = 0;
     public static final double error = 0;
   }
   public static class BallGrabberConstants {
