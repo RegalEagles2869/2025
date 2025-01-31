@@ -12,6 +12,7 @@ import frc.robot.commands.L2Coral;
 import frc.robot.commands.L3Coral;
 import frc.robot.commands.L4Coral;
 import frc.robot.commands.SetPivotPosition;
+import frc.robot.commands.SourceIntake;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -46,7 +47,7 @@ import choreo.trajectory.Trajectory;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private enum Autos {
-    Nothing, Silly6
+    Nothing, Silly6, TheBigHitter
   }
   
   private double MaxSpeed = 5.5;
@@ -67,9 +68,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("L2", new L2Coral());
     NamedCommands.registerCommand("L3", new L3Coral());
     NamedCommands.registerCommand("L4", new L4Coral());
+    NamedCommands.registerCommand("IntakeSource", new SourceIntake());
     newautopick = new SendableChooser<>();
     newautopick.addOption("Nothing", Autos.Nothing);
     newautopick.addOption("TheSillySix", Autos.Silly6);
+    newautopick.addOption("TheBigHitter", Autos.TheBigHitter);
 
     Shuffleboard.getTab("auto").add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
     configureBindings();
@@ -122,6 +125,9 @@ public class RobotContainer {
       case Silly6:
         generateTrajectories("TheSillySix");
         return SwerveSubsystem.getInstance().getAuto("TheSillySix");
+      case TheBigHitter:
+        generateTrajectories("TheBigHitter");
+        return SwerveSubsystem.getInstance().getAuto("TheBigHitter");
       default:
         return new WaitCommand(100);
     }

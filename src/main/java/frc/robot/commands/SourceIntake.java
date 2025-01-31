@@ -13,6 +13,6 @@ import frc.robot.Constants;
 public class SourceIntake extends SequentialCommandGroup {
   /** Creates a new SourceIntake. */
   public SourceIntake() {
-    addCommands(new SetElevatorPosition(Constants.ElevatorConstants.SourcePosition), new SetPivotPosition(Constants.PivotConstants.SourcePosition), new SetBallIntakeSpeed(1));
+    addCommands(new SetElevatorPosition(Constants.ElevatorConstants.sourcePosition), new SetPivotPosition(Constants.PivotConstants.sourcePosition), new SetBallIntakeSpeed(1));
   }
 }
