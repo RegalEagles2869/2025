@@ -4,29 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.BasePosition;
-import frc.robot.commands.ChangeElevatorPosition;
-import frc.robot.commands.L1Coral;
-import frc.robot.commands.L2Coral;
-import frc.robot.commands.L3Coral;
-import frc.robot.commands.L4Coral;
-import frc.robot.commands.SetPivotPosition;
-import frc.robot.subsystems.SwerveSubsystem;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.auto.NamedCommands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,34 +21,10 @@ import choreo.trajectory.Trajectory;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private enum Autos {
-    Nothing, Silly6
-  }
-  
-  private double MaxSpeed = 5.5;
-  private double MaxAngularRate = 2 * Math.PI; // 3/4 of a rotation per second max angular velocity
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
-  
-  private SendableChooser<Autos> newautopick;
-  private Command autoCommand;
-
-  ArrayList<Trajectory> autoTraj = new ArrayList<>();
+  // The robot's subsystems and commands are defined 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
-    NamedCommands.registerCommand("L1", new L1Coral());
-    NamedCommands.registerCommand("L2", new L2Coral());
-    NamedCommands.registerCommand("L3", new L3Coral());
-    NamedCommands.registerCommand("L4", new L4Coral());
-    newautopick = new SendableChooser<>();
-    newautopick.addOption("Nothing", Autos.Nothing);
-    newautopick.addOption("TheSillySix", Autos.Silly6);
-
-    Shuffleboard.getTab("auto").add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
     configureBindings();
   }
 
@@ -85,45 +38,5 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    Inputs.getAdjustElevatorDown().whileTrue(new ChangeElevatorPosition(-.1));
-    Inputs.getAdjustElevatorUp().whileTrue(new ChangeElevatorPosition(.1));
-    Inputs.getAdjustPivotUp().whileTrue(new ChangeElevatorPosition(-.1));
-    Inputs.getAdjustPivotDown().whileTrue(new ChangeElevatorPosition(.1));
-    Inputs.getL1Coral().onTrue(new L1Coral());
-    Inputs.getL2Coral().onTrue(new L2Coral());
-    Inputs.getL3Coral().onTrue(new L3Coral());
-    Inputs.getL4Coral().onTrue(new L4Coral());
-    Inputs.getFloorPosition().onTrue(new BasePosition());
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    if (autoCommand == null) {
-      autoCommand = generateAutoCommand();
-    }
-    return autoCommand;
-  }
-
-  public void generateTrajectories(String name){
-    List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
-    for(PathPlannerPath path:paths){
-      autoTraj.add(TrajectoryGenerator.generateTrajectory(path.getPathPoses(), new TrajectoryConfig(MaxSpeed, MaxAngularRate)));
-    }
-  }
-  
-  private Command generateAutoCommand(){
-    switch(newautopick.getSelected()){
-      case Nothing:
-        return new SequentialCommandGroup(new WaitCommand(50000));
-      case Silly6:
-        generateTrajectories("TheSillySix");
-        return SwerveSubsystem.getInstance().getAuto("TheSillySix");
-      default:
-        return new WaitCommand(100);
-    }
   }
 }
