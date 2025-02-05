@@ -20,12 +20,17 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 0;
+
     public static final double driveDeadBand = .2;
     public static final double rotationDeadBand = .2;
+    public static final double speedMultiplier = 1;
+    public static final double speedMultiplierSlowMode = .3;
   }
+
   public static class FieldConstants {
 
   }
+
   public static class MotorIDs {
     public static final int ballGrabber1 = 0;
     public static final int ballGrabber2 = 0;
