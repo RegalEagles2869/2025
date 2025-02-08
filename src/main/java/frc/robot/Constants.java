@@ -24,7 +24,7 @@ public final class Constants {
     public static final double driveDeadBand = .2;
     public static final double rotationDeadBand = .2;
     public static final double speedMultiplier = 1;
-    public static final double speedMultiplierSlowMode = .3;
+    public static final double speedMultiplierSlowMode = .1;
   }
 
   public static class FieldConstants {

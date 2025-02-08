@@ -10,6 +10,9 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -39,11 +42,15 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     public RobotContainer() {
+        Field2d field = new Field2d();
+        // Do this in either robot or subsystem init
+        SmartDashboard.putData("Field", field);
+        // Do this in either robot periodic or subsystem periodic
+        field.setRobotPose(drivetrain.getState().Pose);
         configureBindings();
     }
 
     private void configureBindings() {
-        
         Inputs.getResetGyro().onTrue(new ResetGyro());
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.

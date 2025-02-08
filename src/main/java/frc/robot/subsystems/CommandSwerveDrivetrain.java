@@ -2,10 +2,13 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.io.ObjectInputFilter.Config;
+import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.ApplyChassisSpeeds;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -14,23 +17,37 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPLTVController;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+    private Field2d field;
+
+    private RobotConfig config;
 
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
@@ -107,6 +124,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         )
     );
 
+    public Pose2d getPose() {
+        Pose2d pose = getState().Pose;
+        return new Pose2d(-pose.getX(), -pose.getY(), pose.getRotation());
+    }
+
     /* The SysId routine to test */
     private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
 
@@ -125,11 +147,48 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, modules);
+        AutoBuilder.configure(
+            this::getPose, // Robot pose supplier
+            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            new PPLTVController(0.02), // PPLTVController is the built in path following controller for differential drive trains
+            config, // The robot configuration
+            () -> {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+            },
+            TunerConstants.createDrivetrain() // Reference to this subsystem to set requirements
+        );
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        field = new Field2d();
     }
 
+    /**
+     * Sets speed of robot
+     * @param speeds ChassisSpeed to set to
+     */
+    public void driveRobotRelative(ChassisSpeeds speeds) {
+        getKinematics().toSwerveModuleStates(speeds);
+    }
+    /**
+     * Gets the speeds of the chassis
+     * @return a ChassisSpeeds which contains information on all the chassis
+     */
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        SwerveDriveKinematics kinematics = getKinematics();
+        ChassisSpeeds speeds = kinematics.toChassisSpeeds(getModule(0).getCurrentState(), getModule(1).getCurrentState(), getModule(2).getCurrentState(), getModule(3).getCurrentState());
+        return speeds;
+    }
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
      * <p>
@@ -237,7 +296,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+        
+        // Do this in either robot or subsystem init
+        SmartDashboard.putData("Field", field);
+        // Do this in either robot periodic or subsystem periodic
+        field.setRobotPose(getPose());
     }
+
 
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
