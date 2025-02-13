@@ -4,15 +4,15 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.MotorConfiguration;
 
 public class ClimberSubsystem extends SubsystemBase {
 
-  private TalonFX motor;
+  private SparkMax motor;
 
   private static ClimberSubsystem instance;
 
@@ -23,17 +23,13 @@ public class ClimberSubsystem extends SubsystemBase {
 
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
-    motor = new TalonFX(Constants.MotorIDs.climberID);
-    MotorConfiguration.configureMotor(motor, Constants.ClimberConstants.config);
+    motor = new SparkMax(Constants.MotorIDs.climberID, MotorType.kBrushless);
   }
 
   public void setSpeed(double speed) {
     motor.set(speed);
   }
 
-  public void climb() {
-    motor.set(1);
-  }
 
   @Override
   public void periodic() {

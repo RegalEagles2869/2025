@@ -4,15 +4,15 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.MotorConfiguration;
 
 public class BallGrabberSubsystem extends SubsystemBase {
-  private TalonFX motor1;
-  private TalonFX motor2;
+  private SparkMax motor1;
+  private SparkMax motor2;
 
   private static BallGrabberSubsystem instance;
 
@@ -23,10 +23,8 @@ public class BallGrabberSubsystem extends SubsystemBase {
 
   /** Creates a new BallGrabberSubsystem. */
   public BallGrabberSubsystem() {
-    motor1 = new TalonFX(Constants.MotorIDs.ballGrabber1);
-    motor2 = new TalonFX(Constants.MotorIDs.ballGrabber1);
-    MotorConfiguration.configureMotor(motor1, Constants.BallGrabberConstants.config1);
-    MotorConfiguration.configureMotor(motor2, Constants.BallGrabberConstants.config2);
+    motor1 = new SparkMax(Constants.MotorIDs.ballGrabber1, MotorType.kBrushless);
+    motor2 = new SparkMax(Constants.MotorIDs.ballGrabber2, MotorType.kBrushless);
   }
 
   public void setSpeed(double speed) {
@@ -36,8 +34,5 @@ public class BallGrabberSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
-
-    // This method will be called once per scheduler run
   }
 }

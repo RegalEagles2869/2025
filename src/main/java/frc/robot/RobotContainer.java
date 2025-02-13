@@ -11,9 +11,9 @@ import frc.robot.commands.L1Coral;
 import frc.robot.commands.L2Coral;
 import frc.robot.commands.L3Coral;
 import frc.robot.commands.L4Coral;
+import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.SetPivotPosition;
 import frc.robot.commands.SourceIntake;
-import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -97,6 +97,9 @@ public class RobotContainer {
     Inputs.getL3Coral().onTrue(new L3Coral());
     Inputs.getL4Coral().onTrue(new L4Coral());
     Inputs.getFloorPosition().onTrue(new BasePosition());
+    
+    Inputs.getSetElevatorSpeedUp().onTrue(new SetElevatorSpeed(.1));
+    Inputs.getSetElevatorSpeedDown().onTrue(new SetElevatorSpeed(.1));
   }
 
   /**
@@ -112,10 +115,10 @@ public class RobotContainer {
   }
 
   public void generateTrajectories(String name){
-    List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
-    for(PathPlannerPath path:paths){
-      autoTraj.add(TrajectoryGenerator.generateTrajectory(path.getPathPoses(), new TrajectoryConfig(MaxSpeed, MaxAngularRate)));
-    }
+    // List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
+    // for(PathPlannerPath path:paths){
+      // autoTraj.add(TrajectoryGenerator.generateTrajectory(path.getPathPoses(), new TrajectoryConfig(MaxSpeed, MaxAngularRate)));
+    // }
   }
   
   private Command generateAutoCommand(){
@@ -124,10 +127,10 @@ public class RobotContainer {
         return new SequentialCommandGroup(new WaitCommand(50000));
       case Silly6:
         generateTrajectories("TheSillySix");
-        return SwerveSubsystem.getInstance().getAuto("TheSillySix");
+        // return SwerveSubsystem.getInstance().getAuto("TheSillySix");
       case TheBigHitter:
         generateTrajectories("TheBigHitter");
-        return SwerveSubsystem.getInstance().getAuto("TheBigHitter");
+        // return SwerveSubsystem.getInstance().getAuto("TheBigHitter");
       default:
         return new WaitCommand(100);
     }

@@ -15,6 +15,13 @@ public class Inputs {
     private static final CommandXboxController driver1 = new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort); 
     private static final CommandGenericHID operatorBoard = new CommandGenericHID(Constants.OperatorConstants.kOperatorControllerPort); 
 
+    public static Trigger getSetElevatorSpeedUp() {
+        return driver1.a();
+    }
+    public static Trigger getSetElevatorSpeedDown() {
+        return driver1.b();
+    }
+
     public static Trigger getAdjustElevatorUp() {
         return operatorBoard.button(1);
     }

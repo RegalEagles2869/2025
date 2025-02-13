@@ -4,18 +4,28 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.MotorConfiguration;
 
 public class CoralPivotSubsystem extends SubsystemBase {
 
-  private TalonFX motor;
+  private SparkMax motor;
   private double position;
+
+  private SparkMaxConfig config;
   
   private static CoralPivotSubsystem instance;
+
+  private boolean posControl = false;
 
   public static CoralPivotSubsystem getInstance() {
     if (instance == null) instance = new CoralPivotSubsystem();
@@ -23,20 +33,32 @@ public class CoralPivotSubsystem extends SubsystemBase {
   }
   /** Creates a new CoralPivotSubsystem. */
   public CoralPivotSubsystem() {
-    motor = new TalonFX(Constants.MotorIDs.CoralPivot);
-    MotorConfiguration.configureMotor(motor, Constants.PivotConstants.config);
+    motor = new SparkMax(Constants.MotorIDs.CoralPivot, MotorType.kBrushless);
+    posControl = false;
+    config = new SparkMaxConfig();
+    config.inverted(false).idleMode(IdleMode.kBrake);
+    config.encoder.positionConversionFactor(1).velocityConversionFactor(1);
+    config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
+    motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public void setPosition(double pos) {
+    posControl = true;
     position = pos;
   }
 
   public void changePosition(double changePos) {
+    posControl = true;
     position += changePos;
   }
 
+  public void setSpeed(double speed) {
+    posControl = false;
+    motor.set(speed);
+  }
+
   public double getPosition() {
-    return motor.getPosition().getValueAsDouble();
+    return motor.getEncoder().getPosition();
   }
 
   public boolean isAtPosition() {
@@ -47,8 +69,11 @@ public class CoralPivotSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (position >= Constants.PivotConstants.floorPosition && position < Constants.PivotConstants.maxPosition) {
-      motor.setPosition(position);
+    if (posControl) {
+      if (position >= Constants.PivotConstants.floorPosition && position < Constants.PivotConstants.maxPosition) {
+        motor.getClosedLoopController().setReference(position, ControlType.kPosition);
+        if (isAtPosition()) posControl = false;
+      }
     }
   }
 }

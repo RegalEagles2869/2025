@@ -4,15 +4,15 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.MotorConfiguration;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
   /** Creates a new CoralIntakeSubsystem. */
-  private TalonFX motor;
+  private SparkMax motor;
 
   private static CoralIntakeSubsystem instance;
 
@@ -22,8 +22,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   }
 
   public CoralIntakeSubsystem() {
-    motor = new TalonFX(Constants.MotorIDs.coralIntake);
-    MotorConfiguration.configureMotor(motor, Constants.CoralConstants.config);
+    motor = new SparkMax(Constants.MotorIDs.coralIntake, MotorType.kBrushless);
   }
 
   public void setSpeed(double speed) {

@@ -23,6 +23,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private double position;
   private SparkMaxConfig config;
   private SparkMaxConfig config2;
+  private boolean posControl = false;
 
   private static ElevatorSubsystem instance;
 
@@ -35,31 +36,38 @@ public class ElevatorSubsystem extends SubsystemBase {
     motor = new SparkMax(Constants.MotorIDs.elevator, MotorType.kBrushless);
     motorFollow = new SparkMax(Constants.MotorIDs.elevatorFollow, MotorType.kBrushless);
     position = Constants.ElevatorConstants.floorPosition;
+    posControl = false;
 
     config = new SparkMaxConfig();
     config.inverted(false).idleMode(IdleMode.kBrake);
-    config.encoder.positionConversionFactor(1000).velocityConversionFactor(1000);
+    config.encoder.positionConversionFactor(1).velocityConversionFactor(1);
     config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     config2 = new SparkMaxConfig();
-    config2.follow(Constants.MotorIDs.elevator);
     config2.inverted(true).idleMode(IdleMode.kBrake);
-    config2.encoder.positionConversionFactor(1000).velocityConversionFactor(1000);
+    config2.encoder.positionConversionFactor(1).velocityConversionFactor(1);
     config2.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
+    config2.follow(Constants.MotorIDs.elevator);
     motorFollow.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public void setPosition(double pos) {
+    posControl = true;
     position = pos;
   }
 
   public void changePosition(double changePos) {
+    posControl = true;
     position += changePos;
   }
 
   public double getPosition() {
     return motor.getAbsoluteEncoder().getPosition();
+  }
+
+  public void setSpeed(double speed) {
+    motor.set(speed);
   }
 
   public boolean isAtPosition() {
@@ -70,8 +78,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (position >= Constants.ElevatorConstants.floorPosition && position < Constants.ElevatorConstants.maxPosition) {
-      motor.getClosedLoopController().setReference(position, ControlType.kPosition);
+    if (posControl) {
+      if (position >= Constants.ElevatorConstants.floorPosition && position < Constants.ElevatorConstants.maxPosition) {
+        motor.getClosedLoopController().setReference(position, ControlType.kPosition);
+        if (isAtPosition()) posControl = false;
+      }
     }
   }
 }
