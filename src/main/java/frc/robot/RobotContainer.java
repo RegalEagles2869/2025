@@ -90,6 +90,60 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto("Example Auto");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        System.out.println("FISH");
+        return new PathPlannerAuto("fishAuto");
     }
 }
