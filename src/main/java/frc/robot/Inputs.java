@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -54,5 +55,14 @@ public class Inputs {
     }
     public static Trigger getAdjustPivotDown() {
         return operatorBoard.button(11);
+    }
+    public static Trigger getRUMBLE() {
+        return operatorBoard.button(12);
+    }
+
+    public static void RUMBLERUMBLE(double rumble) {
+        try {
+            controllerLol.setRumble(RumbleType.kBothRumble, rumble);
+        } catch (Exception e) {}
     }
 }
