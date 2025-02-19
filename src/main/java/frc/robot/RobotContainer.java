@@ -11,11 +11,9 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.ResetGyro;
@@ -90,60 +88,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
-        System.out.println("FISH");
         return new PathPlannerAuto("fishAuto");
     }
 }

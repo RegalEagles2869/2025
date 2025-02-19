@@ -64,16 +64,4 @@ public class Inputs {
     public static Trigger getL4Coral() {
         return operatorBoard.button(7);
     }
-    public static Trigger getBallIntake() {
-        return operatorBoard.button(8);
-    }
-    public static Trigger getBallOuttake() {
-        return operatorBoard.button(9);
-    }
-    public static Trigger getAdjustPivotUp() {
-        return operatorBoard.button(10);
-    }
-    public static Trigger getAdjustPivotDown() {
-        return operatorBoard.button(11);
-    }
 }
