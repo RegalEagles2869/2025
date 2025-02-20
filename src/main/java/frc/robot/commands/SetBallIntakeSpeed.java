@@ -5,41 +5,38 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.subsystems.PivotSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.BallGrabberSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SetPivotSpeed extends Command {
-  private PivotSubsystem pivot = PivotSubsystem.getInstance();
+public class SetBallIntakeSpeed extends Command {
+  private BallGrabberSubsystem intake = BallGrabberSubsystem.getInstance();
   private double speed;
-  /** Creates a new SetPivotSpeed. */
-  public SetPivotSpeed(double speed) {
-    addRequirements(pivot);
+  /** Creates a new SetBallIntakeSpeed. */
+  public SetBallIntakeSpeed(double speed) {
+    addRequirements(intake);
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pivot.setSpeed(speed);
+    intake.setSpeed(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    pivot.setSpeed(0);
-  }
+    intake.setSpeed(speed);}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if ((pivot.getPosition() < Constants.PivotConstants.maxPosition && speed > 0)
-      || (pivot.getPosition() > Constants.PivotConstants.floorPosition && speed < 0)) {
-        pivot.setSpeed(0);
-        return true;
-      }
     return false;
   }
 }

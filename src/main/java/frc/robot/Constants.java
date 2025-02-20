@@ -48,7 +48,6 @@ public final class Constants {
   public static class PivotConstants {
     public static final double floorPosition = 0;
     public static final double maxPosition = 0;
-    public static final MotorConfiguration config = new MotorConfiguration(1, -1, 40, true, false);
 
     public static final double basePosition = 0;
     public static final double l1Position = 0;
@@ -59,13 +58,9 @@ public final class Constants {
     public static final double error = 0;
   }
   public static class BallGrabberConstants {
-    public static final MotorConfiguration config1 = new MotorConfiguration(1, -1, 40, true, false);
-    public static final MotorConfiguration config2 = new MotorConfiguration(1, -1, 40, true, false);
   }
   public static class ClimberConstants {
-    public static final MotorConfiguration config = new MotorConfiguration(1, -1, 40, true, false);
   }
   public static class CoralConstants {
-    public static final MotorConfiguration config = new MotorConfiguration(1, -1, 40, true, false);
   }  
 }

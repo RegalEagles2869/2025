@@ -17,10 +17,13 @@ public class Inputs {
     private static final CommandGenericHID operatorBoard = new CommandGenericHID(Constants.OperatorConstants.kOperatorControllerPort); 
 
     public static Trigger getSetElevatorSpeedUp() {
-        return driver1.a();
+        return driver1.povUp();
     }
     public static Trigger getSetElevatorSpeedDown() {
-        return driver1.b();
+        return driver1.povDown();
+    }
+    public static Trigger getResetGyro() {
+        return driver1.x();
     }
 
     public static Trigger getAdjustElevatorUp() {

@@ -16,23 +16,23 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class CoralPivotSubsystem extends SubsystemBase {
+public class PivotSubsystem extends SubsystemBase {
 
   private SparkMax motor;
   private double position;
 
   private SparkMaxConfig config;
   
-  private static CoralPivotSubsystem instance;
+  private static PivotSubsystem instance;
 
   private boolean posControl = false;
 
-  public static CoralPivotSubsystem getInstance() {
-    if (instance == null) instance = new CoralPivotSubsystem();
+  public static PivotSubsystem getInstance() {
+    if (instance == null) instance = new PivotSubsystem();
     return instance;
   }
   /** Creates a new CoralPivotSubsystem. */
-  public CoralPivotSubsystem() {
+  public PivotSubsystem() {
     motor = new SparkMax(Constants.MotorIDs.CoralPivot, MotorType.kBrushless);
     posControl = false;
     config = new SparkMaxConfig();

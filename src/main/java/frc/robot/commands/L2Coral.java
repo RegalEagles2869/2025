@@ -13,6 +13,6 @@ import frc.robot.Constants;
 public class L2Coral extends SequentialCommandGroup {
   /** Creates a new L1Coral. */
   public L2Coral() {
-    addCommands(new SetElevatorPosition(Constants.ElevatorConstants.l2Position), new SetPivotPosition(Constants.PivotConstants.l2Position), new SetIntakeSpeed(-1));
+    addCommands(new SetElevatorPosition(Constants.ElevatorConstants.l2Position), new SetElevatorPosition(Constants.PivotConstants.l2Position), new SetIntakeSpeed(-1));
   }
 }
