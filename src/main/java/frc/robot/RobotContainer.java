@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.ResetGyro;
-import frc.robot.commands.SetElevatorSpeed;
+import frc.robot.commands.SetPivotSpeed;
 import frc.robot.commands.TestCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -59,8 +59,8 @@ public class RobotContainer {
 
     private void configureBindings() {
         Inputs.getResetGyro().onTrue(new ResetGyro());
-        Inputs.getSetElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.05));
-        Inputs.getSetElevatorSpeedDown().whileTrue(new SetElevatorSpeed(-.05));
+        Inputs.getSetElevatorSpeedUp().whileTrue(new SetPivotSpeed(.05));
+        Inputs.getSetElevatorSpeedDown().whileTrue(new SetPivotSpeed(-.05));
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
