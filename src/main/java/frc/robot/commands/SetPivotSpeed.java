@@ -6,11 +6,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.PivotSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SetPivotSpeed extends Command {
-  private PivotSubsystem pivot = ElevatorSubsystem.getInstance();
+  private PivotSubsystem pivot = PivotSubsystem.getInstance();
   private double speed;
   /** Creates a new SetElevatorSpeed. */
   public SetPivotSpeed(double speed) {
