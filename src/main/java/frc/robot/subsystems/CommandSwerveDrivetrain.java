@@ -163,7 +163,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         speedsC = new ApplyRobotSpeeds();
         
         speedsC.withDriveRequestType(DriveRequestType.Velocity);
-        speedsC.withSteerRequestType(SteerRequestType.MotionMagicExpo);
+        speedsC.withSteerRequestType(SteerRequestType.Position);
         AutoBuilder.configure(
             this::getPose, // Robot pose supplier
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -202,7 +202,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         System.out.println(speeds.vyMetersPerSecond);
         System.out.println(speeds.omegaRadiansPerSecond);
         speedsC.withSpeeds(speeds);
-        applyRequest(() -> speedsC);
+        this.applyRequest(() -> speedsC);
     }
     /**
      * Gets the speeds of the chassis

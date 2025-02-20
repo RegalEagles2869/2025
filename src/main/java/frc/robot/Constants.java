@@ -17,6 +17,10 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 0;
+    public static final double speedMultiplier = 1;
+    public static final double speedMultiplierSlow = .1;
+    public static final double driveDeadBand = .1;
+    public static final double rotationDeadBand = .1;
   }
   public static class FieldConstants {
 
@@ -48,7 +52,6 @@ public final class Constants {
   public static class PivotConstants {
     public static final double floorPosition = 0;
     public static final double maxPosition = 0;
-    public static final MotorConfiguration config = new MotorConfiguration(1, -1, 40, true, false);
 
     public static final double basePosition = 0;
     public static final double l1Position = 0;
@@ -58,14 +61,4 @@ public final class Constants {
     public static final double sourcePosition = 0;
     public static final double error = 0;
   }
-  public static class BallGrabberConstants {
-    public static final MotorConfiguration config1 = new MotorConfiguration(1, -1, 40, true, false);
-    public static final MotorConfiguration config2 = new MotorConfiguration(1, -1, 40, true, false);
-  }
-  public static class ClimberConstants {
-    public static final MotorConfiguration config = new MotorConfiguration(1, -1, 40, true, false);
-  }
-  public static class CoralConstants {
-    public static final MotorConfiguration config = new MotorConfiguration(1, -1, 40, true, false);
-  }  
 }

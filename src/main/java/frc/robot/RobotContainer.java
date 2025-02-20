@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.ResetGyro;
+import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.TestCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -35,7 +36,7 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * Constants.OperatorConstants.driveDeadBand * Constants.OperatorConstants.speedMultiplier).withRotationalDeadband(MaxAngularRate * Constants.OperatorConstants.rotationDeadBand * Inputs.getMultiplier() * Constants.OperatorConstants.speedMultiplier)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.FieldCentric driveSlow = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * Constants.OperatorConstants.driveDeadBand * Constants.OperatorConstants.speedMultiplierSlowMode).withRotationalDeadband(MaxAngularRate * Constants.OperatorConstants.rotationDeadBand * Inputs.getMultiplier() * Constants.OperatorConstants.speedMultiplierSlowMode)
+            .withDeadband(MaxSpeed * Constants.OperatorConstants.driveDeadBand * Constants.OperatorConstants.speedMultiplierSlow).withRotationalDeadband(MaxAngularRate * Constants.OperatorConstants.rotationDeadBand * Inputs.getMultiplier() * Constants.OperatorConstants.speedMultiplierSlow)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -58,6 +59,8 @@ public class RobotContainer {
 
     private void configureBindings() {
         Inputs.getResetGyro().onTrue(new ResetGyro());
+        Inputs.getSetElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.05));
+        Inputs.getSetElevatorSpeedDown().whileTrue(new SetElevatorSpeed(-.05));
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -71,9 +74,9 @@ public class RobotContainer {
 
         joystick.x().whileTrue(
             drivetrain.applyRequest(() ->
-                driveSlow.withVelocityX(Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplierSlowMode) // Drive forward with negative Y (forward)
-                    .withVelocityY(Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplierSlowMode) // Drive left with negative X (left)
-                    .withRotationalRate(Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplierSlowMode) // Drive counterclockwise with negative X (left)
+                driveSlow.withVelocityX(Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplierSlow) // Drive forward with negative Y (forward)
+                    .withVelocityY(Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplierSlow) // Drive left with negative X (left)
+                    .withRotationalRate(Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplierSlow) // Drive counterclockwise with negative X (left)
             )
         );
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));

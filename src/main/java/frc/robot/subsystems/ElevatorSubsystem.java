@@ -80,7 +80,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void periodic() {
     if (posControl) {
       if (position >= Constants.ElevatorConstants.floorPosition && position < Constants.ElevatorConstants.maxPosition) {
-        motor.getClosedLoopController().setReference(position, ControlType.kPosition);
+        // motor.getClosedLoopController().setReference(position, ControlType.kPosition);
         if (isAtPosition()) posControl = false;
       }
     }

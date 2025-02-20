@@ -16,6 +16,13 @@ public class Inputs {
     private static final CommandXboxController driver1 = new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort); 
     private static final CommandGenericHID operatorBoard = new CommandGenericHID(Constants.OperatorConstants.kOperatorControllerPort); 
 
+    public static Trigger getResetGyro() {
+        return driver1.y();
+    }
+    
+    public static boolean getSlowMode(){
+        return driver1.getHID().getRightBumper()||driver1.getHID().getLeftBumper();
+    }
     public static double getTranslationX() {
         return driver1.getLeftY();
     }
@@ -25,21 +32,21 @@ public class Inputs {
     public static double getRotation() {
         double speed =  -driver1.getRightX();
         if(getSlowMode()) {
-            return speed * Constants.OperatorConstants.speedMultiplierSlowMode;
+            return speed * Constants.OperatorConstants.speedMultiplierSlow;
         }
         return speed * Constants.OperatorConstants.speedMultiplier;
     }
 
     public static double getMultiplier() {
-        if (getSlowMode()) return Constants.OperatorConstants.speedMultiplierSlowMode;
+        if (getSlowMode()) return Constants.OperatorConstants.speedMultiplierSlow;
         return Constants.OperatorConstants.speedMultiplier;
     }
     
     public static Trigger getSetElevatorSpeedUp() {
-        return driver1.a();
+        return driver1.povUp();
     }
     public static Trigger getSetElevatorSpeedDown() {
-        return driver1.b();
+        return driver1.povDown();
     }
 
     public static Trigger getAdjustElevatorUp() {
