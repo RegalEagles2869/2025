@@ -16,6 +16,25 @@ public class Inputs {
     private static final CommandXboxController driver1 = new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort); 
     private static final CommandGenericHID operatorBoard = new CommandGenericHID(Constants.OperatorConstants.kOperatorControllerPort); 
 
+    public static double getTranslationX() {
+        return driver1.getLeftY();
+    }
+    public static double getTranslationY() {
+        return driver1.getLeftX();
+    }
+    public static double getRotation() {
+        double speed =  -driver1.getRightX();
+        if(getSlowMode()) {
+            return speed * Constants.OperatorConstants.speedMultiplierSlowMode;
+        }
+        return speed * Constants.OperatorConstants.speedMultiplier;
+    }
+
+    public static double getMultiplier() {
+        if (getSlowMode()) return Constants.OperatorConstants.speedMultiplierSlowMode;
+        return Constants.OperatorConstants.speedMultiplier;
+    }
+    
     public static Trigger getSetElevatorSpeedUp() {
         return driver1.a();
     }
