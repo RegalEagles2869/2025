@@ -31,7 +31,7 @@ public class Inputs {
     }
     public static double getRotation() {
         double speed =  -driver1.getRightX();
-        if(getSlowMode()){
+        if(getSlowMode()) {
             return speed * Constants.OperatorConstants.speedMultiplierSlowMode;
         }
         return speed * Constants.OperatorConstants.speedMultiplier;

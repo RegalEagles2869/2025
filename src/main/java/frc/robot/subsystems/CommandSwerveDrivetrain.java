@@ -7,8 +7,13 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveRequest.ApplyChassisSpeeds;
+import com.ctre.phoenix6.swerve.SwerveRequest.ApplyRobotSpeeds;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -43,6 +48,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private Field2d field;
 
     private RobotConfig config;
+    private ApplyRobotSpeeds speedsC;
 
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
@@ -119,12 +125,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         )
     );
 
-    public Pose2d getPose() {
+    public Pose2d getNegativePose() {
         Pose2d pose = getState().Pose;
         return new Pose2d(-pose.getX(), -pose.getY(), pose.getRotation());
     }
 
-    public Pose2d getPosePathplanner() {
+    public Pose2d getPose() {
         return getState().Pose;
     }
 
@@ -154,8 +160,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             // Handle exception as needed
             e.printStackTrace();
         }
+        speedsC = new ApplyRobotSpeeds();
+        
+        speedsC.withDriveRequestType(DriveRequestType.Velocity);
+        speedsC.withSteerRequestType(SteerRequestType.MotionMagicExpo);
         AutoBuilder.configure(
-            this::getPosePathplanner, // Robot pose supplier
+            this::getPose, // Robot pose supplier
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
@@ -188,7 +198,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * @param speeds ChassisSpeed to set to
      */
     public void driveRobotRelative(ChassisSpeeds speeds) {
-        getKinematics().toSwerveModuleStates(speeds);
+        System.out.println(speeds.vxMetersPerSecond);
+        System.out.println(speeds.vyMetersPerSecond);
+        System.out.println(speeds.omegaRadiansPerSecond);
+        speedsC.withSpeeds(speeds);
+        applyRequest(() -> speedsC);
     }
     /**
      * Gets the speeds of the chassis
