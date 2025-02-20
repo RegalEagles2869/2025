@@ -4,133 +4,107 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.BasePosition;
-import frc.robot.commands.ChangeElevatorPosition;
-import frc.robot.commands.L1Coral;
-import frc.robot.commands.L2Coral;
-import frc.robot.commands.L3Coral;
-import frc.robot.commands.L4Coral;
-import frc.robot.commands.SetElevatorSpeed;
-import frc.robot.commands.SetPivotPosition;
-import frc.robot.commands.SourceIntake;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import static edu.wpi.first.units.Units.*;
 
-
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.auto.NamedCommands;
 
-import java.util.ArrayList;
-import java.util.List;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.ResetGyro;
+import frc.robot.commands.TestCommand;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
-// import com.pathplanner.lib.auto.NamedCommands;
-// import com.pathplanner.lib.commands.PathPlannerAuto;
-// import com.pathplanner.lib.path.PathPlannerPath;
-
-import choreo.trajectory.Trajectory;
-
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private enum Autos {
-    Nothing, Silly6, TheBigHitter
-  }
-  
-  private double MaxSpeed = 5.5;
-  private double MaxAngularRate = 2 * Math.PI; // 3/4 of a rotation per second max angular velocity
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  
-  private SendableChooser<Autos> newautopick;
-  private Command autoCommand;
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-  ArrayList<Trajectory> autoTraj = new ArrayList<>();
+    /* Setting up bindings for necessary control of the swerve drive platform */
+    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+            .withDeadband(MaxSpeed * Constants.OperatorConstants.driveDeadBand * Constants.OperatorConstants.speedMultiplier).withRotationalDeadband(MaxAngularRate * Constants.OperatorConstants.rotationDeadBand * Inputs.getMultiplier() * Constants.OperatorConstants.speedMultiplier)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+    private final SwerveRequest.FieldCentric driveSlow = new SwerveRequest.FieldCentric()
+            .withDeadband(MaxSpeed * Constants.OperatorConstants.driveDeadBand * Constants.OperatorConstants.speedMultiplierSlowMode).withRotationalDeadband(MaxAngularRate * Constants.OperatorConstants.rotationDeadBand * Inputs.getMultiplier() * Constants.OperatorConstants.speedMultiplierSlowMode)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Configure the trigger bindings
-    NamedCommands.registerCommand("L1", new L1Coral());
-    NamedCommands.registerCommand("L2", new L2Coral());
-    NamedCommands.registerCommand("L3", new L3Coral());
-    NamedCommands.registerCommand("L4", new L4Coral());
-    NamedCommands.registerCommand("IntakeSource", new SourceIntake());
-    newautopick = new SendableChooser<>();
-    newautopick.addOption("Nothing", Autos.Nothing);
-    newautopick.addOption("TheSillySix", Autos.Silly6);
-    newautopick.addOption("TheBigHitter", Autos.TheBigHitter);
+    private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    Shuffleboard.getTab("auto").add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
-    configureBindings();
-  }
+    private final CommandXboxController joystick = new CommandXboxController(0);
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    Inputs.getAdjustElevatorDown().whileTrue(new ChangeElevatorPosition(-.1));
-    Inputs.getAdjustElevatorUp().whileTrue(new ChangeElevatorPosition(.1));
-    Inputs.getAdjustPivotUp().whileTrue(new ChangeElevatorPosition(-.1));
-    Inputs.getAdjustPivotDown().whileTrue(new ChangeElevatorPosition(.1));
-    Inputs.getL1Coral().onTrue(new L1Coral());
-    Inputs.getL2Coral().onTrue(new L2Coral());
-    Inputs.getL3Coral().onTrue(new L3Coral());
-    Inputs.getL4Coral().onTrue(new L4Coral());
-    Inputs.getFloorPosition().onTrue(new BasePosition());
-    
-    Inputs.getSetElevatorSpeedUp().onTrue(new SetElevatorSpeed(.1));
-    Inputs.getSetElevatorSpeedDown().onTrue(new SetElevatorSpeed(.1));
-  }
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    if (autoCommand == null) {
-      autoCommand = generateAutoCommand();
+    public RobotContainer() {
+        Field2d field = new Field2d();
+        // Do this in either robot or subsystem init
+        SmartDashboard.putData("Field", field);
+        NamedCommands.registerCommand("TestCommand", new TestCommand());
+        // Do this in either robot periodic or subsystem periodic
+        field.setRobotPose(drivetrain.getNegativePose());
+        configureBindings();
     }
-    return autoCommand;
-  }
 
-  public void generateTrajectories(String name){
-    // List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
-    // for(PathPlannerPath path:paths){
-      // autoTraj.add(TrajectoryGenerator.generateTrajectory(path.getPathPoses(), new TrajectoryConfig(MaxSpeed, MaxAngularRate)));
-    // }
-  }
-  
-  private Command generateAutoCommand(){
-    switch(newautopick.getSelected()){
-      case Nothing:
-        return new SequentialCommandGroup(new WaitCommand(50000));
-      case Silly6:
-        generateTrajectories("TheSillySix");
-        // return SwerveSubsystem.getInstance().getAuto("TheSillySix");
-      case TheBigHitter:
-        generateTrajectories("TheBigHitter");
-        // return SwerveSubsystem.getInstance().getAuto("TheBigHitter");
-      default:
-        return new WaitCommand(100);
+    private void configureBindings() {
+        Inputs.getResetGyro().onTrue(new ResetGyro());
+        // Note that X is defined as forward according to WPILib convention,
+        // and Y is defined as to the left according to WPILib convention.
+        drivetrain.setDefaultCommand(
+            // Drivetrain will execute this command periodically
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplier) // Drive forward with negative Y (forward)
+                    .withVelocityY(Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplier) // Drive left with negative X (left)
+                    .withRotationalRate(Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplier) // Drive counterclockwise with negative X (left)
+            )
+        );
+
+        joystick.x().whileTrue(
+            drivetrain.applyRequest(() ->
+                driveSlow.withVelocityX(Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplierSlowMode) // Drive forward with negative Y (forward)
+                    .withVelocityY(Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplierSlowMode) // Drive left with negative X (left)
+                    .withRotationalRate(Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplierSlowMode) // Drive counterclockwise with negative X (left)
+            )
+        );
+        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        joystick.b().whileTrue(drivetrain.applyRequest(() ->
+            point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
+        ));
+
+        // Run SysId routines when holding back/start and X/Y.
+        // Note that each routine should be run exactly once in a single log.
+        joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
+        // reset the field-centric heading on left bumper press
+        joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+        drivetrain.registerTelemetry(logger::telemeterize);
     }
-  }
+
+    public Command getAutonomousCommand() {
+        // return new PathPlannerAuto("fishAuto");
+        try{
+            // Load the path you want to follow using its name in the GUI
+            PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+
+            // Create a path following command using AutoBuilder. This will also trigger event markers.
+            return AutoBuilder.followPath(path);
+        } catch (Exception e) {
+            DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+            return Commands.none();
+        }
+    }
 }
