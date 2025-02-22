@@ -22,6 +22,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.ResetGyro;
+import frc.robot.commands.SetElevatorPosition;
+import frc.robot.commands.SetElevatorSpeed;
+import frc.robot.commands.SetIntakeSpeed;
+import frc.robot.commands.SetPivotPosition;
+import frc.robot.commands.SetPivotSpeed;
 import frc.robot.commands.TestCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -58,16 +63,23 @@ public class RobotContainer {
 
     private void configureBindings() {
         Inputs.getResetGyro().onTrue(new ResetGyro());
+        Inputs.getSetElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.2));
+        Inputs.getSetElevatorSpeedDown().onTrue(new SetElevatorPosition(0));
+        Inputs.getPOVLeft().whileTrue(new SetIntakeSpeed(.1));
+        Inputs.getPOVRight().whileTrue(new SetIntakeSpeed(-.1));
+
+        Inputs.getPivotDown().onTrue(new SetPivotPosition(0));
+        Inputs.getPivotUp().onTrue(new SetPivotSpeed(.1));
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
+        /*drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplier) // Drive forward with negative Y (forward)
                     .withVelocityY(Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplier) // Drive left with negative X (left)
                     .withRotationalRate(Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplier) // Drive counterclockwise with negative X (left)
             )
-        );
+        );*/
 
         joystick.x().whileTrue(
             drivetrain.applyRequest(() ->
@@ -99,10 +111,51 @@ public class RobotContainer {
         try{
             // Load the path you want to follow using its name in the GUI
             PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
+            System.out.println("radFr");
 
             // Create a path following command using AutoBuilder. This will also trigger event markers.
             return AutoBuilder.followPath(path);
         } catch (Exception e) {
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
+            System.out.println("WOAH BALLS BALLS BALLS");
             DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
             return Commands.none();
         }

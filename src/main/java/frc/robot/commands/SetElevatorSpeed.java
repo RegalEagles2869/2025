@@ -26,6 +26,7 @@ public class SetElevatorSpeed extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println(speed);
     elevator.setSpeed(speed);
   }
 
@@ -40,8 +41,8 @@ public class SetElevatorSpeed extends Command {
   public boolean isFinished() {
     if ((elevator.getPosition() < Constants.ElevatorConstants.maxPosition && speed > 0)
       || (elevator.getPosition() > Constants.ElevatorConstants.floorPosition && speed < 0)) {
-      elevator.setSpeed(0);
-      return true;
+      // elevator.setSpeed(0);
+      // return true;
     }
 
     return false;

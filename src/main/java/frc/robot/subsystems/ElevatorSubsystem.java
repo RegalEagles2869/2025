@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -24,6 +25,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private SparkMaxConfig config;
   private SparkMaxConfig config2;
   private boolean posControl = false;
+  private double kP = .05;
+  private double kD = 0;
 
   private static ElevatorSubsystem instance;
 
@@ -41,14 +44,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     config = new SparkMaxConfig();
     config.inverted(false).idleMode(IdleMode.kBrake);
     config.encoder.positionConversionFactor(1).velocityConversionFactor(1);
-    config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
+    config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(kP, 0, kD);
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     config2 = new SparkMaxConfig();
-    config2.inverted(true).idleMode(IdleMode.kBrake);
     config2.encoder.positionConversionFactor(1).velocityConversionFactor(1);
-    config2.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
-    config2.follow(Constants.MotorIDs.elevator);
+    config2.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(kP, 0, kD);
+    config2.follow(motor, true);
     motorFollow.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -63,10 +65,15 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public double getPosition() {
-    return motor.getAbsoluteEncoder().getPosition();
+    return motor.getEncoder().getPosition();
   }
 
   public void setSpeed(double speed) {
+    if (speed == 0) {
+      posControl = true;
+      position = motor.getEncoder().getPosition();
+    }
+    else posControl = false;
     motor.set(speed);
   }
 
@@ -78,10 +85,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("positionLol", getPosition());
     if (posControl) {
       if (position >= Constants.ElevatorConstants.floorPosition && position < Constants.ElevatorConstants.maxPosition) {
         motor.getClosedLoopController().setReference(position, ControlType.kPosition);
-        if (isAtPosition()) posControl = false;
       }
     }
   }

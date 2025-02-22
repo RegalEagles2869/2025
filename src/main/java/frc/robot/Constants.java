@@ -17,6 +17,10 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 0;
+    public static final double speedMultiplier = 1;
+    public static final double speedMultiplierSlowMode = .1;
+    public static final double driveDeadBand = .1;
+    public static final double rotationDeadBand = .1;
   }
   public static class FieldConstants {
 
@@ -24,16 +28,15 @@ public final class Constants {
   public static class MotorIDs {
     public static final int ballGrabber1 = 0;
     public static final int ballGrabber2 = 0;
-    public static final int elevator = 0;
-    public static final int elevatorFollow = 0;
-    public static final int elevatorEncoder = 0;
+    public static final int elevator = 6;
+    public static final int elevatorFollow = 7;
     public static final int climberID = 0;
-    public static final int coralIntake = 0;
-    public static final int CoralPivot = 0;
+    public static final int coralIntake = 5;
+    public static final int coralPivot = 15;
   }
   public static class ElevatorConstants {
     public static final double floorPosition = 0;
-    public static final double maxPosition = 10;
+    public static final double maxPosition = 10000;
     // config.encoder.positionConversionFactor(1000).velocityConversionFactor(1000);
     // config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
 
@@ -47,7 +50,7 @@ public final class Constants {
   }
   public static class PivotConstants {
     public static final double floorPosition = 0;
-    public static final double maxPosition = 0;
+    public static final double maxPosition = 10000;
 
     public static final double basePosition = 0;
     public static final double l1Position = 0;

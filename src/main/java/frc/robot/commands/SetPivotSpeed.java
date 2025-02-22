@@ -7,7 +7,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.PivotSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SetPivotSpeed extends Command {
@@ -37,8 +36,8 @@ public class SetPivotSpeed extends Command {
   public boolean isFinished() {
     if ((pivot.getPosition() < Constants.PivotConstants.maxPosition && speed > 0)
       || (pivot.getPosition() > Constants.PivotConstants.floorPosition && speed < 0)) {
-        pivot.setSpeed(0);
-        return true;
+        // pivot.setSpeed(0);
+        // return true;
       }
     return false;
   }

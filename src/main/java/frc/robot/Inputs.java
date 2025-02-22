@@ -22,8 +22,37 @@ public class Inputs {
     public static Trigger getSetElevatorSpeedDown() {
         return driver1.povDown();
     }
+    public static Trigger getPOVLeft() {
+        return driver1.povLeft();
+    }
+    public static Trigger getPOVRight() {
+        return driver1.povRight();
+    }
+    
     public static Trigger getResetGyro() {
-        return driver1.x();
+        return driver1.y();
+    }
+    public static Trigger getPivotDown() {
+        return driver1.leftBumper();
+    }
+    public static Trigger getPivotUp() {
+        return driver1.rightBumper();
+    }
+    
+    // DID YOU JUST UPDATE CTRE SWERVE? Remember to invert the drive motors in TunerConstants
+    public static double getTranslationX() {
+        return driver1.getLeftY();
+    }
+    public static double getTranslationY() {
+        return driver1.getLeftX();
+    }
+    public static double getRotation() {
+        double speed =  -driver1.getRightX();
+        return speed;
+    }
+
+    public static double getMultiplier() {
+        return Constants.OperatorConstants.speedMultiplier;
     }
 
     public static Trigger getAdjustElevatorUp() {

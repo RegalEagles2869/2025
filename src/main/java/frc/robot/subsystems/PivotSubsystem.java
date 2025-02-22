@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -18,7 +19,7 @@ import frc.robot.Constants;
 
 public class PivotSubsystem extends SubsystemBase {
 
-  private SparkMax motor;
+  private SparkFlex motor;
   private double position;
 
   private SparkMaxConfig config;
@@ -33,12 +34,13 @@ public class PivotSubsystem extends SubsystemBase {
   }
   /** Creates a new CoralPivotSubsystem. */
   public PivotSubsystem() {
-    motor = new SparkMax(Constants.MotorIDs.CoralPivot, MotorType.kBrushless);
+    motor = new SparkFlex(Constants.MotorIDs.coralPivot, MotorType.kBrushless);
     posControl = false;
+
     config = new SparkMaxConfig();
     config.inverted(false).idleMode(IdleMode.kBrake);
     config.encoder.positionConversionFactor(1).velocityConversionFactor(1);
-    config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(1.0, 0.0, 0.0);
+    config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(.1, 0.0, 0.0);
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -53,7 +55,11 @@ public class PivotSubsystem extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
-    posControl = false;
+    if (speed == 0) {
+      posControl = true;
+      position = motor.getEncoder().getPosition();
+    }
+    else posControl = false;
     motor.set(speed);
   }
 
@@ -71,8 +77,8 @@ public class PivotSubsystem extends SubsystemBase {
   public void periodic() {
     if (posControl) {
       if (position >= Constants.PivotConstants.floorPosition && position < Constants.PivotConstants.maxPosition) {
+        System.out.println(position);
         motor.getClosedLoopController().setReference(position, ControlType.kPosition);
-        if (isAtPosition()) posControl = false;
       }
     }
   }

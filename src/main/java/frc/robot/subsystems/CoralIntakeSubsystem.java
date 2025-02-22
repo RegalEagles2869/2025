@@ -26,6 +26,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
+    System.out.println(speed);
     motor.set(speed);
   }
 

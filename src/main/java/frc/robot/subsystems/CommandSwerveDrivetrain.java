@@ -34,6 +34,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
+import frc.robot.Inputs;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 // import com.pathplanner.lib.auto.AutoBuilder;
@@ -65,6 +67,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+    
+    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -202,7 +206,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         System.out.println(speeds.vyMetersPerSecond);
         System.out.println(speeds.omegaRadiansPerSecond);
         speedsC.withSpeeds(speeds);
-        applyRequest(() -> speedsC);
+        /*applyRequest(() -> drive.withVelocityX(speeds.vxMetersPerSecond) // Drive forward with negative Y (forward)
+            .withVelocityY(speeds.vyMetersPerSecond) // Drive left with negative X (left)
+            .withRotationalRate(speeds.omegaRadiansPerSecond)
+        );*/
+        applyRequest(() -> drive.withVelocityX(.1) // Drive forward with negative Y (forward)
+            .withVelocityY(.1) // Drive left with negative X (left)
+            .withRotationalRate(.1)
+        );
     }
     /**
      * Gets the speeds of the chassis
@@ -324,7 +335,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // Do this in either robot or subsystem init
         SmartDashboard.putData("Field", field);
         // Do this in either robot periodic or subsystem periodic
-        field.setRobotPose(getPose());
+        field.setRobotPose(getNegativePose());
     }
 
 

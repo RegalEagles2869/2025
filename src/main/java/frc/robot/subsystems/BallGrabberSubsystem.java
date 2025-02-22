@@ -28,8 +28,8 @@ public class BallGrabberSubsystem extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
-    motor1.set(speed);
-    motor2.set(-speed);
+    // motor1.set(speed);
+    // motor2.set(-speed);
   }
 
   @Override
