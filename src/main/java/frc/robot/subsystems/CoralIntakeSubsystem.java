@@ -30,6 +30,10 @@ public class CoralIntakeSubsystem extends SubsystemBase {
     motor.set(speed);
   }
 
+  public double getCurrent() {
+    return motor.getOutputCurrent();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

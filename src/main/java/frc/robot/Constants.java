@@ -30,7 +30,7 @@ public final class Constants {
     public static final int ballGrabber2 = 0;
     public static final int elevator = 6;
     public static final int elevatorFollow = 7;
-    public static final int climberID = 0;
+    public static final int climberID = 14;
     public static final int coralIntake = 5;
     public static final int coralPivot = 15;
   }
@@ -63,7 +63,15 @@ public final class Constants {
   public static class BallGrabberConstants {
   }
   public static class ClimberConstants {
+
+    public static final double floorPosition = 0;
+    public static final double goodPosition = 150;
+    public static final double maxPosition = 100000;
+    public static final double error = 0;
   }
   public static class CoralConstants {
+
+    public static final int minCurrentRunning = 0;
+    public static final int intakeSpeed = 1;
   }  
 }

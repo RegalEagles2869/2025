@@ -10,7 +10,6 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,12 +20,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.ResetGyro;
-import frc.robot.commands.SetElevatorPosition;
-import frc.robot.commands.SetElevatorSpeed;
-import frc.robot.commands.SetIntakeSpeed;
-import frc.robot.commands.SetPivotPosition;
-import frc.robot.commands.SetPivotSpeed;
+import frc.robot.commands.L1Coral;
+import frc.robot.commands.L2Coral;
+import frc.robot.commands.L3Coral;
+import frc.robot.commands.L4Coral;
+import frc.robot.commands.SetClimberPosition;
+import frc.robot.commands.SetClimberSpeed;
+import frc.robot.commands.SourceIntake;
 import frc.robot.commands.TestCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -56,20 +56,32 @@ public class RobotContainer {
         // Do this in either robot or subsystem init
         SmartDashboard.putData("Field", field);
         NamedCommands.registerCommand("TestCommand", new TestCommand());
+        NamedCommands.registerCommand("L1", new L1Coral());
+        NamedCommands.registerCommand("L2", new L2Coral());
+        NamedCommands.registerCommand("L3", new L3Coral());
+        NamedCommands.registerCommand("L4", new L4Coral());
+        NamedCommands.registerCommand("Order1", new L1Coral());
+        NamedCommands.registerCommand("Order2", new L2Coral());
+        NamedCommands.registerCommand("Order3", new L3Coral());
+        NamedCommands.registerCommand("Order4", new L4Coral());
+        NamedCommands.registerCommand("SourceIntake", new SourceIntake());
         // Do this in either robot periodic or subsystem periodic
         field.setRobotPose(drivetrain.getNegativePose());
         configureBindings();
     }
 
     private void configureBindings() {
-        Inputs.getResetGyro().onTrue(new ResetGyro());
-        Inputs.getSetElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.2));
-        Inputs.getSetElevatorSpeedDown().onTrue(new SetElevatorPosition(0));
-        Inputs.getPOVLeft().whileTrue(new SetIntakeSpeed(.1));
-        Inputs.getPOVRight().whileTrue(new SetIntakeSpeed(-.1));
+        // Inputs.getResetGyro().onTrue(new ResetGyro());
+        // Inputs.getSetElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.2));
+        // Inputs.getSetElevatorSpeedDown().onTrue(new SetElevatorPosition(0));
+        // Inputs.getPOVLeft().whileTrue(new SetIntakeSpeed(.1));
+        // Inputs.getPOVRight().whileTrue(new SetIntakeSpeed(-.1));
 
-        Inputs.getPivotDown().onTrue(new SetPivotPosition(0));
-        Inputs.getPivotUp().onTrue(new SetPivotSpeed(.1));
+        Inputs.getClimberUp().whileTrue(new SetClimberSpeed(.5));
+        Inputs.getClimberDown().whileTrue(new SetClimberSpeed(-.5));
+        Inputs.getPOVLeft().whileTrue(new SetClimberPosition(Constants.ClimberConstants.floorPosition));
+        Inputs.getPOVRight().whileTrue(new SetClimberPosition(Constants.ClimberConstants.goodPosition));
+        
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         /*drivetrain.setDefaultCommand(
@@ -107,55 +119,15 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+        // return new SequentialCommandGroup(new WaitCommand(5), new SetIntakeSpeed(.5));
         // return new PathPlannerAuto("fishAuto");
         try{
             // Load the path you want to follow using its name in the GUI
             PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
-            System.out.println("radFr");
 
             // Create a path following command using AutoBuilder. This will also trigger event markers.
             return AutoBuilder.followPath(path);
         } catch (Exception e) {
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
-            System.out.println("WOAH BALLS BALLS BALLS");
             DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
             return Commands.none();
         }

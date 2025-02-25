@@ -32,10 +32,10 @@ public class Inputs {
     public static Trigger getResetGyro() {
         return driver1.y();
     }
-    public static Trigger getPivotDown() {
+    public static Trigger getClimberUp() {
         return driver1.leftBumper();
     }
-    public static Trigger getPivotUp() {
+    public static Trigger getClimberDown() {
         return driver1.rightBumper();
     }
     
