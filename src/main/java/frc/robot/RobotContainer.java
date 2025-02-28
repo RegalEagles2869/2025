@@ -12,6 +12,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -24,8 +25,12 @@ import frc.robot.commands.L1Coral;
 import frc.robot.commands.L2Coral;
 import frc.robot.commands.L3Coral;
 import frc.robot.commands.L4Coral;
+import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetClimberPosition;
 import frc.robot.commands.SetClimberSpeed;
+import frc.robot.commands.SetElevatorPosition;
+import frc.robot.commands.SetElevatorSpeed;
+import frc.robot.commands.SetIntakeSpeed;
 import frc.robot.commands.SourceIntake;
 import frc.robot.commands.TestCommand;
 import frc.robot.generated.TunerConstants;
@@ -77,21 +82,22 @@ public class RobotContainer {
         // Inputs.getPOVLeft().whileTrue(new SetIntakeSpeed(.1));
         // Inputs.getPOVRight().whileTrue(new SetIntakeSpeed(-.1));
 
-        Inputs.getClimberUp().whileTrue(new SetClimberSpeed(.5));
-        Inputs.getClimberDown().whileTrue(new SetClimberSpeed(-.5));
-        Inputs.getPOVLeft().whileTrue(new SetClimberPosition(Constants.ClimberConstants.floorPosition));
-        Inputs.getPOVRight().whileTrue(new SetClimberPosition(Constants.ClimberConstants.goodPosition));
+        // Inputs.getClimberUp().whileTrue(new SetClimberSpeed(1));
+        // Inputs.getClimberDown().whileTrue(new SetClimberSpeed(-1));
+        // Inputs.getPOVLeft().whileTrue(new SetClimberPosition(Constants.ClimberConstants.floorPosition));
+        // Inputs.getPOVRight().whileTrue(new SetClimberPosition(Constants.ClimberConstants.goodPosition));
+        Inputs.getPOVRight().whileTrue(drivetrain.moveTo(new Pose2d(0, 0, new Rotation2d(0))));
         
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        /*drivetrain.setDefaultCommand(
+        drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplier) // Drive forward with negative Y (forward)
                     .withVelocityY(Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplier) // Drive left with negative X (left)
                     .withRotationalRate(Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplier) // Drive counterclockwise with negative X (left)
             )
-        );*/
+        );
 
         joystick.x().whileTrue(
             drivetrain.applyRequest(() ->
@@ -119,17 +125,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        // return new SequentialCommandGroup(new WaitCommand(5), new SetIntakeSpeed(.5));
-        // return new PathPlannerAuto("fishAuto");
-        try{
-            // Load the path you want to follow using its name in the GUI
-            PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
-
-            // Create a path following command using AutoBuilder. This will also trigger event markers.
-            return AutoBuilder.followPath(path);
-        } catch (Exception e) {
-            DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
-            return Commands.none();
-        }
+        return drivetrain.moveTo();
     }
 }

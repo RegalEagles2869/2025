@@ -21,7 +21,7 @@ public class ClimberSubsystem extends SubsystemBase {
   private double position;
   private double kP = 5;
   private double kD = 0;
-  private double currentLimit = 0;
+  private double currentLimit = 40;
   private final PositionVoltage request = new PositionVoltage(0).withSlot(0);
   
   private static ClimberSubsystem instance;
