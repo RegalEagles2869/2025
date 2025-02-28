@@ -31,7 +31,7 @@ public final class Constants {
     public static final int elevator = 6;
     public static final int elevatorFollow = 7;
     public static final int climberID = 14;
-    public static final int coralIntake = 5;
+    public static final int coralIntake = 20;
     public static final int coralPivot = 15;
   }
   public static class ElevatorConstants {

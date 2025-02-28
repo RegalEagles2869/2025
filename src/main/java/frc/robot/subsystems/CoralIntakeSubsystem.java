@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,7 +12,7 @@ import frc.robot.Constants;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
   /** Creates a new CoralIntakeSubsystem. */
-  private SparkMax motor;
+  private SparkFlex motor;
 
   private static CoralIntakeSubsystem instance;
 
@@ -22,7 +22,7 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   }
 
   public CoralIntakeSubsystem() {
-    motor = new SparkMax(Constants.MotorIDs.coralIntake, MotorType.kBrushless);
+    motor = new SparkFlex(Constants.MotorIDs.coralIntake, MotorType.kBrushless);
   }
 
   public void setSpeed(double speed) {

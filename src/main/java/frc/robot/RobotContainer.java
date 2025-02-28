@@ -76,28 +76,28 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        // Inputs.getResetGyro().onTrue(new ResetGyro());
-        // Inputs.getSetElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.2));
-        // Inputs.getSetElevatorSpeedDown().onTrue(new SetElevatorPosition(0));
-        // Inputs.getPOVLeft().whileTrue(new SetIntakeSpeed(.1));
-        // Inputs.getPOVRight().whileTrue(new SetIntakeSpeed(-.1));
+        Inputs.getResetGyro().onTrue(new ResetGyro());
+        Inputs.getSetElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.2));
+        Inputs.getSetElevatorSpeedDown().onTrue(new SetElevatorPosition(0));
+        Inputs.getPOVLeft().whileTrue(new SetIntakeSpeed(.1));
+        Inputs.getPOVRight().whileTrue(new SetIntakeSpeed(-.1));
 
         // Inputs.getClimberUp().whileTrue(new SetClimberSpeed(1));
         // Inputs.getClimberDown().whileTrue(new SetClimberSpeed(-1));
         // Inputs.getPOVLeft().whileTrue(new SetClimberPosition(Constants.ClimberConstants.floorPosition));
         // Inputs.getPOVRight().whileTrue(new SetClimberPosition(Constants.ClimberConstants.goodPosition));
-        Inputs.getPOVRight().whileTrue(drivetrain.moveTo(new Pose2d(0, 0, new Rotation2d(0))));
+        // Inputs.getPOVRight().whileTrue(drivetrain.moveTo(new Pose2d(0, 0, new Rotation2d(0))));
         
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
+        /*drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplier) // Drive forward with negative Y (forward)
                     .withVelocityY(Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplier) // Drive left with negative X (left)
                     .withRotationalRate(Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplier) // Drive counterclockwise with negative X (left)
             )
-        );
+        );*/
 
         joystick.x().whileTrue(
             drivetrain.applyRequest(() ->

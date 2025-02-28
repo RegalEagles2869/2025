@@ -40,6 +40,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     motorFollow = new SparkMax(Constants.MotorIDs.elevatorFollow, MotorType.kBrushless);
     position = Constants.ElevatorConstants.floorPosition;
     posControl = false;
+    motor.getEncoder().setPosition(0);
 
     config = new SparkMaxConfig();
     config.inverted(false).idleMode(IdleMode.kBrake);
