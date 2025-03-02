@@ -107,7 +107,7 @@ public class RobotContainer {
                 Inputs.getElevatorL4().onTrue(new SetElevatorPosition(Constants.ElevatorConstants.l4Position));
                 Inputs.getClimberNeutral().onTrue(new SetClimberPosition(Constants.ClimberConstants.floorPosition));
                 Inputs.getClimberGood().onTrue(new SetClimberPosition(Constants.ClimberConstants.goodPosition));
-                
+
                 Inputs.getElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.2));
                 Inputs.getElevatorSpeedDown().whileTrue(new SetElevatorSpeed(-.2));
                 Inputs.getIntakeIn().whileTrue(new SetIntakeSpeed(-Constants.CoralConstants.intakeSpeed));
@@ -120,22 +120,20 @@ public class RobotContainer {
 
                 // Note that X is defi,m ned as forward according to WPILib convention,
                 // and Y is defined as to the left according to WPILib convention.
-                /*
-                 * drivetrain.setDefaultCommand(
-                 * // Drivetrain will execute this command periodically
-                 * drivetrain.applyRequest(() ->
-                 * drive.withVelocityX(Inputs.getTranslationX() * MaxSpeed *
-                 * Constants.OperatorConstants.speedMultiplier) // Drive forward with negative Y
-                 * (forward)
-                 * .withVelocityY(Inputs.getTranslationY() * MaxSpeed *
-                 * Constants.OperatorConstants.speedMultiplier) // Drive left with negative X
-                 * (left)
-                 * .withRotationalRate(Inputs.getRotation() * MaxAngularRate *
-                 * Constants.OperatorConstants.speedMultiplier) // Drive counterclockwise with
-                 * negative X (left)
-                 * )
-                 * );
-                 */
+
+                 drivetrain.setDefaultCommand(
+                 // Drivetrain will execute this command periodically
+                drivetrain.applyRequest(() ->
+                 drive.withVelocityX(Inputs.getTranslationX() * MaxSpeed *
+                 Constants.OperatorConstants.speedMultiplier) // Drive forward with negative Y
+                //  (forward)
+                 .withVelocityY(Inputs.getTranslationY() * MaxSpeed *
+                 Constants.OperatorConstants.speedMultiplier) // Drive left with negative X
+                (left)
+                .withRotationalRate(Inputs.getRotation() * MaxAngularRate *
+                Constants.OperatorConstants.speedMultiplier) // Drive counterclockwise with
+                //  negative X (left)
+                  ));
 
                 joystick.x().whileTrue(
                                 drivetrain.applyRequest(() -> driveSlow
@@ -180,7 +178,7 @@ public class RobotContainer {
         }
 
         public Command getAutonomousCommand() {
-                return drivetrain.moveTo(new Pose2d(1, 0, new Rotation2d(0)));
-
+                // return drivetrain.moveTo(new Pose2d(1, 0, new Rotation2d(0)));
+                return new WaitCommand(.1);
         }
 }
