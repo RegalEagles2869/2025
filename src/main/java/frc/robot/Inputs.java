@@ -46,22 +46,22 @@ public class Inputs {
     public static Trigger getElevatorL4() {
         return operatorBoard.button(3);
     }
-    public static Trigger getClimberGood() {
+    public static Trigger getIntakeOut() {
         return operatorBoard.button(4);
     }
-    public static Trigger getClimberNeutral() {
+    public static Trigger getClimberGood() {
         return operatorBoard.button(5);
     }
-    public static Trigger getElevatorSpeedUp() {
+    public static Trigger getClimberNeutral() {
         return operatorBoard.button(6);
     }
-    public static Trigger getElevatorSpeedDown() {
+    public static Trigger getElevatorSpeedUp() {
         return operatorBoard.button(7);
     }
-    public static Trigger getIntakeIn() {
+    public static Trigger getElevatorSpeedDown() {
         return operatorBoard.button(8);
     }
-    public static Trigger getIntakeOut() {
+    public static Trigger getIntakeIn() {
         return operatorBoard.button(9);
     }
     public static Trigger getClimberUp() {
