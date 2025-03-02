@@ -14,6 +14,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -75,7 +76,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     tarPos += changePos;
   }
 
-  public double getTarPos() {
+  public double getPos() {
     return motor.getEncoder().getPosition();
   }
 
@@ -104,7 +105,7 @@ public class ElevatorSubsystem extends SubsystemBase {
       low = true;
       bottomed = false;
     }
-    if (getTarPos() > 0.1 && getCurrent() < Constants.ElevatorConstants.stallDetectCur) {
+    if (getPos() > 0.1 && getCurrent() < Constants.ElevatorConstants.stallDetectCur) {
       // double cur = getCurrent();
       // if (cur > maxcur) {
       // maxcur = cur;
@@ -135,7 +136,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public boolean isAtPosition() {
-    double dif = getTarPos() - tarPos;
+    double dif = getPos() - tarPos;
     // SmartDashboard.putNumber("dif", dif);
     // System.out.println(Math.abs(dif) < Constants.ElevatorConstants.error);
     return Math.abs(dif) < Constants.ElevatorConstants.error;
@@ -177,14 +178,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     // System.out.print(" \t");
     // System.out.println(motor.getOutputCurrent());
 
-    double dif = getTarPos() - tarPos;
+    double dif = getPos() - tarPos;
     SmartDashboard.putNumber("dif", dif);
     SmartDashboard.putNumber("cur", getCurrent());
-    SmartDashboard.putNumber("positionLol", getTarPos());
+    SmartDashboard.putNumber("positionLol", getPos());
     if (posControl && tarPos >= Constants.ElevatorConstants.floorPosition
         && tarPos < Constants.ElevatorConstants.maxPosition) {
       motor.getClosedLoopController().setReference(tarPos, ControlType.kPosition);
     }
+    
   }
 
 }

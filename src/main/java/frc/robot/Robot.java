@@ -58,7 +58,11 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // if (getPos() > Constants.ElevatorConstants.floorPosition) {
+    //   CommandScheduler.getInstance().schedule(null);
+    // }
+  }
 
   @Override
   public void teleopExit() {}

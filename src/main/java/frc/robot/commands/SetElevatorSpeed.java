@@ -38,8 +38,8 @@ public class SetElevatorSpeed extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if ((elevator.getTarPos() < Constants.ElevatorConstants.maxPosition && speed > 0)
-      || (elevator.getTarPos() > Constants.ElevatorConstants.floorPosition && speed < 0)) {
+    if ((elevator.getPos() < Constants.ElevatorConstants.maxPosition && speed > 0)
+      || (elevator.getPos() > Constants.ElevatorConstants.floorPosition && speed < 0)) {
       // elevator.setSpeed(0);
       // return true;
     }

@@ -37,15 +37,18 @@ import frc.robot.commands.RumbleRumble;
 import frc.robot.commands.SetClimberPosition;
 import frc.robot.commands.SetClimberSpeed;
 import frc.robot.commands.SetElevatorPosition;
+import frc.robot.commands.ElevatorAndSwerve;
 import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.SetIntakeSpeed;
 import frc.robot.commands.SourceIntake;
 import frc.robot.commands.TestCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 public class RobotContainer {
 	private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
+	private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 	// speed
 	private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
 	// second
@@ -134,44 +137,63 @@ public class RobotContainer {
 		// Constants.OperatorConstants.speedMultiplier) // Drive counterclockwise with
 		// // negative X (left)
 		// ));
+		// elevator.getPos() > 
 		drivetrain.setDefaultCommand(
-				// Drivetrain will execute this command periodically
-				drivetrain.applyRequest(() -> drive
-						.withVelocityX(
-								Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
-						// Drive forward with negative Y (forward)
-						.withVelocityY(
-								Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
-						// Drive left with negative X (left)
-						.withRotationalRate(
-								Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplier)
-				// Drive counterclockwise with negative X (left)
-				));
+			// Drivetrain will execute this command periodically
+			drivetrain.applyRequest(() -> drive
+					.withVelocityX(
+							Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
+					// Drive forward with negative Y (forward)
+					.withVelocityY(
+							Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
+					// Drive left with negative X (left)
+					.withRotationalRate(
+							Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplier)
+			// Drive counterclockwise with negative X (left)
+			)
+		);
 
+		
+		new ElevatorAndSwerve(() -> true).whileTrue(
+			// joystick.x().whileTrue(
+			drivetrain.applyRequest(() -> driveSlow
+					.withVelocityX(Inputs.getTranslationX() * MaxSpeed
+							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+					// forward
+					// with
+					// negative
+					// Y
+					// (forward)
+					.withVelocityY(Inputs.getTranslationY() * MaxSpeed
+							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+					.withRotationalRate(Inputs.getRotation() * MaxAngularRate
+							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+			// counterclockwise
+			// with
+			// negative
+			// X
+			// (left)
+			));
 		joystick.x().whileTrue(
-				drivetrain.applyRequest(() -> driveSlow
-						.withVelocityX(Inputs.getTranslationX() * MaxSpeed
-								* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
-						// forward
-						// with
-						// negative
-						// Y
-						// (forward)
-						.withVelocityY(Inputs.getTranslationY() * MaxSpeed
-								* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
-						// left
-						// with
-						// negative
-						// X
-						// (left)
-						.withRotationalRate(Inputs.getRotation() * MaxAngularRate
-								* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
-				// counterclockwise
-				// with
-				// negative
-				// X
-				// (left)
-				));
+			// joystick.x().whileTrue(
+			drivetrain.applyRequest(() -> driveSlow
+					.withVelocityX(Inputs.getTranslationX() * MaxSpeed
+							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+					// forward
+					// with
+					// negative
+					// Y
+					// (forward)
+					.withVelocityY(Inputs.getTranslationY() * MaxSpeed
+							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+					.withRotationalRate(Inputs.getRotation() * MaxAngularRate
+							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+			// counterclockwise
+			// with
+			// negative
+			// X
+			// (left)
+			));
 		joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
 		joystick.b().whileTrue(drivetrain.applyRequest(
 				() -> point.withModuleDirection(

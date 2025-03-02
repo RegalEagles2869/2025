@@ -22,7 +22,8 @@ public final class Constants {
 	public static class OperatorConstants {
 		public static final int kDriverControllerPort = 0;
 		public static final int kOperatorControllerPort = 1;
-		public static final double speedMultiplier = 1;
+		public static double speedMultiplier = 1;
+		public static final double speedMultiplierElev = 0.2;
 		public static final double speedMultiplierSlowMode = .1;
 		public static final double driveDeadBand = .1;
 		public static final double rotationDeadBand = .1;
