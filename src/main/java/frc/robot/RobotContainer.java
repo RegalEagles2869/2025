@@ -162,6 +162,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return drivetrain.moveTo(new Pose2d(0, 0, new Rotation2d(0)));
+        return drivetrain.moveTo(new Pose2d(1, 0, new Rotation2d(0)));
+
     }
 }

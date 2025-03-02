@@ -37,19 +37,19 @@ public class Inputs {
         return Constants.OperatorConstants.speedMultiplier;
     }
 
-    public static Trigger getElevatorL4() {
+    public static Trigger getElevatorL2() {
         return operatorBoard.button(1);
     }
-    public static Trigger getElevatorL2() {
+    public static Trigger getElevatorL3() {
         return operatorBoard.button(2);
     }
-    public static Trigger getElevatorL3() {
+    public static Trigger getElevatorL4() {
         return operatorBoard.button(3);
     }
-    public static Trigger getClimberNeutral() {
+    public static Trigger getClimberGood() {
         return operatorBoard.button(4);
     }
-    public static Trigger getClimberGood() {
+    public static Trigger getClimberNeutral() {
         return operatorBoard.button(5);
     }
     public static Trigger getElevatorSpeedUp() {
