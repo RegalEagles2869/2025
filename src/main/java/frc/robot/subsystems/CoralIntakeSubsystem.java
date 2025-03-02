@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -12,7 +13,7 @@ import frc.robot.Constants;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
   /** Creates a new CoralIntakeSubsystem. */
-  private SparkFlex motor;
+  private TalonFX motor;
 
   private static CoralIntakeSubsystem instance;
 
@@ -22,20 +23,14 @@ public class CoralIntakeSubsystem extends SubsystemBase {
   }
 
   public CoralIntakeSubsystem() {
-    motor = new SparkFlex(Constants.MotorIDs.coralIntake, MotorType.kBrushless);
+    motor = new TalonFX(Constants.MotorIDs.coralIntake);
   }
 
   public void setSpeed(double speed) {
-    System.out.println(speed);
     motor.set(speed);
   }
 
   public double getCurrent() {
-    return motor.getOutputCurrent();
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+    return motor.getSupplyCurrent().getValueAsDouble();
   }
 }

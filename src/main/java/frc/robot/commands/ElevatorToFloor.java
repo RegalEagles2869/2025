@@ -4,24 +4,17 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class L1Coral extends SequentialCommandGroup {
-  /** Creates a new L1Coral. */
-  public L1Coral() {
-    addCommands(
-      new SetElevatorPosition(Constants.ElevatorConstants.l1Position),
-      new ParallelDeadlineGroup(
-        new WaitCommand(Constants.CoralConstants.intakeTime), 
-        new SetIntakeSpeed(Constants.CoralConstants.intakeSpeed)
-      ),
-      new ElevatorToFloor()
-    );
+public class ElevatorToFloor extends SequentialCommandGroup {
+  /** Creates a new Floor. */
+  public ElevatorToFloor() {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands(new SetElevatorPosition(Constants.ElevatorConstants.floorPosition), new ElevatorToFloorFinal());
   }
 }

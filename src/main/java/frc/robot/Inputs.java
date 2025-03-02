@@ -16,27 +16,9 @@ public class Inputs {
     private static final CommandXboxController driver1 = new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort); 
     private static final CommandGenericHID operatorBoard = new CommandGenericHID(Constants.OperatorConstants.kOperatorControllerPort); 
 
-    public static Trigger getSetElevatorSpeedUp() {
-        return driver1.povUp();
-    }
-    public static Trigger getSetElevatorSpeedDown() {
-        return driver1.povDown();
-    }
-    public static Trigger getPOVLeft() {
-        return driver1.povLeft();
-    }
-    public static Trigger getPOVRight() {
-        return driver1.povRight();
-    }
-    
+
     public static Trigger getResetGyro() {
         return driver1.y();
-    }
-    public static Trigger getClimberUp() {
-        return driver1.leftBumper();
-    }
-    public static Trigger getClimberDown() {
-        return driver1.rightBumper();
     }
     
     // DID YOU JUST UPDATE CTRE SWERVE? Remember to invert the drive motors in TunerConstants
@@ -55,41 +37,47 @@ public class Inputs {
         return Constants.OperatorConstants.speedMultiplier;
     }
 
-    public static Trigger getAdjustElevatorUp() {
+    public static Trigger getElevatorL4() {
         return operatorBoard.button(1);
     }
-    public static Trigger getAdjustElevatorDown() {
+    public static Trigger getElevatorL2() {
         return operatorBoard.button(2);
     }
-    public static Trigger getFloorPosition() {
+    public static Trigger getElevatorL3() {
         return operatorBoard.button(3);
     }
-    public static Trigger getL1Coral() {
+    public static Trigger getClimberNeutral() {
         return operatorBoard.button(4);
     }
-    public static Trigger getL2Coral() {
+    public static Trigger getClimberGood() {
         return operatorBoard.button(5);
     }
-    public static Trigger getL3Coral() {
+    public static Trigger getElevatorSpeedUp() {
         return operatorBoard.button(6);
     }
-    public static Trigger getL4Coral() {
+    public static Trigger getElevatorSpeedDown() {
         return operatorBoard.button(7);
     }
-    public static Trigger getBallIntake() {
+    public static Trigger getIntakeIn() {
         return operatorBoard.button(8);
     }
-    public static Trigger getBallOuttake() {
+    public static Trigger getIntakeOut() {
         return operatorBoard.button(9);
     }
-    public static Trigger getAdjustPivotUp() {
+    public static Trigger getClimberUp() {
         return operatorBoard.button(10);
     }
-    public static Trigger getAdjustPivotDown() {
+    public static Trigger getClimberDown() {
         return operatorBoard.button(11);
     }
     public static Trigger getRUMBLE() {
         return operatorBoard.button(12);
+    }
+    public static Trigger getTest() {
+        return operatorBoard.button(13);
+    }
+    public static Trigger getElevatorDown() {
+        return operatorBoard.button(14);
     }
 
     public static void RUMBLERUMBLE(double rumble) {

@@ -4,46 +4,56 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SetElevatorSpeed extends Command {
+public class ElevatorToFloorFinal extends Command {
   private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
-  private double speed;
-  /** Creates a new SetElevatorSpeed. */
-  public SetElevatorSpeed(double speed) {
+
+  /** Creates a new ElevatorToFloor. */
+  public ElevatorToFloorFinal() {
     addRequirements(elevator);
-    this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    elevator.bottomed = false;
+    elevator.low = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setSpeed(speed);
+    elevator.ending();
+    // if (elevator.getTarPos() < Constants.ElevatorConstants.slowPose) {
+    //   // elevator.setSpeed(-.01);
+    // } else {
+    //   elevator.setSpeedWithoutPID(-.5);
+    //   SmartDashboard.putString("state", "speed down");
+
+    //   // elevator.low = false;
+    // }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    elevator.setSpeed(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if ((elevator.getTarPos() < Constants.ElevatorConstants.maxPosition && speed > 0)
-      || (elevator.getTarPos() > Constants.ElevatorConstants.floorPosition && speed < 0)) {
-      // elevator.setSpeed(0);
-      // return true;
-    }
-
-    return false;
+    // if (elevator.getCurrent() >= Constants.ElevatorConstants.maxCurrent
+    // || elevator.getPosition() <= Constants.ElevatorConstants.floorPosition) {
+    // elevator.setSpeedWithoutPID(0);
+    // elevator.setToCoast();
+    // return true;
+    // }
+    return elevator.bottomed;
   }
 }

@@ -4,7 +4,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -13,6 +15,13 @@ import frc.robot.Constants;
 public class L4Coral extends SequentialCommandGroup {
   /** Creates a new L1Coral. */
   public L4Coral() {
-    addCommands(new SetElevatorPosition(Constants.ElevatorConstants.l4Position), new SetElevatorPosition(Constants.PivotConstants.l4Position), new SetIntakeSpeedWait(-Constants.CoralConstants.intakeSpeed));
+    addCommands(
+      new SetElevatorPosition(Constants.ElevatorConstants.l4Position),
+      new ParallelDeadlineGroup(
+        new WaitCommand(Constants.CoralConstants.intakeTime), 
+        new SetIntakeSpeed(Constants.CoralConstants.intakeSpeed)
+      ),
+      new ElevatorToFloor()
+    );
   }
 }

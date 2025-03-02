@@ -76,7 +76,6 @@ public class PivotSubsystem extends SubsystemBase {
   public void periodic() {
     if (posControl) {
       if (position >= Constants.PivotConstants.floorPosition && position < Constants.PivotConstants.maxPosition) {
-        System.out.println(position);
         motor.getClosedLoopController().setReference(position, ControlType.kPosition);
       }
     }
