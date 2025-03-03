@@ -173,7 +173,8 @@ public class RobotContainer {
 			// negative
 			// X
 			// (left)
-			));
+			)
+		);
 		joystick.x().whileTrue(
 			// joystick.x().whileTrue(
 			drivetrain.applyRequest(() -> driveSlow
@@ -214,6 +215,6 @@ public class RobotContainer {
 
 	public Command getAutonomousCommand() {
 		// return drivetrain.moveTo(new Pose2d(1, 0, new Rotation2d(0)));
-		return new WaitCommand(.1);
+		return new ParallelDeadlineGroup(new WaitCommand(5), new DriveToPose(new Pose2d(.5, 0, new Rotation2d(0))));
 	}
 }
