@@ -10,6 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -77,9 +78,10 @@ public class RobotContainer {
 
 	private final CommandXboxController joystick = new CommandXboxController(0);
 
-	public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+	public final CommandSwerveDrivetrain drivetrain;
 
 	public RobotContainer() {
+		drivetrain = TunerConstants.createDrivetrain();
 		Field2d field = new Field2d();
 		// Do this in either robot or subsystem init
 		SmartDashboard.putData("Field", field);
@@ -213,8 +215,18 @@ public class RobotContainer {
 		drivetrain.registerTelemetry(logger::telemeterize);
 	}
 
+
 	public Command getAutonomousCommand() {
 		// return drivetrain.moveTo(new Pose2d(1, 0, new Rotation2d(0)));
-		return new ParallelDeadlineGroup(new WaitCommand(5), new DriveToPose(new Pose2d(.5, 0, new Rotation2d(0))));
+		// return new ParallelDeadlineGroup(new WaitCommand(5), new DriveToPose(new Pose2d(0, .5, new Rotation2d(0))));
+		// drivetrain.getAuto("TheSilly6");
+		// return new WaitCommand(0);
+		try {
+			//  PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory("TestPath");
+			 return drivetrain.getAuto("TestPath2");
+		}
+		catch (Exception e) {
+			return new WaitCommand(0);
+		}
 	}
 }

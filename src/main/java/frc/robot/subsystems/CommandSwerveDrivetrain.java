@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -13,29 +14,37 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.ConstraintsZone;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PointTowardsZone;
+import com.pathplanner.lib.path.RotationTarget;
 import com.pathplanner.lib.path.Waypoint;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -190,8 +199,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 ),
                 new PPHolonomicDriveController(
                     // PID constants for translation
+                    // new PIDConstants(10, 0, 0),
                     new PIDConstants(10, 0, 0),
                     // PID constants for rotation
+                    //new PIDConstants(7, 0, 0)
                     new PIDConstants(7, 0, 0)
                 ),
                 config,
@@ -202,6 +213,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         } catch (Exception ex) {
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
         }
+    }
+
+    public ChassisSpeeds getSpeed(ChassisSpeeds speeds) {
+        return new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
     }
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -293,7 +308,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("f", getState().Pose.getRotation().getDegrees());
+        SmartDashboard.putNumber("X", getState().Pose.getX());
+        SmartDashboard.putNumber("Y", getState().Pose.getY());
+        SmartDashboard.putNumber("Deg", getState().Pose.getRotation().getDegrees());
         /*
          * Periodically try to apply the operator perspective.
          * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
@@ -368,25 +385,65 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     
+    /**
+     * Gets the autonomous command from Path Planner
+     * @param autoName name of the autonomous
+     * @return PathPlannerAuto to run
+     */
+    public Command getAuto(String autoName){
+        try {
+            SmartDashboard.putNumber("fish degress hhhaha", PathPlannerAuto.getPathGroupFromAutoFile(autoName).get(0).getStartingDifferentialPose().getRotation().getDegrees());
+            Pose2d poseLolHahaha = new Pose2d(
+                PathPlannerAuto.getPathGroupFromAutoFile(autoName).get(0).getStartingDifferentialPose().getX(),
+                PathPlannerAuto.getPathGroupFromAutoFile(autoName).get(0).getStartingDifferentialPose().getY(),
+                new Rotation2d(Math.PI)
+            );
+            resetPose(poseLolHahaha);
+        }
+        catch (Exception e) {
+            SmartDashboard.putNumber("fish degress hhhaha", -1);
+        }
+        return new PathPlannerAuto(autoName);
+    }
     
     public Command moveTo(Pose2d... poses) {
         // Create a list of waypoints from poses. Each pose represents one waypoint.
         // The rotation component of the pose should be the direction of travel. Do not use holonomic rotation.
-        ArrayList<Pose2d> poseList = new ArrayList<>();
-        poseList.add(getState().Pose);
-        for (Pose2d posLol : poses) poseList.add(posLol);
-        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(poseList);
+        ArrayList<Waypoint> poseList = new ArrayList<>();
+        ArrayList<RotationTarget> rot = new ArrayList<>();
+        poseList.add(getState().Pose.getTranslation(), new Rotation2d(0));
+        for (Pose2d posLol : poses) {
+            poseList.add(posLol.getTranslation());
+            rot.add(rot);
+        }
 
         PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
         // PathConstraints constraints = PathConstraints.unlimitedConstraints(12.0); // You can also use unlimited constraints, only limited by motor torque and nominal battery voltage
-
+        IdealStartingState start = new IdealStartingState(0, getState().Pose.getRotation());
         // Create the path using the waypoints created above
         PathPlannerPath path = new PathPlannerPath(
-                waypoints,
+                poseList,
+                rot,
+                new ArrayList<PointTowardsZone>(),
+                new ArrayList<ConstraintsZone>(),
+                new ArrayList<EventMarker>(),
                 constraints,
-                null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-                new GoalEndState(0.0, Rotation2d.fromDegrees(0)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+                start, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
+                new GoalEndState(0.0, Rotation2d.fromDegrees(0)),
+                false // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
         );
         return AutoBuilder.followPath(path);
     }
+    
+    // public void doLimelightStuff() {
+    //     if (getArray()[0] != 0) SmartDashboard.putNumberArray("limelight bot pose", clean(getArray()));
+    //     try{
+    //         if(SwerveSubsystem.getInstance().getRobotRelativeSpeeds().vxMetersPerSecond<0.25||SwerveSubsystem.getInstance().getRobotRelativeSpeeds().vyMetersPerSecond<0.25){
+    //         if(Constants.currentRobotState != RobotState.AUTON){
+    //             //updateVisionOdometry();
+    //         }
+    //         }
+    //     }
+    //     catch(Exception e) {}
+    // }
 }

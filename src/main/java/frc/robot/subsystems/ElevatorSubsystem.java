@@ -139,6 +139,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     double dif = getPos() - tarPos;
     // SmartDashboard.putNumber("dif", dif);
     // System.out.println(Math.abs(dif) < Constants.ElevatorConstants.error);
+    System.out.println(Math.abs(dif) < Constants.ElevatorConstants.error);
     return Math.abs(dif) < Constants.ElevatorConstants.error;
     // if ((getPosition() >= (position - Constants.ElevatorConstants.error))
     // && (getPosition() <= (position + Constants.ElevatorConstants.error)))

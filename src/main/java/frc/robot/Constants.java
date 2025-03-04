@@ -54,7 +54,7 @@ public final class Constants {
 		public static final double l4Position = 70.19239807128906;
 		public static final double l4Position2 = l4Position + 1;
 		public static final double sourcePosition = 0;
-		public static final double error = 0.2;
+		public static final double error = 0.8;
 		public static final double stallDetectCur = 40.0;
 		public static final double slowPose = 5.0;
 	}
