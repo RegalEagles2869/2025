@@ -23,10 +23,10 @@ public class Inputs {
     
     // DID YOU JUST UPDATE CTRE SWERVE? Remember to invert the drive motors in TunerConstants
     public static double getTranslationX() {
-        return driver1.getLeftY();
+        return -driver1.getLeftY();
     }
     public static double getTranslationY() {
-        return driver1.getLeftX();
+        return -driver1.getLeftX();
     }
     public static double getRotation() {
         double speed =  -driver1.getRightX();

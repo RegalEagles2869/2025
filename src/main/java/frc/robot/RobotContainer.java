@@ -223,7 +223,7 @@ public class RobotContainer {
 		// return new WaitCommand(0);
 		try {
 			//  PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory("TestPath");
-			 return drivetrain.getAuto("TestPath2");
+			 return drivetrain.getAuto("TheSilly6");
 		}
 		catch (Exception e) {
 			return new WaitCommand(0);

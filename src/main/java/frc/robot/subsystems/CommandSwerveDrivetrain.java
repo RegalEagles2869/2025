@@ -19,15 +19,18 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.ConstraintsZone;
+import com.pathplanner.lib.path.EventMarker;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPoint;
 import com.pathplanner.lib.path.PointTowardsZone;
 import com.pathplanner.lib.path.RotationTarget;
 import com.pathplanner.lib.path.Waypoint;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -45,6 +48,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -200,10 +204,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 new PPHolonomicDriveController(
                     // PID constants for translation
                     // new PIDConstants(10, 0, 0),
-                    new PIDConstants(10, 0, 0),
+                    new PIDConstants(2, 0, .05),
                     // PID constants for rotation
                     //new PIDConstants(7, 0, 0)
-                    new PIDConstants(7, 0, 0)
+                    new PIDConstants(2, 0, .05)
                 ),
                 config,
                 // Assume the path needs to be flipped for Red vs Blue, this is normally the case
@@ -308,9 +312,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("X", getState().Pose.getX());
-        SmartDashboard.putNumber("Y", getState().Pose.getY());
-        SmartDashboard.putNumber("Deg", getState().Pose.getRotation().getDegrees());
         /*
          * Periodically try to apply the operator perspective.
          * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
@@ -318,6 +319,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * Otherwise, only check and apply the operator perspective if the DS is disabled.
          * This ensures driving behavior doesn't change until an explicit disable event occurs during testing.
          */
+        doLimelightStuff();
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
                 setOperatorPerspectiveForward(
@@ -329,8 +331,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
         // Do this in either robot or subsystem init
-        field.setRobotPose(getState().Pose);
-        SmartDashboard.putData("Field", field);
+        // field.setRobotPose(getState().Pose);
+        // SmartDashboard.putData("Field", field);
         // Do this in either robot periodic or subsystem periodic
     }
 
@@ -407,43 +409,41 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
     
     public Command moveTo(Pose2d... poses) {
+        System.out.println("fish");
         // Create a list of waypoints from poses. Each pose represents one waypoint.
         // The rotation component of the pose should be the direction of travel. Do not use holonomic rotation.
-        ArrayList<Waypoint> poseList = new ArrayList<>();
-        ArrayList<RotationTarget> rot = new ArrayList<>();
-        poseList.add(getState().Pose.getTranslation(), new Rotation2d(0));
+        ArrayList<PathPoint> poseList = new ArrayList<>();
+        poseList.add(new PathPoint(getState().Pose.getTranslation(), new RotationTarget(0, getState().Pose.getRotation())));
         for (Pose2d posLol : poses) {
-            poseList.add(posLol.getTranslation());
-            rot.add(rot);
+            poseList.add(new PathPoint(posLol.getTranslation(), new RotationTarget(0, posLol.getRotation())));
         }
 
         PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
         // PathConstraints constraints = PathConstraints.unlimitedConstraints(12.0); // You can also use unlimited constraints, only limited by motor torque and nominal battery voltage
-        IdealStartingState start = new IdealStartingState(0, getState().Pose.getRotation());
+        GoalEndState end = new GoalEndState(1, poses[poses.length - 1].getRotation());
         // Create the path using the waypoints created above
-        PathPlannerPath path = new PathPlannerPath(
-                poseList,
-                rot,
-                new ArrayList<PointTowardsZone>(),
-                new ArrayList<ConstraintsZone>(),
-                new ArrayList<EventMarker>(),
-                constraints,
-                start, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-                new GoalEndState(0.0, Rotation2d.fromDegrees(0)),
-                false // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-        );
+        PathPlannerPath path = PathPlannerPath.fromPathPoints(poseList, constraints, end);
         return AutoBuilder.followPath(path);
     }
     
-    // public void doLimelightStuff() {
-    //     if (getArray()[0] != 0) SmartDashboard.putNumberArray("limelight bot pose", clean(getArray()));
-    //     try{
-    //         if(SwerveSubsystem.getInstance().getRobotRelativeSpeeds().vxMetersPerSecond<0.25||SwerveSubsystem.getInstance().getRobotRelativeSpeeds().vyMetersPerSecond<0.25){
-    //         if(Constants.currentRobotState != RobotState.AUTON){
-    //             //updateVisionOdometry();
-    //         }
-    //         }
-    //     }
-    //     catch(Exception e) {}
-    // }
+  public double[] clean(double[] a) {
+    double[] array = new double[a.length];
+    for (int i = 0; i < a.length; i++)
+      array[i] = ((double)(int)(a[i] * 100 + .5)/100);
+    return array;
+  }
+    
+    public void doLimelightStuff() {
+        try{
+            LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-noor");
+            addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
+            if (limelightMeasurement.pose.getX() != 0) 
+                SmartDashboard.putNumberArray("limelight bot pose", clean(new double[]{
+                    limelightMeasurement.pose.getX(), 
+                    limelightMeasurement.pose.getY(), 
+                    limelightMeasurement.pose.getRotation().getDegrees()
+                }));
+        }
+        catch(Exception e) {}
+    }
 }
