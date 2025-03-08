@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -49,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.LimelightHelpers.RawFiducial;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -63,6 +65,9 @@ import com.pathplanner.lib.path.PathPlannerPath;
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private Field2d field;
+    private Field2d field2;
+
+    
 
     private RobotConfig config;
 
@@ -155,6 +160,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return getState().Pose;
     }
 
+    public int getPigeonDegrees() {
+        //return (int)this.getPigeon2().getRotation2d().getDegrees();
+        StatusSignal<Double> ssX = this.getPigeon2().getMagneticFieldZ();
+        return (int) ( ssX.getValueAsDouble());
+    }
+
     /* The SysId routine to test */
     private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
 
@@ -186,6 +197,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
         configureAutoBuilder();
         field = new Field2d();
+        field2 = new Field2d();
     }
 
     private void configureAutoBuilder() {
@@ -204,7 +216,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 new PPHolonomicDriveController(
                     // PID constants for translation
                     // new PIDConstants(10, 0, 0),
-                    new PIDConstants(2, 0, .05),
+                    new PIDConstants(2.1, 0, .05),
                     // PID constants for rotation
                     //new PIDConstants(7, 0, 0)
                     new PIDConstants(2, 0, .05)
@@ -312,6 +324,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("XDif", getState().Pose.getX() - 6.1978888511657715);
+        SmartDashboard.putNumber("YDif", getState().Pose.getY() - 5.592275619506836);
+        SmartDashboard.putNumber("RotDif", getState().Pose.getRotation().getDegrees() - 2.0852476398539244 * 180/3.14);
         /*
          * Periodically try to apply the operator perspective.
          * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
@@ -319,7 +334,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * Otherwise, only check and apply the operator perspective if the DS is disabled.
          * This ensures driving behavior doesn't change until an explicit disable event occurs during testing.
          */
-        doLimelightStuff();
+        // doLimelightStuff();
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
                 setOperatorPerspectiveForward(
@@ -331,8 +346,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
         // Do this in either robot or subsystem init
-        // field.setRobotPose(getState().Pose);
-        // SmartDashboard.putData("Field", field);
+        field.setRobotPose(getState().Pose);
+        SmartDashboard.putData("Field", field);
+
+        SmartDashboard.putNumber("PigeonHaha", getPigeonDegrees() % 360);
+
         // Do this in either robot periodic or subsystem periodic
     }
 
@@ -435,15 +453,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     
     public void doLimelightStuff() {
         try{
-            LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-noor");
-            addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
-            if (limelightMeasurement.pose.getX() != 0) 
-                SmartDashboard.putNumberArray("limelight bot pose", clean(new double[]{
-                    limelightMeasurement.pose.getX(), 
-                    limelightMeasurement.pose.getY(), 
-                    limelightMeasurement.pose.getRotation().getDegrees()
-                }));
+            LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-noor");
+            
+            if (limelightMeasurement.pose.getY() != 0) {
+                addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
+                resetPose(limelightMeasurement.pose);
+            }
+            field2.setRobotPose(limelightMeasurement.pose);
+            SmartDashboard.putData("FieldLimelight", field2);
         }
-        catch(Exception e) {}
+        catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void alignToTarget() {
+        
     }
 }

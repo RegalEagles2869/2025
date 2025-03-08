@@ -42,6 +42,7 @@ import frc.robot.commands.ElevatorAndSwerve;
 import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.SetIntakeSpeed;
 import frc.robot.commands.SourceIntake;
+import frc.robot.commands.StopSwerve;
 import frc.robot.commands.TestCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -49,7 +50,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class RobotContainer {
 	private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
-	private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
+	private ElevatorSubsystem elevator;
 	// speed
 	private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
 	// second
@@ -78,23 +79,28 @@ public class RobotContainer {
 
 	private final CommandXboxController joystick = new CommandXboxController(0);
 
-	public final CommandSwerveDrivetrain drivetrain;
+	public CommandSwerveDrivetrain drivetrain;
 
 	public RobotContainer() {
 		drivetrain = TunerConstants.createDrivetrain();
+		elevator = ElevatorSubsystem.getInstance();
 		Field2d field = new Field2d();
 		// Do this in either robot or subsystem init
 		SmartDashboard.putData("Field", field);
-		NamedCommands.registerCommand("TestCommand", new TestCommand());
+		NamedCommands.registerCommand("TestCommand", new TestCommand("fishing hahaha"));
 		NamedCommands.registerCommand("L1", new L1Coral());
 		NamedCommands.registerCommand("L2", new L2Coral());
+		NamedCommands.registerCommand("L2Pos", new SetElevatorPosition(Constants.ElevatorConstants.l2Position));
 		NamedCommands.registerCommand("L3", new L3Coral());
 		NamedCommands.registerCommand("L4", new L4Coral());
-		NamedCommands.registerCommand("Order1", new L1Coral());
-		NamedCommands.registerCommand("Order2", new L2Coral());
-		NamedCommands.registerCommand("Order3", new L3Coral());
-		NamedCommands.registerCommand("Order4", new L4Coral());
-		NamedCommands.registerCommand("SourceIntake", new SourceIntake());
+		NamedCommands.registerCommand("StopSwerve", new StopSwerve());
+		// NamedCommands.registerCommand("Order1", new L1Coral());
+		// NamedCommands.registerCommand("Order2", new L2Coral());
+		// NamedCommands.registerCommand("Order2", new L2Coral());
+		// NamedCommands.registerCommand("Order3", new L3Coral());
+		// NamedCommands.registerCommand("Order4", new L4Coral());
+		// NamedCommands.registerCommand("SourceIntake", new SourceIntake());
+		NamedCommands.registerCommand("StopAndWait", new SequentialCommandGroup(new StopSwerve(), new WaitCommand(1)));
 		// Do this in either robot periodic or subsystem periodic
 		field.setRobotPose(drivetrain.getNegativePose());
 		configureBindings();
@@ -121,7 +127,10 @@ public class RobotContainer {
 		Inputs.getClimberUp().whileTrue(new SetClimberSpeed(1));
 		Inputs.getClimberDown().whileTrue(new SetClimberSpeed(-1));
 		Inputs.getRUMBLE().whileTrue(new RumbleRumble());
-		Inputs.getTest().onTrue(new DriveToPose(new Pose2d(0, 0, new Rotation2d(0))));
+		// Inputs.getTest().onTrue(new DriveToPose(Constants.FieldConstants.coralPose1));
+		Inputs.getTest().onTrue(
+			new L2Coral()
+		);
 
 		// Note that X is defi,m ned as forward according to WPILib convention,
 		// and Y is defined as to the left according to WPILib convention.
@@ -177,7 +186,7 @@ public class RobotContainer {
 			// (left)
 			)
 		);
-		joystick.x().whileTrue(
+		joystick.leftTrigger().whileTrue(
 			// joystick.x().whileTrue(
 			drivetrain.applyRequest(() -> driveSlow
 					.withVelocityX(Inputs.getTranslationX() * MaxSpeed
@@ -224,6 +233,7 @@ public class RobotContainer {
 		try {
 			//  PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory("TestPath");
 			 return drivetrain.getAuto("TheSilly6");
+			// return new L2Coral();
 		}
 		catch (Exception e) {
 			return new WaitCommand(0);

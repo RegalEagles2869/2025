@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Time;
 
 /**
@@ -30,7 +32,7 @@ public final class Constants {
 	}
 
 	public static class FieldConstants {
-
+		public static final Pose2d coralPose1 = new Pose2d(13.802569389343262, 5.468622207641602, new Rotation2d(-2.12558861030898));
 	}
 
 	public static class MotorIDs {
@@ -54,9 +56,10 @@ public final class Constants {
 		public static final double l4Position = 70.19239807128906;
 		public static final double l4Position2 = l4Position + 1;
 		public static final double sourcePosition = 0;
-		public static final double error = 0.8;
+		public static final double error = 1.5;
 		public static final double stallDetectCur = 40.0;
 		public static final double slowPose = 5.0;
+		public static final double waitTime = .1;
 	}
 
 	public static class PivotConstants {

@@ -13,19 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "StopSwerve"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L2Pos"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L2"
+            "name": "StopAndWait"
           }
         },
         {
@@ -49,7 +37,7 @@
         {
           "type": "named",
           "data": {
-            "name": "L3"
+            "name": "StopAndWait"
           }
         },
         {
@@ -73,7 +61,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Order2"
+            "name": "StopAndWait"
           }
         },
         {
@@ -97,7 +85,7 @@
         {
           "type": "named",
           "data": {
-            "name": "SourceIntake"
+            "name": "StopAndWait"
           }
         },
         {
@@ -121,7 +109,7 @@
         {
           "type": "named",
           "data": {
-            "name": "SourceIntake"
+            "name": "StopAndWait"
           }
         },
         {
@@ -140,12 +128,6 @@
           "type": "path",
           "data": {
             "pathName": "Silly6.10"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Order3"
           }
         }
       ]

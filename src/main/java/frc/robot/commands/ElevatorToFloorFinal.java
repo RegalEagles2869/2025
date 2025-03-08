@@ -54,6 +54,39 @@ public class ElevatorToFloorFinal extends Command {
     // elevator.setToCoast();
     // return true;
     // }
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
+    System.out.println("balls to the walls");
     return elevator.bottomed;
   }
 }
