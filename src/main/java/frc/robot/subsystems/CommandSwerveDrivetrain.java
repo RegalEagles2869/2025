@@ -427,7 +427,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
     
     public Command moveTo(Pose2d... poses) {
-        System.out.println("fish");
         // Create a list of waypoints from poses. Each pose represents one waypoint.
         // The rotation component of the pose should be the direction of travel. Do not use holonomic rotation.
         ArrayList<PathPoint> poseList = new ArrayList<>();

@@ -14,7 +14,6 @@ public class SetIntakeSpeed extends Command {
   /** Creates a new SetIntakeSpeed. */
   public SetIntakeSpeed(double speed) {
     addRequirements(intake);
-    System.out.println("fishhahahahaha    hahaha");
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -26,7 +25,6 @@ public class SetIntakeSpeed extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("fish");
     intake.setSpeed(speed);
   }
 

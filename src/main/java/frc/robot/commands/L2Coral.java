@@ -17,6 +17,8 @@ public class L2Coral extends SequentialCommandGroup {
   /** Creates a new L1Coral. */
   public L2Coral() {
     addCommands(
+      new StopSwerve(),
+      new SetElevatorPositionInstant(Constants.ElevatorConstants.l2Position),  
       new ParallelDeadlineGroup(
         new WaitCommand(Constants.CoralConstants.intakeTime), 
         new SetIntakeSpeed(Constants.CoralConstants.intakeSpeed)

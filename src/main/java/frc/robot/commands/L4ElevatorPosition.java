@@ -18,8 +18,8 @@ public class L4ElevatorPosition extends SequentialCommandGroup {
   public L4ElevatorPosition() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new SetElevatorPosition(Constants.ElevatorConstants.l4Position),
+    addCommands(new SetElevatorPositionInstant(Constants.ElevatorConstants.l4Position),
         new ParallelCommandGroup(new ParallelRaceGroup(new SetIntakeSpeed(.1), new WaitCommand(2)),
-            new SetElevatorPosition(Constants.ElevatorConstants.l4Position2)));
+            new SetElevatorPositionInstant(Constants.ElevatorConstants.l4Position2)));
   }
 }

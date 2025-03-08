@@ -100,7 +100,6 @@ public class ElevatorSubsystem extends SubsystemBase {
       // setSpeedWithoutPID(0);
       setToCoast();
       // motor.configure(config, null, null);
-      System.out.println("bottoming");
       SmartDashboard.putString("state", "bottoming");
       low = true;
       bottomed = false;
@@ -139,7 +138,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     double dif = getPos() - tarPos;
     // SmartDashboard.putNumber("dif", dif);
     // System.out.println(Math.abs(dif) < Constants.ElevatorConstants.error);
-    System.out.println(Math.abs(dif) < Constants.ElevatorConstants.error);
     return Math.abs(dif) < Constants.ElevatorConstants.error;
     // if ((getPosition() >= (position - Constants.ElevatorConstants.error))
     // && (getPosition() <= (position + Constants.ElevatorConstants.error)))

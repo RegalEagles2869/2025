@@ -13,18 +13,6 @@
         {
           "type": "named",
           "data": {
-            "name": "StopSwerve"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L2Pos"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "L2"
           }
         },

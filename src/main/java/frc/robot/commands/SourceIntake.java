@@ -13,6 +13,6 @@ import frc.robot.Constants;
 public class SourceIntake extends SequentialCommandGroup {
   /** Creates a new SourceIntake. */
   public SourceIntake() {
-    addCommands(new SetElevatorPosition(Constants.ElevatorConstants.sourcePosition));
+    addCommands(new SetElevatorPositionInstant(Constants.ElevatorConstants.sourcePosition));
   }
 }

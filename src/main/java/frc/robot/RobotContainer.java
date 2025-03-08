@@ -38,6 +38,7 @@ import frc.robot.commands.RumbleRumble;
 import frc.robot.commands.SetClimberPosition;
 import frc.robot.commands.SetClimberSpeed;
 import frc.robot.commands.SetElevatorPosition;
+import frc.robot.commands.SetElevatorPositionInstant;
 import frc.robot.commands.ElevatorAndSwerve;
 import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.SetIntakeSpeed;
@@ -90,7 +91,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("TestCommand", new TestCommand("fishing hahaha"));
 		NamedCommands.registerCommand("L1", new L1Coral());
 		NamedCommands.registerCommand("L2", new L2Coral());
-		NamedCommands.registerCommand("L2Pos", new SetElevatorPosition(Constants.ElevatorConstants.l2Position));
+		NamedCommands.registerCommand("L2Pos", new SetElevatorPositionInstant(Constants.ElevatorConstants.l2Position));
 		NamedCommands.registerCommand("L3", new L3Coral());
 		NamedCommands.registerCommand("L4", new L4Coral());
 		NamedCommands.registerCommand("StopSwerve", new StopSwerve());
