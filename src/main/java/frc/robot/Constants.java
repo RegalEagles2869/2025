@@ -87,9 +87,27 @@ public final class Constants {
 	}
 
 	public static class CoralConstants {
-
 		public static final double minCurrentRunning = 0;
 		public static final double intakeSpeed = 1.0;
 		public static final double intakeTime = .5;
+		public static final double currentToStopIntaking = 10;
+	}
+
+	public static class SwerveConstants {
+
+		public static final double xErrorLimelight = 1;
+		public static final double yErrorLimelight = 1;
+		public static final double rotationErrorLimelight = 1;
+		public static final double rotIncLimelight = .1;
+		public static final double xIncLimelight = .1;
+		public static final double yIncLimelight = .1;
+		public static final double[] ids = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
+		public static final double[] degrees = {300, 0, 60, 120, 180, 240, 300, 0, 60, 120, 180, 240};
+		public static final double xPosLeft = 0;
+		public static final double yPosLeft = 1;
+		public static final double waitTheyDontLoveYouLikeILoveYou = .5;
+        public static final double forwardForAuto = .1;
+        public static final double xPosRight = 0;
+        public static final double yPosRight = 0;
 	}
 }

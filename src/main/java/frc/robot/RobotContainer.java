@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.CenterAtAprilTag;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.ElevatorToFloor;
 import frc.robot.commands.ElevatorToFloorFinal;
@@ -40,10 +41,12 @@ import frc.robot.commands.SetClimberSpeed;
 import frc.robot.commands.SetElevatorPosition;
 import frc.robot.commands.SetElevatorPositionInstant;
 import frc.robot.commands.ElevatorAndSwerve;
+import frc.robot.commands.ElevatorResetPosition;
 import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.SetIntakeSpeed;
+import frc.robot.commands.SetIntakeSpeedWait;
 import frc.robot.commands.SourceIntake;
-import frc.robot.commands.StopSwerve;
+import frc.robot.commands.MoveSwerve;
 import frc.robot.commands.TestCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -85,6 +88,7 @@ public class RobotContainer {
 	public RobotContainer() {
 		drivetrain = TunerConstants.createDrivetrain();
 		elevator = ElevatorSubsystem.getInstance();
+		elevator.setEncoderPosition(0);
 		Field2d field = new Field2d();
 		// Do this in either robot or subsystem init
 		SmartDashboard.putData("Field", field);
@@ -94,14 +98,15 @@ public class RobotContainer {
 		NamedCommands.registerCommand("L2Pos", new SetElevatorPositionInstant(Constants.ElevatorConstants.l2Position));
 		NamedCommands.registerCommand("L3", new L3Coral());
 		NamedCommands.registerCommand("L4", new L4Coral());
-		NamedCommands.registerCommand("StopSwerve", new StopSwerve());
+		NamedCommands.registerCommand("Limelight", new SequentialCommandGroup(new MoveSwerve(0, 0, 0), new CenterAtAprilTag(true), new ParallelDeadlineGroup(new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou), new MoveSwerve(0, Constants.SwerveConstants.forwardForAuto, 0))));
+		NamedCommands.registerCommand("StopSwerve", new MoveSwerve(0, 0, 0));
 		// NamedCommands.registerCommand("Order1", new L1Coral());
 		// NamedCommands.registerCommand("Order2", new L2Coral());
 		// NamedCommands.registerCommand("Order2", new L2Coral());
 		// NamedCommands.registerCommand("Order3", new L3Coral());
 		// NamedCommands.registerCommand("Order4", new L4Coral());
 		// NamedCommands.registerCommand("SourceIntake", new SourceIntake());
-		NamedCommands.registerCommand("StopAndWait", new SequentialCommandGroup(new StopSwerve(), new WaitCommand(1)));
+		NamedCommands.registerCommand("StopAndWait", new SequentialCommandGroup(new MoveSwerve(0, 0, 0), new WaitCommand(1)));
 		// Do this in either robot periodic or subsystem periodic
 		field.setRobotPose(drivetrain.getNegativePose());
 		configureBindings();
@@ -129,9 +134,10 @@ public class RobotContainer {
 		Inputs.getClimberDown().whileTrue(new SetClimberSpeed(-1));
 		Inputs.getRUMBLE().whileTrue(new RumbleRumble());
 		// Inputs.getTest().onTrue(new DriveToPose(Constants.FieldConstants.coralPose1));
-		Inputs.getTest().onTrue(
-			new L2Coral()
-		);
+		// Inputs.getTest().onTrue(new L2Coral());
+		Inputs.getTest().onTrue(new CenterAtAprilTag(true));
+		// Inputs.getTest().onTrue(new SetIntakeSpeedWait(Constants.CoralConstants.intakeSpeed));
+		Inputs.getElevatorResetPosition().onTrue(new ElevatorResetPosition(0));
 
 		// Note that X is defi,m ned as forward according to WPILib convention,
 		// and Y is defined as to the left according to WPILib convention.

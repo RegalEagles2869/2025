@@ -36,9 +36,10 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static ElevatorSubsystem instance;
 
   public static ElevatorSubsystem getInstance() {
-    if (instance == null)
-      instance = new ElevatorSubsystem();
-    return instance;
+    if (ElevatorSubsystem.instance == null) {
+      ElevatorSubsystem.instance = new ElevatorSubsystem();
+    }
+    return ElevatorSubsystem.instance;
   }
 
   /** Creates a new ElevatorSubsystem. */
@@ -47,7 +48,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     motorFollow = new SparkMax(Constants.MotorIDs.elevatorFollow, MotorType.kBrushless);
     tarPos = Constants.ElevatorConstants.floorPosition;
     posControl = false;
-    motor.getEncoder().setPosition(0);
+    // motor.getEncoder().setPosition(0);
 
     config = new SparkMaxConfig();
     config.inverted(false).idleMode(IdleMode.kBrake);
@@ -88,6 +89,10 @@ public class ElevatorSubsystem extends SubsystemBase {
       posControl = false;
     }
     motor.set(speed);
+  }
+
+  public void setEncoderPosition(double position) {
+    motor.getEncoder().setPosition(position);
   }
 
   public boolean low = false;
@@ -158,7 +163,7 @@ public class ElevatorSubsystem extends SubsystemBase {
       config2.idleMode(IdleMode.kCoast);
     }
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    motorFollow.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // motorFollow.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public void setToBrake() {
@@ -176,7 +181,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // System.out.print(motor.getEncoder().getPosition());
     // System.out.print(" \t");
     // System.out.println(motor.getOutputCurrent());
-
+    // System.out.println("bruh");
     double dif = getPos() - tarPos;
     SmartDashboard.putNumber("dif", dif);
     SmartDashboard.putNumber("cur", getCurrent());

@@ -14,15 +14,14 @@ public class SetIntakeSpeedWait extends Command {
   private double speed;
   /** Creates a new CoralIntakeAndWait. */
   public SetIntakeSpeedWait(double speed) {
-    addRequirements(intake);
+    // addRequirements(intake);
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -32,12 +31,13 @@ public class SetIntakeSpeedWait extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    intake.setSpeed(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (intake.getCurrent() <= Constants.CoralConstants.minCurrentRunning) return true;
-    return false;
+    return intake.getCurrent() > Constants.CoralConstants.currentToStopIntaking;
   }
 }

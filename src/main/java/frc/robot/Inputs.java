@@ -79,6 +79,9 @@ public class Inputs {
     public static Trigger getElevatorDown() {
         return operatorBoard.button(14);
     }
+    public static Trigger getElevatorResetPosition() {
+        return operatorBoard.button(15);
+    }
 
     public static void RUMBLERUMBLE(double rumble) {
         try {

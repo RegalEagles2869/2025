@@ -16,10 +16,12 @@ public class L1Coral extends SequentialCommandGroup {
   /** Creates a new L1Coral. */
   public L1Coral() {
     addCommands(
-      new StopSwerve(),
+      // new SetElevatorPositionInstant(Constants.ElevatorConstants.l2Position),
       new SetElevatorPositionInstant(Constants.ElevatorConstants.l1Position),
+      new WaitCommand(.1),
       new ParallelDeadlineGroup(
-        new WaitCommand(Constants.CoralConstants.intakeTime), 
+      //   // new WaitCommand(Constants.CoralConstants.intakeTime), 
+        new WaitCommand(.5), 
         new SetIntakeSpeed(Constants.CoralConstants.intakeSpeed)
       ),
       new ElevatorToFloor()

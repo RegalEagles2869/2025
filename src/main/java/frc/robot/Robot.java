@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.ElevatorResetPosition;
 import frc.robot.commands.RumbleRumble;
 
 public class Robot extends TimedRobot {
@@ -26,6 +27,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     Inputs.getRUMBLE().whileTrue(new RumbleRumble().ignoringDisable(true));
+    Inputs.getElevatorResetPosition().whileTrue(new ElevatorResetPosition(0).ignoringDisable(true));
   }
 
   @Override

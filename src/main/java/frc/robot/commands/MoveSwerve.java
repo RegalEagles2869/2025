@@ -14,20 +14,26 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class StopSwerve extends InstantCommand {
+public class MoveSwerve extends InstantCommand {
   private CommandSwerveDrivetrain swerve = TunerConstants.createDrivetrain();
   private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
+  private double x;
+  private double y;
+  private double theta;
 
-  public StopSwerve() {
-    addRequirements(swerve);
+  public MoveSwerve(double x, double y, double theta) {
+    this.x = x;
+    this.y = y;
+    this.theta = theta;
+    // addRequirements(swerve);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    swerve.setControl(
-      m_pathApplyRobotSpeeds.withSpeeds(new ChassisSpeeds(0, 0, 0))
+    swerve.applyRequest(() ->
+      m_pathApplyRobotSpeeds.withSpeeds(new ChassisSpeeds(x, y, theta))
     );
   }
 }

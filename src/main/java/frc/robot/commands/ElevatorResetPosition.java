@@ -4,23 +4,24 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SetElevatorPositionInstant extends InstantCommand {
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class ElevatorResetPosition extends InstantCommand {
   private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
   private double position;
-  /** Creates a new SetPivotPosition. */
-  public SetElevatorPositionInstant(double position) {
+  public ElevatorResetPosition(double position) {
+    addRequirements(elevator);
     this.position = position;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  
+  // Called when the command is initially scheduled.
   @Override
-  public void execute() {
-    elevator.setTarPos(position);
+  public void initialize() {
+    elevator.setEncoderPosition(position);
   }
 }

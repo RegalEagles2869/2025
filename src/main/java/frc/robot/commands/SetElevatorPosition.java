@@ -22,12 +22,14 @@ public class SetElevatorPosition extends Command {
   @Override
   public void initialize() {
     elevator.setTarPos(position);
-    elevator.setToBrake();
+    // elevator.setToBrake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    System.out.println("a");
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -39,5 +41,6 @@ public class SetElevatorPosition extends Command {
   @Override
   public boolean isFinished() {
     return elevator.isAtPosition();
+    // return true;
   }
 }

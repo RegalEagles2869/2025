@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "StopSwerve"
+            "name": "Limelight"
           }
         },
         {
@@ -43,6 +43,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Limelight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "L3"
           }
         },
@@ -62,6 +68,12 @@
           "type": "path",
           "data": {
             "pathName": "Silly6.4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Limelight"
           }
         },
         {
@@ -91,6 +103,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Limelight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "SourceIntake"
           }
         },
@@ -115,6 +133,12 @@
         {
           "type": "named",
           "data": {
+            "name": "Limelight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "SourceIntake"
           }
         },
@@ -134,6 +158,12 @@
           "type": "path",
           "data": {
             "pathName": "Silly6.10"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Limelight"
           }
         },
         {

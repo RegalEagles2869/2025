@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -32,5 +33,10 @@ public class CoralIntakeSubsystem extends SubsystemBase {
 
   public double getCurrent() {
     return motor.getSupplyCurrent().getValueAsDouble();
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Current intake", getCurrent());
   }
 }
