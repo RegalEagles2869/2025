@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.CenterAtAprilTag;
 import frc.robot.commands.DriveToPose;
@@ -58,6 +59,7 @@ public class RobotContainer {
 	// speed
 	private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
 	// second
+	private Trigger elevatorAndSwerve = new Trigger(() -> elevator.getPos() > Constants.ElevatorConstants.floorPosition);
 	// max angular velocity
 
 	/* Setting up bindings for necessary control of the swerve drive platform */
@@ -75,6 +77,12 @@ public class RobotContainer {
 			.withRotationalDeadband(MaxAngularRate * Constants.OperatorConstants.rotationDeadBand
 					* Inputs.getMultiplier() * Constants.OperatorConstants.speedMultiplierSlowMode)
 			.withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive
+
+	
+	/* Setting up bindings for necessary control of the swerve drive platform */
+	private final SwerveRequest.RobotCentric limelightSwerve = new SwerveRequest.RobotCentric()
+		.withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive
+
 	// motors
 	private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 	private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -94,7 +102,6 @@ public class RobotContainer {
 		SmartDashboard.putData("Field", field);
 		NamedCommands.registerCommand("TestCommand", new TestCommand("fishing hahaha"));
 		NamedCommands.registerCommand("L1", new L1Coral());
-		NamedCommands.registerCommand("L2", new L2Coral());
 		NamedCommands.registerCommand("L2Pos", new SetElevatorPositionInstant(Constants.ElevatorConstants.l2Position));
 		NamedCommands.registerCommand("L3", new L3Coral());
 		NamedCommands.registerCommand("L4", new L4Coral());
@@ -110,6 +117,7 @@ public class RobotContainer {
 		// Do this in either robot periodic or subsystem periodic
 		field.setRobotPose(drivetrain.getNegativePose());
 		configureBindings();
+		NamedCommands.registerCommand("L2", new L2Coral());
 	}
 
 	private void configureBindings() {
@@ -134,7 +142,7 @@ public class RobotContainer {
 		Inputs.getClimberDown().whileTrue(new SetClimberSpeed(-1));
 		Inputs.getRUMBLE().whileTrue(new RumbleRumble());
 		// Inputs.getTest().onTrue(new DriveToPose(Constants.FieldConstants.coralPose1));
-		// Inputs.getTest().onTrue(new L2Coral());
+		// Inputs.getTest().onTrue(new SequentialCommandGroup(new MoveSwerve(0, 0, 0), new L2Coral()));
 		Inputs.getTest().onTrue(new CenterAtAprilTag(true));
 		// Inputs.getTest().onTrue(new SetIntakeSpeedWait(Constants.CoralConstants.intakeSpeed));
 		Inputs.getElevatorResetPosition().onTrue(new ElevatorResetPosition(0));
@@ -156,23 +164,25 @@ public class RobotContainer {
 		// // negative X (left)
 		// ));
 		// elevator.getPos() > 
-		drivetrain.setDefaultCommand(
-			// Drivetrain will execute this command periodically
-			drivetrain.applyRequest(() -> drive
-					.withVelocityX(
-							Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
-					// Drive forward with negative Y (forward)
-					.withVelocityY(
-							Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
-					// Drive left with negative X (left)
-					.withRotationalRate(
-							Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplier)
-			// Drive counterclockwise with negative X (left)
-			)
-		);
+
+		//UNCOMMENT THIS PLS PLS PLS DONT PROVE ME RIGHT
+		// drivetrain.setDefaultCommand(
+		// 	// Drivetrain will execute this command periodically
+		// 	drivetrain.applyRequest(() -> drive
+		// 			.withVelocityX(
+		// 					Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
+		// 			// Drive forward with negative Y (forward)
+		// 			.withVelocityY(
+		// 					Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
+		// 			// Drive left with negative X (left)
+		// 			.withRotationalRate(
+		// 					Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplier)
+		// 	// Drive counterclockwise with negative X (left)
+		// 	)
+		// );
 
 		
-		new ElevatorAndSwerve(() -> true).whileTrue(
+		elevatorAndSwerve.whileTrue(
 			// joystick.x().whileTrue(
 			drivetrain.applyRequest(() -> driveSlow
 					.withVelocityX(Inputs.getTranslationX() * MaxSpeed
@@ -212,7 +222,30 @@ public class RobotContainer {
 			// negative
 			// X
 			// (left)
-			));
+			)
+		);
+			
+		drivetrain.setDefaultCommand(
+			// joystick.x().whileTrue(
+			drivetrain.applyRequest(() -> limelightSwerve
+					.withVelocityX(LimelightHelpers.getZ() * MaxSpeed
+							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+					// forward
+					// with
+					// negative
+					// Y
+					// (forward)
+					.withVelocityY(LimelightHelpers.getX() * MaxSpeed
+							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+					.withRotationalRate(Inputs.getRotation() * MaxAngularRate
+							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+			// counterclockwise
+			// with
+			// negative
+			// X
+			// (left)
+			)
+		);
 		joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
 		joystick.b().whileTrue(drivetrain.applyRequest(
 				() -> point.withModuleDirection(
@@ -237,13 +270,11 @@ public class RobotContainer {
 		// return new ParallelDeadlineGroup(new WaitCommand(5), new DriveToPose(new Pose2d(0, .5, new Rotation2d(0))));
 		// drivetrain.getAuto("TheSilly6");
 		// return new WaitCommand(0);
-		try {
-			//  PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory("TestPath");
-			 return drivetrain.getAuto("TheSilly6");
-			// return new L2Coral();
-		}
-		catch (Exception e) {
-			return new WaitCommand(0);
-		}
+		// PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory("TestPath");
+		// return drivetrain.getAuto("TheSilly6");
+		// return new L2Coral();
+		return new CenterAtAprilTag(true);
+		// return new ParallelDeadlineGroup(new WaitCommand(1), new MoveSwerve(1, 0, 0));
+	
 	}
 }

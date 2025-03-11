@@ -10,18 +10,21 @@ import frc.robot.subsystems.ElevatorSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ElevatorResetPosition extends InstantCommand {
+public class ElevatorInit extends InstantCommand {
   private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
-  private double position;
-  public ElevatorResetPosition(double position) {
-    // addRequirements(elevator);
-    this.position = position;
+  public ElevatorInit() {
+    addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.setEncoderPosition(position);
+    elevator.setSpeed(0);
+  }
+  // Called when the command is initially scheduled.
+  @Override
+  public void execute() {
+    elevator.setSpeed(0);
   }
 }

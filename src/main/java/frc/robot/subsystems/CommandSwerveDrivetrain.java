@@ -324,6 +324,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("limelightX", LimelightHelpers.getTX("limelight-noor"));
+        SmartDashboard.putNumber("limelightY", LimelightHelpers.getTY("limelight-noor"));
         SmartDashboard.putNumber("XDif", getState().Pose.getX() - 6.1978888511657715);
         SmartDashboard.putNumber("YDif", getState().Pose.getY() - 5.592275619506836);
         SmartDashboard.putNumber("RotDif", getState().Pose.getRotation().getDegrees() - 2.0852476398539244 * 180/3.14);
@@ -334,6 +336,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * Otherwise, only check and apply the operator perspective if the DS is disabled.
          * This ensures driving behavior doesn't change until an explicit disable event occurs during testing.
          */
+        LimelightHelpers.generateLimelightStuff();
         // doLimelightStuff();
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
@@ -450,7 +453,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     return array;
   }
     
-    public void doLimelightStuff() {
+    public void doLimelightStuffOld() {
         try{
             LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-noor");
             
@@ -464,6 +467,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         catch(Exception e) {
             System.out.println(e);
         }
+    }
+
+    public void limelightTime() {
+        
     }
 
     public void alignToTarget() {

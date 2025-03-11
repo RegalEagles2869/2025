@@ -13,7 +13,7 @@ public class SetIntakeSpeed extends Command {
   private double speed;
   /** Creates a new SetIntakeSpeed. */
   public SetIntakeSpeed(double speed) {
-    addRequirements(intake);
+    // addRequirements(intake);
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
   }

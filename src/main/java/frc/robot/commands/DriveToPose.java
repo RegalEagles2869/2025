@@ -16,7 +16,6 @@ public class DriveToPose extends InstantCommand {
   private Pose2d[] poses;
   /** Creates a new DriveToPose. */
   public DriveToPose(Pose2d... poses) {
-    addRequirements(swerve);
     this.poses = poses;
     // Use addRequirements() here to declare subsystem dependencies.
   }

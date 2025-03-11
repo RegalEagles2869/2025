@@ -41,6 +41,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
     return ElevatorSubsystem.instance;
   }
+  /**for testing purposes */
+  public static ElevatorSubsystem justGetInstance() {
+    return ElevatorSubsystem.instance;
+  }
 
   /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
@@ -109,7 +113,7 @@ public class ElevatorSubsystem extends SubsystemBase {
       low = true;
       bottomed = false;
     }
-    if (getPos() > 0.1 && getCurrent() < Constants.ElevatorConstants.stallDetectCur) {
+    if (getPos() > .8 && getCurrent() < Constants.ElevatorConstants.stallDetectCur) {
       // double cur = getCurrent();
       // if (cur > maxcur) {
       // maxcur = cur;
@@ -163,7 +167,7 @@ public class ElevatorSubsystem extends SubsystemBase {
       config2.idleMode(IdleMode.kCoast);
     }
     motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    // motorFollow.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    motorFollow.configure(config2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public void setToBrake() {

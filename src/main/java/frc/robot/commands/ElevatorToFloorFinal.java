@@ -15,7 +15,7 @@ public class ElevatorToFloorFinal extends Command {
 
   /** Creates a new ElevatorToFloor. */
   public ElevatorToFloorFinal() {
-    addRequirements(elevator);
+    // addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
