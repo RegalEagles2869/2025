@@ -166,20 +166,20 @@ public class RobotContainer {
 		// elevator.getPos() > 
 
 		//UNCOMMENT THIS PLS PLS PLS DONT PROVE ME RIGHT
-		// drivetrain.setDefaultCommand(
-		// 	// Drivetrain will execute this command periodically
-		// 	drivetrain.applyRequest(() -> drive
-		// 			.withVelocityX(
-		// 					Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
-		// 			// Drive forward with negative Y (forward)
-		// 			.withVelocityY(
-		// 					Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
-		// 			// Drive left with negative X (left)
-		// 			.withRotationalRate(
-		// 					Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplier)
-		// 	// Drive counterclockwise with negative X (left)
-		// 	)
-		// );
+		drivetrain.setDefaultCommand(
+			// Drivetrain will execute this command periodically
+			drivetrain.applyRequest(() -> drive
+					.withVelocityX(
+							Inputs.getTranslationX() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
+					// Drive forward with negative Y (forward)
+					.withVelocityY(
+							Inputs.getTranslationY() * MaxSpeed * Constants.OperatorConstants.speedMultiplier)
+					// Drive left with negative X (left)
+					.withRotationalRate(
+							Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplier)
+			// Drive counterclockwise with negative X (left)
+			)
+		);
 
 		
 		elevatorAndSwerve.whileTrue(
@@ -225,7 +225,7 @@ public class RobotContainer {
 			)
 		);
 			
-		drivetrain.setDefaultCommand(
+		joystick.povUp().whileTrue(
 			// joystick.x().whileTrue(
 			drivetrain.applyRequest(() -> limelightSwerve
 					.withVelocityX(LimelightHelpers.getZ() * MaxSpeed

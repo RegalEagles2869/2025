@@ -82,6 +82,9 @@ public class Inputs {
     public static Trigger getElevatorResetPosition() {
         return operatorBoard.button(15);
     }
+    public static Trigger getLimelightTime() {
+        return driver1.povUp();
+    }
 
     public static void RUMBLERUMBLE(double rumble) {
         try {

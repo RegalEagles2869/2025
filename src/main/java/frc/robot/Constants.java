@@ -95,16 +95,16 @@ public final class Constants {
 
 	public static class SwerveConstants {
 
-		public static final double xErrorLimelight = .5;
-		public static final double yErrorLimelight = .5;
+		public static final double xErrorLimelight = .05;
+		public static final double yErrorLimelight = .05;
 		public static final double rotationErrorLimelight = 70;
 		public static final double rotIncLimelight = 5;
-		public static final double xIncLimelight = 5;
-		public static final double yIncLimelight = 5;
+		public static final double xIncLimelight = 1;
+		public static final double yIncLimelight = 1;
 		public static final double[] ids = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
 		public static final double[] degrees = {300, 0, 60, 120, 180, 240, 300, 0, 60, 120, 180, 240};
-		public static final double xPosLeft = 0;
-		public static final double zPosLeft = 1.5;
+		public static final double xPosLeft = -.21;
+		public static final double zPosLeft = .75;
 		public static final double waitTheyDontLoveYouLikeILoveYou = .5;
         public static final double forwardForAuto = .1;
         public static final double xPosRight = 0;
