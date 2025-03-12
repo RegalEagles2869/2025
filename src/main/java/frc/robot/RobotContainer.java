@@ -49,6 +49,7 @@ import frc.robot.commands.SetIntakeSpeedWait;
 import frc.robot.commands.SourceIntake;
 import frc.robot.commands.MoveSwerve;
 import frc.robot.commands.TestCommand;
+import frc.robot.commands.WaitForAlign;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -225,27 +226,40 @@ public class RobotContainer {
 			)
 		);
 			
-		joystick.povUp().whileTrue(
-			// joystick.x().whileTrue(
-			drivetrain.applyRequest(() -> limelightSwerve
-					.withVelocityX(LimelightHelpers.getZ() * MaxSpeed
-							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
-					// forward
-					// with
-					// negative
-					// Y
-					// (forward)
-					.withVelocityY(LimelightHelpers.getX() * MaxSpeed
-							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
-					.withRotationalRate(Inputs.getRotation() * MaxAngularRate
-							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
-			// counterclockwise
-			// with
-			// negative
-			// X
-			// (left)
+		joystick.povUp().onTrue(
+			new SequentialCommandGroup(
+				new ParallelDeadlineGroup(
+					new WaitForAlign(false),
+					drivetrain.applyRequest(() -> limelightSwerve
+							.withVelocityX(LimelightHelpers.getLz() * MaxSpeed)
+							.withVelocityY(LimelightHelpers.getLx() * MaxSpeed)
+							.withRotationalRate(LimelightHelpers.getTheta() * MaxAngularRate)
+					)
+				),
+				new ParallelDeadlineGroup(
+					new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
+					drivetrain.applyRequest(() -> limelightSwerve
+							.withVelocityX(Constants.SwerveConstants.forwardForAuto * MaxSpeed)
+							.withVelocityY(0)
+							.withRotationalRate(0)
+					)
+				)
 			)
+
 		);
+		joystick.povLeft().whileTrue(
+			new ParallelDeadlineGroup(
+				new WaitForAlign(true),
+				drivetrain.applyRequest(() -> limelightSwerve
+						.withVelocityX(LimelightHelpers.getRz() * MaxSpeed)
+						.withVelocityY(LimelightHelpers.getRx() * MaxSpeed)
+						.withRotationalRate(LimelightHelpers.getTheta() * MaxAngularRate)
+				)
+			)
+
+		);
+		SmartDashboard.putNumber("constantX", Constants.SwerveConstants.xPosLeft);
+		SmartDashboard.putNumber("constantZ", Constants.SwerveConstants.zPosLeft);
 		joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
 		joystick.b().whileTrue(drivetrain.applyRequest(
 				() -> point.withModuleDirection(

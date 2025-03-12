@@ -41,8 +41,10 @@ public class LimelightHelpers {
 
     private static final Map<String, DoubleArrayEntry> doubleArrayEntries = new ConcurrentHashMap<>();
     
-    private static double x;
-    private static double z;
+    private static double lx;
+    private static double lz;
+    private static double rx;
+    private static double rz;
     private static double theta;
 
     /**
@@ -1653,8 +1655,9 @@ public class LimelightHelpers {
     public static void generateLimelightStuff() {
         try {
             double[] coords = getTargetPose_CameraSpace("limelight-noor");
-            x = 0;
-            z = 0;
+            // IMUData coords = getIMUData("limelight-noor");
+            lx = 0;
+            lz = 0;
             theta = 0;
 
             boolean isXDone = true;
@@ -1668,45 +1671,105 @@ public class LimelightHelpers {
             double realTheta = coords[4];
             if (realX == 0 && realZ == 0) return;
             
-            if (Math.abs(realTheta - Constants.SwerveConstants.thetaPos) > Constants.SwerveConstants.rotationErrorLimelight) {
-                if (Constants.SwerveConstants.thetaPos > realTheta) theta -= Constants.SwerveConstants.rotIncLimelight;
-                else theta += Constants.SwerveConstants.rotIncLimelight;
-                isXDone = false;
-                isZDone = false;
-                isThetaDone = false;
-            }
-            else {
+            // if (Math.abs(realTheta - Constants.SwerveConstants.thetaPos) > Constants.SwerveConstants.rotationErrorLimelight) {
+            //     if (Constants.SwerveConstants.thetaPos > realTheta) theta = Constants.SwerveConstants.rotIncLimelight;
+            //     else theta = -Constants.SwerveConstants.rotIncLimelight;
+            //     isXDone = false;
+            //     isZDone = false;
+            //     isThetaDone = false;
+            // }
+            // else {
                 if (Math.abs(realX - Constants.SwerveConstants.xPosLeft) > Constants.SwerveConstants.xErrorLimelight) {
                     isXDone = false;
-                    if (realX > Constants.SwerveConstants.xPosLeft) x = Constants.SwerveConstants.xIncLimelight;
-                    else x = -Constants.SwerveConstants.xIncLimelight;
+                    if (realX > Constants.SwerveConstants.xPosLeft) lx = Constants.SwerveConstants.xIncLimelight;
+                    else lx = -Constants.SwerveConstants.xIncLimelight;
                 }
-                if (Math.abs(realZ - Constants.SwerveConstants.zPosLeft) > Constants.SwerveConstants.yErrorLimelight) {
-                    isZDone = false;
-                    if (realZ > Constants.SwerveConstants.zPosLeft) z = -Constants.SwerveConstants.yIncLimelight;
-                    else z = Constants.SwerveConstants.yIncLimelight;
+                else if (Math.abs(realZ - Constants.SwerveConstants.zPosLeft) > Constants.SwerveConstants.yErrorLimelight) {
+                    isXDone = false;
+                    if (realZ > Constants.SwerveConstants.zPosLeft) lz = Constants.SwerveConstants.yIncLimelight;
+                    else lz = -Constants.SwerveConstants.yIncLimelight;
                 }
-            }
+            // }
             SmartDashboard.putNumber("thetaPos", realTheta);
             SmartDashboard.putNumber("xPos", realX);
             SmartDashboard.putNumber("zPos", realZ);
-            SmartDashboard.putNumber("xSpeedLime", getX());
-            SmartDashboard.putNumber("zSpeedLime", getZ());
+            SmartDashboard.putNumber("xSpeedLime", getLx());
+            SmartDashboard.putNumber("zSpeedLime", getLz());
             SmartDashboard.putNumber("thetaSpeedLime", getTheta());
             SmartDashboard.putBooleanArray("progress check hehe", new boolean[]{isXDone, isZDone, isThetaDone});
         }
         catch(Exception e) {
-            x = 0;
-            z = 0;
+            lx = 0;
+            lz = 0;
+            theta = 0;
+        }
+        try {
+            double[] coords = getTargetPose_CameraSpace("limelight-noor");
+            // IMUData coords = getIMUData("limelight-noor");
+            rx = 0;
+            rz = 0;
+            theta = 0;
+
+            boolean isXDone = true;
+            boolean isZDone = true;
+            boolean isThetaDone = true;
+            //double realX = LimelightHelpers.getTX("limelight-noor");
+            //double realY = LimelightHelpers.getTA("limelight-noor");
+            //x y z f y f
+            double realX = coords[0];
+            double realZ = coords[2];
+            double realTheta = coords[4];
+            if (realX == 0 && realZ == 0) return;
+            
+            // if (Math.abs(realTheta - Constants.SwerveConstants.thetaPos) > Constants.SwerveConstants.rotationErrorLimelight) {
+            //     if (Constants.SwerveConstants.thetaPos > realTheta) theta = Constants.SwerveConstants.rotIncLimelight;
+            //     else theta = -Constants.SwerveConstants.rotIncLimelight;
+            //     isXDone = false;
+            //     isZDone = false;
+            //     isThetaDone = false;
+            // }
+            // else {
+                if (Math.abs(realX - Constants.SwerveConstants.xPosRight) > Constants.SwerveConstants.xErrorLimelight) {
+                    isXDone = false;
+                    if (realX > Constants.SwerveConstants.xPosRight) rx = Constants.SwerveConstants.xIncLimelight;
+                    else rx = -Constants.SwerveConstants.xIncLimelight;
+                }
+                else if (Math.abs(realZ - Constants.SwerveConstants.zPosRight) > Constants.SwerveConstants.yErrorLimelight) {
+                    isXDone = false;
+                    if (realZ > Constants.SwerveConstants.zPosRight) rz = Constants.SwerveConstants.yIncLimelight;
+                    else rz = -Constants.SwerveConstants.yIncLimelight;
+                }
+            // }
+            SmartDashboard.putNumber("thetaPos", realTheta);
+            SmartDashboard.putNumber("xPos", realX);
+            SmartDashboard.putNumber("zPos", realZ);
+            SmartDashboard.putNumber("xSpeedLime", getLx());
+            SmartDashboard.putNumber("zSpeedLime", getLz());
+            SmartDashboard.putNumber("thetaSpeedLime", getTheta());
+            SmartDashboard.putBooleanArray("progress check hehe", new boolean[]{isXDone, isZDone, isThetaDone});
+        }
+        catch(Exception e) {
+            rx = 0;
+            rz = 0;
             theta = 0;
         }
     }
 
-    public static double getX() {
-        return x;
+    public static double getLx() {
+        return lx;
+        // return 0;
     }
-    public static double getZ() {
-        return z;
+    public static double getLz() {
+        return lz;
+        // return 0;
+    }
+    public static double getRx() {
+        return rx;
+        // return 0;
+    }
+    public static double getRz() {
+        return rz;
+        // return 0;
     }
     public static double getTheta() {
         return theta;

@@ -51,7 +51,7 @@ public class CenterAtAprilTag extends Command {
     }
     else {
       tarX = Constants.SwerveConstants.xPosRight;
-      tarY = Constants.SwerveConstants.yPosRight;
+      tarY = Constants.SwerveConstants.zPosRight;
       tarTheta = Constants.SwerveConstants.thetaPos;
     }
     // Use addRequirements() here to declare subsystem dependencies.
