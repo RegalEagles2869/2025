@@ -1652,6 +1652,9 @@ public class LimelightHelpers {
         return results;
     }
 
+    /**
+     * Runs every tick in the periodic function of Swerve.
+     */
     public static void generateLimelightStuff() {
         try {
             double[] coords = getTargetPose_CameraSpace("limelight-noor");
@@ -1763,10 +1766,16 @@ public class LimelightHelpers {
         return lz;
         // return 0;
     }
+
     public static double getRx() {
         return rx;
         // return 0;
     }
+
+    /**
+     * Gets the speed in the forward direction which is updated every tick
+     * @return the speed that is required to get to the position of the limelight
+     */
     public static double getRz() {
         return rz;
         // return 0;

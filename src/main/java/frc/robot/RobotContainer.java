@@ -50,6 +50,7 @@ import frc.robot.commands.SourceIntake;
 import frc.robot.commands.MoveSwerve;
 import frc.robot.commands.TestCommand;
 import frc.robot.commands.WaitForAlign;
+import frc.robot.commands.WaitUntilPositionReached;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -237,13 +238,16 @@ public class RobotContainer {
 					)
 				),
 				new ParallelDeadlineGroup(
-					new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
+					// new WaitCommand((Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError)/(Constants.SwerveConstants.forwardForAuto * MaxSpeed)),
+					// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
+					new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
 					drivetrain.applyRequest(() -> limelightSwerve
 							.withVelocityX(Constants.SwerveConstants.forwardForAuto * MaxSpeed)
 							.withVelocityY(0)
 							.withRotationalRate(0)
 					)
-				)
+				),
+				new MoveSwerve(0, 0, 0)
 			)
 
 		);

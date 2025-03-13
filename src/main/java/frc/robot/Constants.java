@@ -105,10 +105,11 @@ public final class Constants {
 		public static final double[] degrees = {300, 0, 60, 120, 180, 240, 300, 0, 60, 120, 180, 240};
         public static final double xPosLeft = -.259;
         public static final double zPosLeft = .849;
-		public static final double waitTheyDontLoveYouLikeILoveYou = .4;
+		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;
         public static final double forwardForAuto = .1;
         public static final double xPosRight = .0588;
         public static final double zPosRight = .427;
 		public static final double thetaPos = 0;
+		public static final double swerveError = 0;
 	}
 }
