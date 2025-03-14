@@ -74,6 +74,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     setToBrake();
     posControl = true;
     tarPos = pos;
+    motor.getClosedLoopController().setReference(pos, ControlType.kPosition);
   }
 
   public void changePosition(double changePos) {
@@ -190,10 +191,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("dif", dif);
     SmartDashboard.putNumber("cur", getCurrent());
     SmartDashboard.putNumber("positionLol", getPos());
-    // if (posControl && tarPos >= Constants.ElevatorConstants.floorPosition
-        // && tarPos < Constants.ElevatorConstants.maxPosition) {
-      motor.getClosedLoopController().setReference(tarPos, ControlType.kPosition);
-    // }
+    if (posControl && tarPos >= Constants.ElevatorConstants.floorPosition
+        && tarPos < Constants.ElevatorConstants.maxPosition) {
+      // motor.getClosedLoopController().setReference(tarPos, ControlType.kPosition);
+    }
     
   }
 
