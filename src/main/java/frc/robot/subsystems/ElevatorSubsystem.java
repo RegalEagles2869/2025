@@ -52,7 +52,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     motorFollow = new SparkMax(Constants.MotorIDs.elevatorFollow, MotorType.kBrushless);
     tarPos = Constants.ElevatorConstants.floorPosition;
     posControl = false;
-    // motor.getEncoder().setPosition(0);
+    motor.getEncoder().setPosition(0);
 
     config = new SparkMaxConfig();
     config.inverted(false).idleMode(IdleMode.kBrake);
@@ -190,10 +190,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("dif", dif);
     SmartDashboard.putNumber("cur", getCurrent());
     SmartDashboard.putNumber("positionLol", getPos());
-    if (posControl && tarPos >= Constants.ElevatorConstants.floorPosition
-        && tarPos < Constants.ElevatorConstants.maxPosition) {
+    // if (posControl && tarPos >= Constants.ElevatorConstants.floorPosition
+        // && tarPos < Constants.ElevatorConstants.maxPosition) {
       motor.getClosedLoopController().setReference(tarPos, ControlType.kPosition);
-    }
+    // }
     
   }
 

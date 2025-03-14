@@ -8,8 +8,10 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.TimestampedDoubleArray;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.LimelightHelpers.LimelightResults;
 import frc.robot.LimelightHelpers.PoseEstimate;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -46,6 +48,7 @@ public class LimelightHelpers {
     private static double rx;
     private static double rz;
     private static double theta;
+    private static boolean isThetaDone = false;
 
     /**
      * Represents a Color/Retroreflective Target Result extracted from JSON Output
@@ -1656,6 +1659,15 @@ public class LimelightHelpers {
      * Runs every tick in the periodic function of Swerve.
      */
     public static void generateLimelightStuff() {
+        noPid();
+    }
+
+    public static void Pid() {
+        PIDController p = new PIDController(0, 0, 0);
+        // p.calculate();
+    }
+
+    public static void noPid() {
         try {
             double[] coords = getTargetPose_CameraSpace("limelight-noor");
             // IMUData coords = getIMUData("limelight-noor");
@@ -1665,7 +1677,6 @@ public class LimelightHelpers {
 
             boolean isXDone = true;
             boolean isZDone = true;
-            boolean isThetaDone = true;
             //double realX = LimelightHelpers.getTX("limelight-noor");
             //double realY = LimelightHelpers.getTA("limelight-noor");
             //x y z f y f
@@ -1674,14 +1685,15 @@ public class LimelightHelpers {
             double realTheta = coords[4];
             if (realX == 0 && realZ == 0) return;
             
-            // if (Math.abs(realTheta - Constants.SwerveConstants.thetaPos) > Constants.SwerveConstants.rotationErrorLimelight) {
-            //     if (Constants.SwerveConstants.thetaPos > realTheta) theta = Constants.SwerveConstants.rotIncLimelight;
-            //     else theta = -Constants.SwerveConstants.rotIncLimelight;
-            //     isXDone = false;
-            //     isZDone = false;
-            //     isThetaDone = false;
-            // }
-            // else {
+            if (!isThetaDone && Math.abs(realTheta - Constants.SwerveConstants.leftThetaPos) > Constants.SwerveConstants.rotationErrorLimelight) {
+                if (Constants.SwerveConstants.leftThetaPos > realTheta) theta = Constants.SwerveConstants.rotIncLimelight;
+                else theta = -Constants.SwerveConstants.rotIncLimelight;
+                isXDone = false;
+                isZDone = false;
+                isThetaDone = false;
+            }
+            else {
+                isThetaDone = true;
                 if (Math.abs(realX - Constants.SwerveConstants.xPosLeft) > Constants.SwerveConstants.xErrorLimelight) {
                     isXDone = false;
                     if (realX > Constants.SwerveConstants.xPosLeft) lx = Constants.SwerveConstants.xIncLimelight;
@@ -1689,10 +1701,10 @@ public class LimelightHelpers {
                 }
                 else if (Math.abs(realZ - Constants.SwerveConstants.zPosLeft) > Constants.SwerveConstants.yErrorLimelight) {
                     isXDone = false;
-                    if (realZ > Constants.SwerveConstants.zPosLeft) lz = Constants.SwerveConstants.yIncLimelight;
-                    else lz = -Constants.SwerveConstants.yIncLimelight;
+                    if (realZ > Constants.SwerveConstants.zPosLeft) lz = Constants.SwerveConstants.zIncLimelight;
+                    else lz = -Constants.SwerveConstants.zIncLimelight;
                 }
-            // }
+            }
             SmartDashboard.putNumber("thetaPos", realTheta);
             SmartDashboard.putNumber("xPos", realX);
             SmartDashboard.putNumber("zPos", realZ);
@@ -1715,7 +1727,6 @@ public class LimelightHelpers {
 
             boolean isXDone = true;
             boolean isZDone = true;
-            boolean isThetaDone = true;
             //double realX = LimelightHelpers.getTX("limelight-noor");
             //double realY = LimelightHelpers.getTA("limelight-noor");
             //x y z f y f
@@ -1724,25 +1735,26 @@ public class LimelightHelpers {
             double realTheta = coords[4];
             if (realX == 0 && realZ == 0) return;
             
-            // if (Math.abs(realTheta - Constants.SwerveConstants.thetaPos) > Constants.SwerveConstants.rotationErrorLimelight) {
-            //     if (Constants.SwerveConstants.thetaPos > realTheta) theta = Constants.SwerveConstants.rotIncLimelight;
-            //     else theta = -Constants.SwerveConstants.rotIncLimelight;
-            //     isXDone = false;
-            //     isZDone = false;
-            //     isThetaDone = false;
-            // }
-            // else {
+            if (!isThetaDone && Math.abs(realTheta - Constants.SwerveConstants.rightThetaPos) > Constants.SwerveConstants.rotationErrorLimelight) {
+                if (Constants.SwerveConstants.rightThetaPos > realTheta) theta = Constants.SwerveConstants.rotIncLimelight;
+                else theta = -Constants.SwerveConstants.rotIncLimelight;
+                isXDone = false;
+                isZDone = false;
+                isThetaDone = false;
+            }
+            else {
+                isThetaDone = true;
                 if (Math.abs(realX - Constants.SwerveConstants.xPosRight) > Constants.SwerveConstants.xErrorLimelight) {
                     isXDone = false;
                     if (realX > Constants.SwerveConstants.xPosRight) rx = Constants.SwerveConstants.xIncLimelight;
                     else rx = -Constants.SwerveConstants.xIncLimelight;
                 }
                 else if (Math.abs(realZ - Constants.SwerveConstants.zPosRight) > Constants.SwerveConstants.yErrorLimelight) {
-                    isXDone = false;
-                    if (realZ > Constants.SwerveConstants.zPosRight) rz = Constants.SwerveConstants.yIncLimelight;
-                    else rz = -Constants.SwerveConstants.yIncLimelight;
+                    isZDone = false;
+                    if (realZ > Constants.SwerveConstants.zPosRight) rz = Constants.SwerveConstants.zIncLimelight;
+                    else rz = -Constants.SwerveConstants.zIncLimelight;
                 }
-            // }
+            }
             SmartDashboard.putNumber("thetaPos", realTheta);
             SmartDashboard.putNumber("xPos", realX);
             SmartDashboard.putNumber("zPos", realZ);
@@ -1756,6 +1768,10 @@ public class LimelightHelpers {
             rz = 0;
             theta = 0;
         }
+    }
+
+    public static void setBool(boolean hm) {
+        isThetaDone = hm;
     }
 
     public static double getLx() {

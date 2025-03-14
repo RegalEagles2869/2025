@@ -55,9 +55,6 @@ public class WaitUntilPositionReached extends Command {
     double dx =swerve.getState().Pose.getX() - start.getX();
     double dy =swerve.getState().Pose.getY() - start.getY();
 
-    return 
-      dx * dx + 
-      dy * dy > 
-      goalMeters * goalMeters;
+    return dx * dx + dy * dy > goalMeters * goalMeters;
   }
 }

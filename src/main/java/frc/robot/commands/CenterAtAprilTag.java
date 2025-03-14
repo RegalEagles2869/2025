@@ -47,12 +47,12 @@ public class CenterAtAprilTag extends Command {
     if (isLeft) {
       tarX = Constants.SwerveConstants.xPosLeft;
       tarY = Constants.SwerveConstants.zPosLeft;
-      tarTheta = Constants.SwerveConstants.thetaPos;
+      tarTheta = Constants.SwerveConstants.leftThetaPos;
     }
     else {
       tarX = Constants.SwerveConstants.xPosRight;
       tarY = Constants.SwerveConstants.zPosRight;
-      tarTheta = Constants.SwerveConstants.thetaPos;
+      tarTheta = Constants.SwerveConstants.leftThetaPos;
     }
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -103,8 +103,8 @@ public class CenterAtAprilTag extends Command {
       }
       if (Math.abs(realZ - tarY) > Constants.SwerveConstants.yErrorLimelight) {
         isZDone = false;
-        if (z > tarY) z -= Constants.SwerveConstants.yIncLimelight;
-        else z += Constants.SwerveConstants.yIncLimelight;
+        if (z > tarY) z -= Constants.SwerveConstants.zIncLimelight;
+        else z += Constants.SwerveConstants.zIncLimelight;
       }
     }
     SmartDashboard.putNumber("thetaPos", realTheta);

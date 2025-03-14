@@ -41,7 +41,6 @@ import frc.robot.commands.SetClimberPosition;
 import frc.robot.commands.SetClimberSpeed;
 import frc.robot.commands.SetElevatorPosition;
 import frc.robot.commands.SetElevatorPositionInstant;
-import frc.robot.commands.ElevatorAndSwerve;
 import frc.robot.commands.ElevatorResetPosition;
 import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.SetIntakeSpeed;
@@ -107,8 +106,18 @@ public class RobotContainer {
 		NamedCommands.registerCommand("L2Pos", new SetElevatorPositionInstant(Constants.ElevatorConstants.l2Position));
 		NamedCommands.registerCommand("L3", new L3Coral());
 		NamedCommands.registerCommand("L4", new L4Coral());
-		NamedCommands.registerCommand("Limelight", new SequentialCommandGroup(new MoveSwerve(0, 0, 0), new CenterAtAprilTag(true), new ParallelDeadlineGroup(new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou), new MoveSwerve(0, Constants.SwerveConstants.forwardForAuto, 0))));
 		NamedCommands.registerCommand("StopSwerve", new MoveSwerve(0, 0, 0));
+		
+		NamedCommands.registerCommand("Limelight", 
+			new ParallelDeadlineGroup(
+				new WaitForAlign(true),
+				drivetrain.applyRequest(() -> limelightSwerve
+						.withVelocityX(LimelightHelpers.getRz() * MaxSpeed)
+						.withVelocityY(LimelightHelpers.getRx() * MaxSpeed)
+						.withRotationalRate(LimelightHelpers.getTheta() * MaxAngularRate)
+				)
+			)
+		);
 		// NamedCommands.registerCommand("Order1", new L1Coral());
 		// NamedCommands.registerCommand("Order2", new L2Coral());
 		// NamedCommands.registerCommand("Order2", new L2Coral());
@@ -227,7 +236,7 @@ public class RobotContainer {
 			)
 		);
 			
-		joystick.povUp().onTrue(
+		joystick.povLeft().onTrue(
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					new WaitForAlign(false),
@@ -238,9 +247,9 @@ public class RobotContainer {
 					)
 				),
 				new ParallelDeadlineGroup(
-					// new WaitCommand((Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError)/(Constants.SwerveConstants.forwardForAuto * MaxSpeed)),
+					new WaitCommand((Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError)/(Constants.SwerveConstants.forwardForAuto * MaxSpeed)),
 					// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
-					new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
+					// new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
 					drivetrain.applyRequest(() -> limelightSwerve
 							.withVelocityX(Constants.SwerveConstants.forwardForAuto * MaxSpeed)
 							.withVelocityY(0)
@@ -251,7 +260,7 @@ public class RobotContainer {
 			)
 
 		);
-		joystick.povLeft().whileTrue(
+		joystick.povRight().onTrue(
 			new ParallelDeadlineGroup(
 				new WaitForAlign(true),
 				drivetrain.applyRequest(() -> limelightSwerve
@@ -289,9 +298,9 @@ public class RobotContainer {
 		// drivetrain.getAuto("TheSilly6");
 		// return new WaitCommand(0);
 		// PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory("TestPath");
-		// return drivetrain.getAuto("TheSilly6");
+		return drivetrain.getAuto("TheSilly6");
 		// return new L2Coral();
-		return new CenterAtAprilTag(true);
+		// return new CenterAtAprilTag(true);
 		// return new ParallelDeadlineGroup(new WaitCommand(1), new MoveSwerve(1, 0, 0));
 	
 	}
