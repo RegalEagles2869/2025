@@ -21,11 +21,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Robot.RobotState;
 import frc.robot.commands.CenterAtAprilTag;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.ElevatorToFloor;
@@ -60,7 +62,7 @@ public class RobotContainer {
 	// speed
 	private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
 	// second
-	private Trigger elevatorAndSwerve = new Trigger(() -> elevator.getPos() > Constants.ElevatorConstants.floorPosition);
+	private Trigger elevatorAndSwerve = new Trigger(() -> (elevator.getPos() > Constants.ElevatorConstants.floorPosition && Robot.getState() == RobotState.TELEOP));
 	// max angular velocity
 
 	/* Setting up bindings for necessary control of the swerve drive platform */
@@ -154,8 +156,9 @@ public class RobotContainer {
 		Inputs.getRUMBLE().whileTrue(new RumbleRumble());
 		// Inputs.getTest().onTrue(new DriveToPose(Constants.FieldConstants.coralPose1));
 		// Inputs.getTest().onTrue(new SequentialCommandGroup(new MoveSwerve(0, 0, 0), new L2Coral()));
-		Inputs.getTest().onTrue(new CenterAtAprilTag(true));
+		// Inputs.getTest().onTrue(new CenterAtAprilTag(true));
 		// Inputs.getTest().onTrue(new SetIntakeSpeedWait(Constants.CoralConstants.intakeSpeed));
+		Inputs.getTest().onTrue(new L2Coral());
 		Inputs.getElevatorResetPosition().onTrue(new ElevatorResetPosition(0));
 
 		// Note that X is defi,m ned as forward according to WPILib convention,
@@ -239,7 +242,10 @@ public class RobotContainer {
 		joystick.povLeft().onTrue(
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
-					new WaitForAlign(false),
+					new ParallelRaceGroup(
+						new WaitForAlign(false),
+						new WaitCommand(10)
+					),
 					drivetrain.applyRequest(() -> limelightSwerve
 							.withVelocityX(LimelightHelpers.getLz() * MaxSpeed)
 							.withVelocityY(LimelightHelpers.getLx() * MaxSpeed)
@@ -262,7 +268,10 @@ public class RobotContainer {
 		);
 		joystick.povRight().onTrue(
 			new ParallelDeadlineGroup(
-				new WaitForAlign(true),
+				new ParallelRaceGroup(
+					new WaitForAlign(true),
+					new WaitCommand(10)
+				),
 				drivetrain.applyRequest(() -> limelightSwerve
 						.withVelocityX(LimelightHelpers.getRz() * MaxSpeed)
 						.withVelocityY(LimelightHelpers.getRx() * MaxSpeed)

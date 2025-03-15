@@ -85,6 +85,7 @@ public class Inputs {
     public static Trigger getLimelightTime() {
         return driver1.povUp();
     }
+    
 
     public static void RUMBLERUMBLE(double rumble) {
         try {

@@ -11,7 +11,11 @@ import frc.robot.commands.ElevatorResetPosition;
 import frc.robot.commands.RumbleRumble;
 
 public class Robot extends TimedRobot {
+  public enum RobotState {
+    DISABLED, TELEOP, AUTON, TEST
+  }
   private Command m_autonomousCommand;
+  private static RobotState state = RobotState.DISABLED;
 
   private final RobotContainer m_robotContainer;
 
@@ -28,6 +32,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     Inputs.getRUMBLE().whileTrue(new RumbleRumble().ignoringDisable(true));
     Inputs.getElevatorResetPosition().whileTrue(new ElevatorResetPosition(0).ignoringDisable(true));
+    state = RobotState.DISABLED;
   }
 
   @Override
@@ -38,6 +43,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    state = RobotState.AUTON;
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -53,6 +59,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    state = RobotState.TELEOP;
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -60,6 +67,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    state = RobotState.TEST;
     // if (getPos() > Constants.ElevatorConstants.floorPosition) {
     //   CommandScheduler.getInstance().schedule(null);
     // }
@@ -70,6 +78,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    state = RobotState.TEST;
     CommandScheduler.getInstance().cancelAll();
   }
 
@@ -81,4 +90,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {}
+
+  public static RobotState getState() {
+    return state;
+  }
 }
