@@ -326,9 +326,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public void periodic() {
         SmartDashboard.putNumber("limelightX", LimelightHelpers.getTX("limelight-noor"));
         SmartDashboard.putNumber("limelightY", LimelightHelpers.getTY("limelight-noor"));
-        SmartDashboard.putNumber("XDif", getState().Pose.getX() - 6.1978888511657715);
-        SmartDashboard.putNumber("YDif", getState().Pose.getY() - 5.592275619506836);
-        SmartDashboard.putNumber("RotDif", getState().Pose.getRotation().getDegrees() - 2.0852476398539244 * 180/3.14);
+        
+        SmartDashboard.putNumber("xSpeedLime", LimelightHelpers.getLx());
+        SmartDashboard.putNumber("zSpeedLime", LimelightHelpers.getLz());
+        SmartDashboard.putNumber("thetaSpeedLime", LimelightHelpers.getThetaLeft());
         /*
          * Periodically try to apply the operator perspective.
          * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
@@ -336,6 +337,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          * Otherwise, only check and apply the operator perspective if the DS is disabled.
          * This ensures driving behavior doesn't change until an explicit disable event occurs during testing.
          */
+        SmartDashboard.putBoolean("finished right", LimelightHelpers.getFinishedRight());
         LimelightHelpers.generateLimelightStuff();
         // doLimelightStuff();
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {

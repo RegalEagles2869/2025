@@ -13,25 +13,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Limelight"
+            "name": "StopSwerve"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Silly6.1"
+            "name": "LimelightRight"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "StopAndWait"
+            "name": "L4"
           }
         },
         {
@@ -43,13 +37,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Limelight"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "L3"
+            "name": "StopAndWait"
           }
         },
         {
@@ -61,25 +49,19 @@
         {
           "type": "named",
           "data": {
-            "name": "StopAndWait"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Silly6.4"
+            "name": "StopSwerve"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Limelight"
+            "name": "LimelightRight"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Order2"
+            "name": "L4"
           }
         },
         {
@@ -103,73 +85,19 @@
         {
           "type": "named",
           "data": {
-            "name": "Limelight"
+            "name": "StopSwerve"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "SourceIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Silly6.7"
+            "name": "LimelightLeft"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "StopAndWait"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Silly6.8"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Limelight"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "SourceIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Silly6.9"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopAndWait"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Silly6.10"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Limelight"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Order3"
+            "name": "L4"
           }
         }
       ]

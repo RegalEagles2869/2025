@@ -101,7 +101,7 @@ public class CenterAtAprilTag extends Command {
         if (x > tarX) x += Constants.SwerveConstants.xIncLimelight;
         else x -= Constants.SwerveConstants.xIncLimelight;
       }
-      if (Math.abs(realZ - tarY) > Constants.SwerveConstants.yErrorLimelight) {
+      if (Math.abs(realZ - tarY) > Constants.SwerveConstants.zErrorLimelight) {
         isZDone = false;
         if (z > tarY) z -= Constants.SwerveConstants.zIncLimelight;
         else z += Constants.SwerveConstants.zIncLimelight;

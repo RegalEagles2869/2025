@@ -33,9 +33,11 @@ public class WaitForAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (isRight)
-      return LimelightHelpers.getRx() == 0 && LimelightHelpers.getRz() == 0 && LimelightHelpers.getTheta() == 0 && LimelightHelpers.getTV("limelight-noor");
-    else
-      return LimelightHelpers.getLx() == 0 && LimelightHelpers.getLz() == 0 && LimelightHelpers.getTheta() == 0 && LimelightHelpers.getTV("limelight-noor");
+    // if (isRight)
+    //   return LimelightHelpers.getRx() == 0 && LimelightHelpers.getRz() == 0 && LimelightHelpers.getThetaLeft() == 0 && LimelightHelpers.getTV("limelight-noor");
+    // else
+    //   return LimelightHelpers.getLx() == 0 && LimelightHelpers.getLz() == 0 && LimelightHelpers.getThetaLeft() == 0 && LimelightHelpers.getTV("limelight-noor");
+    if (isRight) return LimelightHelpers.getFinishedRight();
+    else return LimelightHelpers.getFinishedLeft();
   }
 }
