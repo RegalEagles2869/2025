@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class CoralIntakeSubsystem extends SubsystemBase {
-  /** Creates a new CoralIntakeSubsystem. */
   private TalonFX motor;
-
+  
   private static CoralIntakeSubsystem instance;
-
+  
+  /** Creates a new CoralIntakeSubsystem. */
   public static CoralIntakeSubsystem getInstance() {
     if (instance == null) instance = new CoralIntakeSubsystem();
     return instance;

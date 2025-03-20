@@ -180,8 +180,8 @@ public class RobotContainer {
 		// Inputs.getClimberNeutral().onTrue(new SetClimberPosition(Constants.ClimberConstants.floorPosition));
 		// Inputs.getClimberGood().onTrue(new SetClimberPosition(Constants.ClimberConstants.goodPosition));
 
-		Inputs.getElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.2));
-		Inputs.getElevatorSpeedDown().whileTrue(new SetElevatorSpeed(-.2));
+		Inputs.getElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.1));
+		Inputs.getElevatorSpeedDown().whileTrue(new SetElevatorSpeed(-.1));
 		Inputs.getIntakeIn().whileTrue(new SetIntakeSpeed(-Constants.CoralConstants.intakeSpeed));
 		Inputs.getIntakeOut().whileTrue(new SetIntakeSpeed(Constants.CoralConstants.intakeSpeed));
 
@@ -273,7 +273,7 @@ public class RobotContainer {
 			)
 		);
 			
-		joystick.povLeft().whileTrue(
+		joystick.povLeft().onTrue(
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
@@ -301,7 +301,7 @@ public class RobotContainer {
 			)
 
 		);
-		joystick.povRight().whileTrue(
+		joystick.povRight().onTrue(
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(

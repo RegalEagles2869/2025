@@ -324,8 +324,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("limelightX", LimelightHelpers.getTX("limelight-noor"));
-        SmartDashboard.putNumber("limelightY", LimelightHelpers.getTY("limelight-noor"));
+        SmartDashboard.putNumber("limelightX", LimelightHelpers.getTX("noor"));
+        SmartDashboard.putNumber("limelightY", LimelightHelpers.getTY(""));
         
         SmartDashboard.putNumber("xSpeedLime", LimelightHelpers.getLx());
         SmartDashboard.putNumber("zSpeedLime", LimelightHelpers.getLz());

@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.units.measure.Time;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -51,6 +50,8 @@ public final class Constants {
 		public static final double maxPosition = 10000;
 		public static final double basePosition = 0;
 		public static final double l1Position = 0;
+		//
+		//
 		public static final double l2Position = 13.690503120422363;
 		public static final double l3Position = 35.83300018310547;
 		// public static final double l4Position = 70.19239807128906;
@@ -96,8 +97,8 @@ public final class Constants {
 
 	public static class SwerveConstants {
 
-		public static final double xErrorLimelight = .05;
-		public static final double zErrorLimelight = .05;
+		public static final double xErrorLimelight = .04;
+		public static final double zErrorLimelight = .04;
 		// public static final double xErrorLimelight = 0;
 		// public static final double zErrorLimelight = 0;
 		public static final double rotationErrorLimelight = 10;
@@ -106,21 +107,25 @@ public final class Constants {
 		public static final double zIncLimelight = .1;
 		public static final double[] ids = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
 		public static final double[] degrees = {300, 0, 60, 120, 180, 240, 300, 0, 60, 120, 180, 240};
-        public static final double xPosLeft = -.343;
-        public static final double zPosLeft = .92;
+        // public static final double xPosLeft = -.343;
+        public static final double xPosLeft = -.25;
+        // public static final double zPosLeft = .92;
+        public static final double zPosLeft = .772;
 		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;
         public static final double forwardForAuto = .1;
-        public static final double xPosRight = .0434;
+        // public static final double xPosRight = .0434;
+        public static final double xPosRight = .08;
         // public static final double xPosRight = 0;
         // public static final double zPosRight = .427;
         // public static final double zPosRight = .507;
-        public static final double zPosRight = .56;
+        // public static final double zPosRight = .56;
+        public static final double zPosRight = .452;
         // public static final double zPosRight = 1;
-		public static final double leftThetaPos = 2;
-		public static final double rightThetaPos = 5;
+		public static final double leftThetaPos = 3;
+		public static final double rightThetaPos = 1;
 		public static final double swerveError = -.45;
 
-        public static final PIDController pidLol = new PIDController(3.5, 0, .002);
+        public static final PIDController pidLol = new PIDController(4.3, 0, .002);
         public static final PIDController pidRot = new PIDController(.03, 0, 0);
 		public static final double LimelightMultiplier = .1;
 	}
