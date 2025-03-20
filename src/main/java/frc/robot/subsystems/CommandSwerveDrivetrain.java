@@ -471,11 +471,4 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
-    public void limelightTime() {
-        
-    }
-
-    public void alignToTarget() {
-        
-    }
 }

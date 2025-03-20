@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.ElevatorResetPosition;
+import frc.robot.commands.LoadAutoCommand;
 import frc.robot.commands.RumbleRumble;
 
 public class Robot extends TimedRobot {
@@ -17,7 +18,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private static RobotState state = RobotState.DISABLED;
 
-  private final RobotContainer m_robotContainer;
+  public static RobotContainer m_robotContainer;
 
   public Robot() {
     m_robotContainer = new RobotContainer();
@@ -36,7 +37,11 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    if (Inputs.getGenAuto()) {
+      new LoadAutoCommand().ignoringDisable(true).schedule();
+    }
+  }
 
   @Override
   public void disabledExit() {}

@@ -6,6 +6,9 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -13,10 +16,15 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -59,6 +67,11 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class RobotContainer {
 	private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
 	private ElevatorSubsystem elevator;
+	private enum Autos {
+		Nothing, THREESOME, SILLY6
+	}
+	private SendableChooser<Autos> newautopick;
+	private Command autoCommand;
 	// speed
 	private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
 	// second
@@ -161,6 +174,13 @@ public class RobotContainer {
 		// NamedCommands.registerCommand("Order4", new L4Coral());
 		// NamedCommands.registerCommand("SourceIntake", new SourceIntake());
 		NamedCommands.registerCommand("StopAndWait", new SequentialCommandGroup(new MoveSwerve(0, 0, 0), new WaitCommand(1)));
+		
+		newautopick = new SendableChooser<>();
+		newautopick.addOption("Nothing", Autos.Nothing);
+		newautopick.addOption("Threesome", Autos.THREESOME);
+		newautopick.addOption("Silly6", Autos.SILLY6);
+		Shuffleboard.getTab("auto").add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
+		
 		// Do this in either robot periodic or subsystem periodic
 		field.setRobotPose(drivetrain.getNegativePose());
 		configureBindings();
@@ -338,6 +358,34 @@ public class RobotContainer {
 		drivetrain.registerTelemetry(logger::telemeterize);
 	}
 
+	private ArrayList<Trajectory> autoTraj = new ArrayList<>();
+
+	public void generateTrajectories(String name){
+		try{
+			List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(name);
+			for(PathPlannerPath path:paths){
+				autoTraj.add(TrajectoryGenerator.generateTrajectory(path.getPathPoses(), new TrajectoryConfig(MaxSpeed, MaxAngularRate)));
+			// autoTraj.add(path.getPathPoses());   
+			}
+		}
+		catch(Exception e){}
+	}
+	
+	public void generateAndLoad() {
+		autoCommand = generateAutoCommand();
+	}	
+	private Command generateAutoCommand(){
+		switch(newautopick.getSelected()){
+			case SILLY6:
+				generateTrajectories("TheSilly6WithLimelight");
+				return TunerConstants.createDrivetrain().getAuto("TheSilly6WithLimelight");
+			case THREESOME:
+				generateTrajectories("BottomThreesome");
+				return TunerConstants.createDrivetrain().getAuto("TheSilly6WithLimelight");
+			default: //Autos.Nothing
+			return new WaitCommand(50000);
+		}
+	}
 
 	public Command getAutonomousCommand() {
 		// return drivetrain.moveTo(new Pose2d(1, 0, new Rotation2d(0)));
@@ -345,10 +393,15 @@ public class RobotContainer {
 		// drivetrain.getAuto("TheSilly6");
 		// return new WaitCommand(0);
 		// PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory("TestPath");
-		return drivetrain.getAuto("TheSilly6WithLimelight");
+		// return drivetrain.getAuto("TheSilly6WithLimelight");
 		// return new L2Coral();
 		// return new CenterAtAprilTag(true);
 		// return new ParallelDeadlineGroup(new WaitCommand(1), new MoveSwerve(1, 0, 0));
+		
+		if (autoCommand == null) {
+			autoCommand = generateAutoCommand();
+		  }
+		  return autoCommand;
 	
 	}
 }
