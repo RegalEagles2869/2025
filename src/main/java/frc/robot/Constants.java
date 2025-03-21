@@ -85,6 +85,7 @@ public final class Constants {
 		public static final double floorPosition = 0;
 		public static final double goodPosition = 250;
 		public static final double maxPosition = 100000;
+		public static final double speed = .3;
 		public static final double error = 0;
 	}
 

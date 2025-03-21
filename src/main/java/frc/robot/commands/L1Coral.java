@@ -18,7 +18,7 @@ public class L1Coral extends SequentialCommandGroup {
     addCommands(
       // new SetElevatorPositionInstant(Constants.ElevatorConstants.l2Position),
       new SetElevatorPositionInstant(Constants.ElevatorConstants.l1Position),
-      new WaitCommand(.1),
+      new WaitCommand(1),
       new ParallelDeadlineGroup(
       //   // new WaitCommand(Constants.CoralConstants.intakeTime), 
         new WaitCommand(.5), 

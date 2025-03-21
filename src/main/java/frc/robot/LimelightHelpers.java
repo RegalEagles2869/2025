@@ -1782,7 +1782,7 @@ public class LimelightHelpers {
                     if (realX > Constants.SwerveConstants.xPosRight) rx = Constants.SwerveConstants.xIncLimelight;
                     else rx = -Constants.SwerveConstants.xIncLimelight;
                 }
-                else if (Math.abs(realZ - Constants.SwerveConstants.zPosRight) > Constants.SwerveConstants.zErrorLimelight) {
+                else if (Math.abs(realZ - (Constants.SwerveConstants.zPosRight + SmartDashboard.getNumber("ZOffsetRight", 0))) > Constants.SwerveConstants.zErrorLimelight) {
                     isZDone = false;
                     if (realZ > Constants.SwerveConstants.zPosRight) rz = Constants.SwerveConstants.zIncLimelight;
                     else rz = -Constants.SwerveConstants.zIncLimelight;

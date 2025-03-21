@@ -200,6 +200,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         field2 = new Field2d();
     }
 
+    private ChassisSpeeds setSpeeds(ChassisSpeeds speeds) {
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+            return new ChassisSpeeds(speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        }
+        else {
+            return speeds;
+        }
+    }
+
     private void configureAutoBuilder() {
         try {
             config = RobotConfig.fromGUISettings();
@@ -209,7 +218,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 () -> getState().Speeds, // Supplier of current robot speeds
                 // Consumer of ChassisSpeeds and feedforwards to drive the robot
                 (speeds, feedforwards) -> setControl(
-                    m_pathApplyRobotSpeeds.withSpeeds(speeds)
+                    m_pathApplyRobotSpeeds.withSpeeds(setSpeeds(speeds))
                         .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
                         .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
                 ),
@@ -223,7 +232,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 ),
                 config,
                 // Assume the path needs to be flipped for Red vs Blue, this is normally the case
-                () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+                // () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+                () -> false,
                 this // Subsystem for requirements
             );
         } catch (Exception ex) {
@@ -354,7 +364,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         field.setRobotPose(getState().Pose);
         SmartDashboard.putData("Field", field);
 
-        SmartDashboard.putNumber("PigeonHaha", getPigeonDegrees() % 360);
 
         // Do this in either robot periodic or subsystem periodic
     }
@@ -417,7 +426,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     public Command getAuto(String autoName){
         try {
-            SmartDashboard.putNumber("fish degress hhhaha", PathPlannerAuto.getPathGroupFromAutoFile(autoName).get(0).getStartingDifferentialPose().getRotation().getDegrees());
             Pose2d poseLolHahaha = new Pose2d(
                 PathPlannerAuto.getPathGroupFromAutoFile(autoName).get(0).getStartingDifferentialPose().getX(),
                 PathPlannerAuto.getPathGroupFromAutoFile(autoName).get(0).getStartingDifferentialPose().getY(),
@@ -425,9 +433,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             );
             resetPose(poseLolHahaha);
         }
-        catch (Exception e) {
-            SmartDashboard.putNumber("fish degress hhhaha", -1);
-        }
+        catch (Exception e) {}
         return new PathPlannerAuto(autoName);
     }
     

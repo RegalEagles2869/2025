@@ -74,13 +74,16 @@ public class Inputs {
         return operatorBoard.button(12);
     }
     public static Trigger getTest() {
-        return operatorBoard.button(13);
+        return operatorBoard.button(17);
     }
     public static Trigger getElevatorDown() {
         return operatorBoard.button(14);
     }
     public static Trigger getElevatorResetPosition() {
         return operatorBoard.button(15);
+    }
+    public static Trigger getGo() {
+        return operatorBoard.button(13);
     }
     public static boolean getGenAuto() {
         return operatorBoard.button(16).getAsBoolean();
