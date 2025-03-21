@@ -1768,7 +1768,7 @@ public class LimelightHelpers {
             double realTheta = coords[4];
             if (realX == 0 && realZ == 0) return;
             
-            if (!isThetaDone && Math.abs(realTheta - Constants.SwerveConstants.rightThetaPos) > Constants.SwerveConstants.rotationErrorLimelight) {
+            if (!isThetaDone && Math.abs(realTheta - Constants.SwerveConstants.rightThetaPos) > SmartDashboard.getNumber("LimelightErrorTheta", Constants.SwerveConstants.rotationErrorLimelight)) {
                 if (Constants.SwerveConstants.rightThetaPos > realTheta) thetaRight = Constants.SwerveConstants.rotIncLimelight;
                 else thetaRight = -Constants.SwerveConstants.rotIncLimelight;
                 isXDone = false;
@@ -1777,12 +1777,12 @@ public class LimelightHelpers {
             }
             else {
                 isThetaDone = true;
-                if (Math.abs(realX - Constants.SwerveConstants.xPosRight) > Constants.SwerveConstants.xErrorLimelight) {
+                if (Math.abs(realX - Constants.SwerveConstants.xPosRight) > SmartDashboard.getNumber("LimelightErrorX", Constants.SwerveConstants.xErrorLimelight)) {
                     isXDone = false;
                     if (realX > Constants.SwerveConstants.xPosRight) rx = Constants.SwerveConstants.xIncLimelight;
                     else rx = -Constants.SwerveConstants.xIncLimelight;
                 }
-                else if (Math.abs(realZ - (Constants.SwerveConstants.zPosRight + SmartDashboard.getNumber("ZOffsetRight", 0))) > Constants.SwerveConstants.zErrorLimelight) {
+                else if (Math.abs(realZ - (Constants.SwerveConstants.zPosRight + SmartDashboard.getNumber("ZOffsetRight", 0))) > SmartDashboard.getNumber("LimelightErrorZ", Constants.SwerveConstants.zErrorLimelight)) {
                     isZDone = false;
                     if (realZ > Constants.SwerveConstants.zPosRight) rz = Constants.SwerveConstants.zIncLimelight;
                     else rz = -Constants.SwerveConstants.zIncLimelight;

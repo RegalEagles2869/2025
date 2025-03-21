@@ -4,6 +4,15 @@
 
 package frc.robot;
 
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,6 +22,7 @@ import frc.robot.commands.LoadAutoCommand;
 import frc.robot.commands.RumbleRumble;
 
 public class Robot extends TimedRobot {
+
   public enum RobotState {
     DISABLED, TELEOP, AUTON, TEST
   }

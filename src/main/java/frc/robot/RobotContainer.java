@@ -9,6 +9,11 @@ import static edu.wpi.first.units.Units.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -19,6 +24,10 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,6 +36,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -69,10 +79,11 @@ public class RobotContainer {
 	private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
 	private ElevatorSubsystem elevator;
 	private enum Autos {
-		Nothing, Three, SILLY6, MeetMeInTheMiddle
+		Nothing, Right, Left, MeetMeInTheMiddle
 	}
 	private SendableChooser<Autos> newautopick;
 	private Command autoCommand;
+	private Thread m_visionThread;
 	// speed
 	private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
 	// second
@@ -111,6 +122,7 @@ public class RobotContainer {
 	public CommandSwerveDrivetrain drivetrain;
 
 	public RobotContainer() {
+		// startCamera();
 		drivetrain = TunerConstants.createDrivetrain();
 		elevator = ElevatorSubsystem.getInstance();
 		elevator.setEncoderPosition(0);
@@ -123,13 +135,26 @@ public class RobotContainer {
 		NamedCommands.registerCommand("L3", new L3Coral());
 		NamedCommands.registerCommand("L4", new L4Coral());
 		NamedCommands.registerCommand("StopSwerve", new MoveSwerve(0, 0, 0));
+
+		NamedCommands.registerCommand("MoveToSource", 
+			new ParallelDeadlineGroup(
+				new WaitCommand(3),
+				// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
+				// new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
+				drivetrain.applyRequest(() -> limelightSwerve
+						.withVelocityX(-Constants.SwerveConstants.forwardForAuto * MaxSpeed)
+						.withVelocityY(0)
+						.withRotationalRate(0)
+				)
+			)
+		);
 		
 		NamedCommands.registerCommand("LimelightLeft", 
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
 						new WaitForAlign(false),
-						new WaitCommand(10)
+						new WaitCommand(3)
 					),
 					drivetrain.applyRequest(() -> limelightSwerve
 							.withVelocityX(LimelightHelpers.getLz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
@@ -156,7 +181,7 @@ public class RobotContainer {
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
 						new WaitForAlign(true),
-						new WaitCommand(10)
+						new WaitCommand(3)
 					),
 					drivetrain.applyRequest(() -> limelightSwerve
 							.withVelocityX(LimelightHelpers.getRz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
@@ -178,8 +203,8 @@ public class RobotContainer {
 		
 		newautopick = new SendableChooser<>();
 		newautopick.addOption("Nothing", Autos.Nothing);
-		newautopick.addOption("Threesome", Autos.Three);
-		newautopick.addOption("Silly6", Autos.SILLY6);
+		newautopick.addOption("Threesome", Autos.Right);
+		newautopick.addOption("Silly6", Autos.Left);
 		newautopick.addOption("MeetMeInTheMiddle", Autos.MeetMeInTheMiddle);
 		Shuffleboard.getTab("auto").add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
 		
@@ -190,6 +215,7 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
+		SmartDashboard.putString("AutonChoice", "");
 		Inputs.getResetGyro().onTrue(new ResetGyro());
 
 		Inputs.getElevatorDown().onTrue(new ElevatorToFloor());
@@ -204,8 +230,10 @@ public class RobotContainer {
 
 		Inputs.getElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.1));
 		Inputs.getElevatorSpeedDown().whileTrue(new SetElevatorSpeed(-.1));
-		Inputs.getIntakeIn().whileTrue(new SetIntakeSpeed(-Constants.CoralConstants.intakeSpeed));
+
+		Inputs.getIntakeIn().whileTrue(new SetIntakeSpeed(-.2));
 		Inputs.getIntakeOut().whileTrue(new SetIntakeSpeed(Constants.CoralConstants.intakeSpeed));
+		Inputs.getSlowIntake().whileTrue(new SetIntakeSpeed(.1));
 
 		Inputs.getClimberUp().whileTrue(new SetClimberSpeed(Constants.ClimberConstants.speed));
 		Inputs.getClimberDown().whileTrue(new SetClimberSpeed(-Constants.ClimberConstants.speed));
@@ -216,6 +244,26 @@ public class RobotContainer {
 		// Inputs.getTest().onTrue(new SetIntakeSpeedWait(Constants.CoralConstants.intakeSpeed));
 		Inputs.getTest().onTrue(new L2Coral());
 		Inputs.getElevatorResetPosition().onTrue(new ElevatorResetPosition(0));
+
+		SmartDashboard.putNumber("LimelightErrorX", Constants.SwerveConstants.xErrorLimelight);
+		SmartDashboard.putNumber("LimelightErrorZ", Constants.SwerveConstants.zErrorLimelight);
+		SmartDashboard.putNumber("LimelightErrorTheta", Constants.SwerveConstants.rotationErrorLimelight);
+
+		Inputs.getStartCamera().onTrue(new Command() {
+			private boolean coolBool = true;
+			@Override
+			public void initialize() {
+				try {
+					if (coolBool) {
+						startCamera();
+					}
+					coolBool = false;
+				}
+				catch(Exception e) {
+					
+				}
+			}
+		}.ignoringDisable(true));
 
 		// Note that X is defi,m ned as forward according to WPILib convention,
 		// and Y is defined as to the left according to WPILib convention.
@@ -300,7 +348,7 @@ public class RobotContainer {
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
 						new WaitForAlign(false),
-						new WaitCommand(10)
+						new WaitCommand(3)
 					),
 					drivetrain.applyRequest(() -> limelightSwerve
 							.withVelocityX(LimelightHelpers.getLz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
@@ -343,7 +391,7 @@ public class RobotContainer {
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
 						new WaitForAlign(true),
-						new WaitCommand(10)
+						new WaitCommand(3)
 					),
 					drivetrain.applyRequest(() -> limelightSwerve
 							.withVelocityX(LimelightHelpers.getRz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
@@ -393,55 +441,28 @@ public class RobotContainer {
 		autoCommand = generateAutoCommand();
 	}
 
-	private Command generateAutoCommand(){
+	public Command generateAutoCommand(){
 		switch(newautopick.getSelected()){
-			case SILLY6:
+			case Left:
+			//left from robot
 			    // start close to curtain (Blue DS right))
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
-				System.out.println("fish1");
+				SmartDashboard.putString("AutonChoice", "Left");
 				generateTrajectories("TheSilly6WithLimelight");
 				return TunerConstants.createDrivetrain().getAuto("TheSilly6WithLimelight");
-			case Three:
+			case Right:
+			//Right from robot
 			//near audience (blue DS left, Red DS right side)
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
-				System.out.println("fish2");
+				SmartDashboard.putString("AutonChoice", "Right");
 				generateTrajectories("BottomThreesome");
 				return TunerConstants.createDrivetrain().getAuto("BottomThreesome");
 			case MeetMeInTheMiddle:
+				SmartDashboard.putString("AutonChoice", "MeetMeInTheMiddle");
 				//middle pillar
 				return new SequentialCommandGroup(
 					new ParallelDeadlineGroup(
 						new ParallelRaceGroup(
 							new WaitForAlign(true),
-							new WaitCommand(10)
+							new WaitCommand(3)
 						),
 						drivetrain.applyRequest(() -> limelightSwerve
 								.withVelocityX(LimelightHelpers.getRz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
@@ -471,9 +492,52 @@ public class RobotContainer {
 		// return new CenterAtAprilTag(true);
 		// return new ParallelDeadlineGroup(new WaitCommand(1), new MoveSwerve(1, 0, 0));
 		
-		// if (autoCommand == null) {
-		// 	autoCommand = generateAutoCommand();
-		// }
-		return generateAutoCommand();
+		if (autoCommand == null) {
+			autoCommand = generateAutoCommand();
+		}
+		return autoCommand;
 	}
+	
+  private void startCamera() {
+      m_visionThread =
+		new Thread(
+			() -> {
+				// Get the UsbCamera from CameraServer
+				UsbCamera camera = CameraServer.startAutomaticCapture();
+				// Set the resolution
+				camera.setResolution(320, 240);
+
+				// Get a CvSink. This will capture Mats from the camera
+				CvSink cvSink = CameraServer.getVideo();
+				// Setup a CvSource. This will send images back to the Dashboard
+				// CvSource outputStream = CameraServer.putVideo("Rectangle", 640, 480);
+				// outputStream.setFPS(-1);
+				// Mats are very memory expensive. Lets reuse this Mat.
+				Mat mat = new Mat();
+
+				// This cannot be 'true'. The program will never exit if it is. This
+				// lets the robot stop this thread when restarting robot code or
+				// deploying.
+				while (!Thread.interrupted()) {
+				// Tell the CvSink to grab a frame from the camera and put it
+				// in the source mat.  If there is an error notify the output.
+				if (cvSink.grabFrame(mat) == 0) {
+					// Send the output the error.
+					// outputStream.notifyError(cvSink.getError());
+					// skip the rest of the current iteration
+					continue;
+				}
+				// Put a rectangle on the image
+				// Imgproc.rectangle(
+				// 	mat, new Point(0, 240/2), new Point(700, 241/2), new Scalar(0, 0, 0), 5);
+
+				// Imgproc.rectangle(
+				// 	mat, new Point(310/2, 0), new Point(311/2, 700), new Scalar(0, 0, 0), 5);
+				// Give the output stream a new image to display
+				// outputStream.putFrame(mat);
+				}
+			});
+	m_visionThread.setDaemon(true);
+	m_visionThread.start();
+  }
 }

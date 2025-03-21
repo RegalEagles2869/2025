@@ -7,6 +7,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
@@ -30,6 +35,10 @@ import com.pathplanner.lib.path.PointTowardsZone;
 import com.pathplanner.lib.path.RotationTarget;
 import com.pathplanner.lib.path.Waypoint;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -67,7 +76,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private Field2d field;
     private Field2d field2;
 
-    
 
     private RobotConfig config;
 
@@ -201,12 +209,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private ChassisSpeeds setSpeeds(ChassisSpeeds speeds) {
-        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-            return new ChassisSpeeds(speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
-        }
-        else {
-            return speeds;
-        }
+        // if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+        //     return speeds;
+        // }
+        // else {
+        //     return new ChassisSpeeds(speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        // }
+        return speeds;
     }
 
     private void configureAutoBuilder() {
@@ -218,7 +227,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 () -> getState().Speeds, // Supplier of current robot speeds
                 // Consumer of ChassisSpeeds and feedforwards to drive the robot
                 (speeds, feedforwards) -> setControl(
-                    m_pathApplyRobotSpeeds.withSpeeds(setSpeeds(speeds))
+                    m_pathApplyRobotSpeeds.withSpeeds(speeds)
                         .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
                         .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
                 ),
@@ -363,7 +372,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // Do this in either robot or subsystem init
         field.setRobotPose(getState().Pose);
         SmartDashboard.putData("Field", field);
-
 
         // Do this in either robot periodic or subsystem periodic
     }

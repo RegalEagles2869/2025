@@ -85,6 +85,12 @@ public class Inputs {
     public static Trigger getGo() {
         return operatorBoard.button(13);
     }
+    public static Trigger getSlowIntake() {
+        return operatorBoard.button(18);
+    }
+    public static Trigger getStartCamera() {
+        return operatorBoard.button(19);
+    }
     public static boolean getGenAuto() {
         return operatorBoard.button(16).getAsBoolean();
     }
