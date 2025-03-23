@@ -54,6 +54,9 @@ public class ElevatorToFloorFinal extends Command {
     // elevator.setToCoast();
     // return true;
     // }
+    if (elevator.bottomed) {
+      elevator.setEncoderPosition(0);
+    }
     return elevator.bottomed;
   }
 }

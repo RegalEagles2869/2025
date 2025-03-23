@@ -16,6 +16,9 @@ public class ElevatorToFloor extends SequentialCommandGroup {
   public ElevatorToFloor() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new SetElevatorPosition(Constants.ElevatorConstants.floorPosition), new ElevatorToFloorFinal(), new WaitCommand(1), new SetEncoderElevator(0));
+    addCommands(
+      new SetElevatorPosition(Constants.ElevatorConstants.floorPosition), 
+      new ElevatorToFloorFinal()
+    );
   }
 }

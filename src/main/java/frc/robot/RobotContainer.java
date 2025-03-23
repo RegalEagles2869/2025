@@ -134,7 +134,19 @@ public class RobotContainer {
 		NamedCommands.registerCommand("L2Pos", new SetElevatorPositionInstant(Constants.ElevatorConstants.l2Position));
 		NamedCommands.registerCommand("L3", new L3Coral());
 		NamedCommands.registerCommand("L4", new L4Coral());
-		NamedCommands.registerCommand("StopSwerve", new MoveSwerve(0, 0, 0));
+		// NamedCommands.registerCommand("StopSwerve", new MoveSwerve(0, 0, 0));
+		NamedCommands.registerCommand("StopSwerve",
+			new ParallelDeadlineGroup(
+				new WaitCommand(.1),
+				// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
+				// new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
+				drivetrain.applyRequest(() -> limelightSwerve
+						.withVelocityX(0)
+						.withVelocityY(0)
+						.withRotationalRate(0)
+				)
+			)
+		);
 
 		NamedCommands.registerCommand("MoveToSource", 
 			new ParallelDeadlineGroup(
@@ -232,7 +244,7 @@ public class RobotContainer {
 		Inputs.getElevatorSpeedDown().whileTrue(new SetElevatorSpeed(-.1));
 
 		Inputs.getIntakeIn().whileTrue(new SetIntakeSpeed(-.2));
-		Inputs.getIntakeOut().whileTrue(new SetIntakeSpeed(Constants.CoralConstants.intakeSpeed));
+		Inputs.getIntakeOut().whileTrue(new SetIntakeSpeed(SmartDashboard.getNumber("IntakeSpeed", Constants.CoralConstants.intakeSpeed)));
 		Inputs.getSlowIntake().whileTrue(new SetIntakeSpeed(.1));
 
 		Inputs.getClimberUp().whileTrue(new SetClimberSpeed(Constants.ClimberConstants.speed));
@@ -404,6 +416,7 @@ public class RobotContainer {
 			)
 		);
 		SmartDashboard.putNumber("ZOffsetRight", 0);
+		SmartDashboard.putNumber("IntakeSpeed", Constants.CoralConstants.intakeSpeed);
 		SmartDashboard.putNumber("constantX", Constants.SwerveConstants.xPosLeft);
 		SmartDashboard.putNumber("constantZ", Constants.SwerveConstants.zPosLeft);
 		joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));

@@ -91,15 +91,15 @@ public final class Constants {
 
 	public static class CoralConstants {
 		public static final double minCurrentRunning = 0;
-		public static final double intakeSpeed = 1.0;
+		public static final double intakeSpeed = .9;
 		public static final double intakeTime = .5;
 		public static final double currentToStopIntaking = 10;
 	}
 
 	public static class SwerveConstants {
 
-		public static final double xErrorLimelight = .05;
-		public static final double zErrorLimelight = .05;
+		public static final double xErrorLimelight = .04;
+		public static final double zErrorLimelight = .04;
 		// public static final double xErrorLimelight = 0;
 		// public static final double zErrorLimelight = 0;
 		public static final double rotationErrorLimelight = 10;
