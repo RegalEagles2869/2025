@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -46,7 +47,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Robot.RobotState;
-import frc.robot.commands.CenterAtAprilTag;
 import frc.robot.commands.DriveToPose;
 import frc.robot.commands.ElevatorToFloor;
 import frc.robot.commands.ElevatorToFloorFinal;
@@ -69,6 +69,7 @@ import frc.robot.commands.SetIntakeSpeedWait;
 import frc.robot.commands.SourceIntake;
 import frc.robot.commands.MoveSwerve;
 import frc.robot.commands.TestCommand;
+import frc.robot.commands.WaitDontTip;
 import frc.robot.commands.WaitForAlign;
 import frc.robot.commands.WaitUntilPositionReached;
 import frc.robot.generated.TunerConstants;
@@ -134,6 +135,8 @@ public class RobotContainer {
 		NamedCommands.registerCommand("L2Pos", new SetElevatorPositionInstant(Constants.ElevatorConstants.l2Position));
 		NamedCommands.registerCommand("L3", new L3Coral());
 		NamedCommands.registerCommand("L4", new L4Coral());
+		NamedCommands.registerCommand("Bottoming", new ElevatorToFloor());
+		NamedCommands.registerCommand("WaitForElevate", new WaitDontTip());
 		// NamedCommands.registerCommand("StopSwerve", new MoveSwerve(0, 0, 0));
 		NamedCommands.registerCommand("StopSwerve",
 			new ParallelDeadlineGroup(
@@ -195,11 +198,17 @@ public class RobotContainer {
 						new WaitForAlign(true),
 						new WaitCommand(3)
 					),
-					drivetrain.applyRequest(() -> limelightSwerve
-							.withVelocityX(LimelightHelpers.getRz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
-							.withVelocityY(LimelightHelpers.getRx() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
-							.withRotationalRate(-LimelightHelpers.getThetaRight() * Constants.SwerveConstants.LimelightMultiplier)
-							// .withRotationalRate(-.1)
+					new ParallelCommandGroup(
+						drivetrain.applyRequest(() -> limelightSwerve
+								.withVelocityX(LimelightHelpers.getRz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
+								.withVelocityY(LimelightHelpers.getRx() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
+								.withRotationalRate(-LimelightHelpers.getThetaRight() * Constants.SwerveConstants.LimelightMultiplier)
+								// .withRotationalRate(-.1)
+						),
+						new SequentialCommandGroup(
+							new WaitCommand(.1),
+							new SetElevatorPositionInstant(Constants.ElevatorConstants.l4Position)
+						)
 					)
 				),
 				new MoveSwerve(0, 0, 0)
@@ -245,6 +254,7 @@ public class RobotContainer {
 
 		Inputs.getIntakeIn().whileTrue(new SetIntakeSpeed(-.2));
 		Inputs.getIntakeOut().whileTrue(new SetIntakeSpeed(SmartDashboard.getNumber("IntakeSpeed", Constants.CoralConstants.intakeSpeed)));
+		Inputs.getIntakeOut().onFalse(new SequentialCommandGroup(new WaitCommand(.2), new ElevatorToFloor()));
 		Inputs.getSlowIntake().whileTrue(new SetIntakeSpeed(.1));
 
 		Inputs.getClimberUp().whileTrue(new SetClimberSpeed(Constants.ClimberConstants.speed));

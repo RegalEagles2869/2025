@@ -29,9 +29,35 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Silly6.2"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Bottoming"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "WaitForElevate"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Silly6.2"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -65,9 +91,35 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Silly6.5"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Bottoming"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "WaitForElevate"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Silly6.5"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
