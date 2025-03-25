@@ -369,8 +369,8 @@ public class RobotContainer {
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
-						new WaitForAlign(false),
-						new WaitCommand(3)
+						// new WaitForAlign(false),
+						new WaitCommand(10)
 					),
 					drivetrain.applyRequest(() -> limelightSwerve
 							.withVelocityX(LimelightHelpers.getLz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)

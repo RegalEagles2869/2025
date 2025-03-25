@@ -126,7 +126,8 @@ public final class Constants {
 		public static final double rightThetaPos = 1;
 		public static final double swerveError = -.45;
 
-        public static final PIDController pidLol = new PIDController(4.3, 0, .002);
+        // public static final PIDController pidLol = new PIDController(4.3, 0, .002);
+        public static final PIDController pidLol = new PIDController(4.3, 0, 0.02);
         public static final PIDController pidRot = new PIDController(.03, 0, 0);
 		public static final double LimelightMultiplier = .1;
 	}
