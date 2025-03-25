@@ -113,7 +113,7 @@ public final class Constants {
         // public static final double zPosLeft = .92;
         public static final double zPosLeft = .772;
 		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;
-        public static final double forwardForAuto = .3;
+        public static final double forwardForAuto = .1;
         // public static final double xPosRight = .0434;
         public static final double xPosRight = .08;
         // public static final double xPosRight = 0;

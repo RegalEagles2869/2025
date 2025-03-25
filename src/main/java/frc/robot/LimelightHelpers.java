@@ -1670,7 +1670,15 @@ public class LimelightHelpers {
             double realZ = coords[2];
             double realTheta = coords[4];
 
-            if (realX == 0 && realZ == 0) return;
+            if (realX == 0 && realZ == 0) {
+                lx = 0;
+                lz = 0;
+                thetaLeft = 0;
+                rx = 0;
+                rz = 0;
+                thetaRight = 0;
+                return;
+            }
             lx = Constants.SwerveConstants.pidLol.calculate(Constants.SwerveConstants.xPosLeft - realX);
             lz = Constants.SwerveConstants.pidLol.calculate(Constants.SwerveConstants.zPosLeft - realZ);
             thetaLeft = Constants.SwerveConstants.pidRot.calculate(Constants.SwerveConstants.leftThetaPos - realTheta);

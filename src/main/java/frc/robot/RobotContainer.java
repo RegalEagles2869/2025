@@ -122,12 +122,23 @@ public class RobotContainer {
 
 	public CommandSwerveDrivetrain drivetrain;
 
+	
+	private ParallelDeadlineGroup stopSwerve;
+
 	public RobotContainer() {
 		// startCamera();
 		drivetrain = TunerConstants.createDrivetrain();
 		elevator = ElevatorSubsystem.getInstance();
 		elevator.setEncoderPosition(0);
 		Field2d field = new Field2d();
+		stopSwerve = new ParallelDeadlineGroup(
+			new WaitCommand(.1),
+			drivetrain.applyRequest(() -> limelightSwerve
+				.withVelocityX(0)
+				.withVelocityY(0)
+				.withRotationalRate(0)
+			)
+		);
 		// Do this in either robot or subsystem init
 		SmartDashboard.putData("Field", field);
 		NamedCommands.registerCommand("TestCommand", new TestCommand("fishing hahaha"));
@@ -138,18 +149,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("Bottoming", new ElevatorToFloor());
 		NamedCommands.registerCommand("WaitForElevate", new WaitDontTip());
 		// NamedCommands.registerCommand("StopSwerve", new MoveSwerve(0, 0, 0));
-		NamedCommands.registerCommand("StopSwerve",
-			new ParallelDeadlineGroup(
-				new WaitCommand(.1),
-				// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
-				// new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
-				drivetrain.applyRequest(() -> limelightSwerve
-						.withVelocityX(0)
-						.withVelocityY(0)
-						.withRotationalRate(0)
-				)
-			)
-		);
+		NamedCommands.registerCommand("StopSwerve", stopSwerve);
 
 		NamedCommands.registerCommand("MoveToSource", 
 			new ParallelDeadlineGroup(
@@ -206,12 +206,12 @@ public class RobotContainer {
 								// .withRotationalRate(-.1)
 						),
 						new SequentialCommandGroup(
-							new WaitCommand(.1),
+							new WaitCommand(1),
 							new SetElevatorPositionInstant(Constants.ElevatorConstants.l4Position)
 						)
 					)
 				),
-				new MoveSwerve(0, 0, 0)
+				stopSwerve
 			)
 		);
 		// NamedCommands.registerCommand("Order1", new L1Coral());
@@ -369,8 +369,8 @@ public class RobotContainer {
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
-						// new WaitForAlign(false),
-						new WaitCommand(10)
+						new WaitForAlign(false),
+						new WaitCommand(3)
 					),
 					drivetrain.applyRequest(() -> limelightSwerve
 							.withVelocityX(LimelightHelpers.getLz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)

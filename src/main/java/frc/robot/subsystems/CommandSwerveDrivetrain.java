@@ -346,6 +346,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("limelightX", LimelightHelpers.getTX("noor"));
         SmartDashboard.putNumber("limelightY", LimelightHelpers.getTY(""));
         
+        SmartDashboard.putNumber("targetShown?", LimelightHelpers.getTA("limelight-noor"));
+
         SmartDashboard.putNumber("xSpeedLime", LimelightHelpers.getLx());
         SmartDashboard.putNumber("zSpeedLime", LimelightHelpers.getLz());
         SmartDashboard.putNumber("thetaSpeedLime", LimelightHelpers.getThetaLeft());
