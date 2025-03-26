@@ -1680,11 +1680,17 @@ public class LimelightHelpers {
                 return;
             }
             lx = Constants.SwerveConstants.pidLol.calculate(Constants.SwerveConstants.xPosLeft - realX);
+            if (lx > Constants.SwerveConstants.maxSpeed) lx = Constants.SwerveConstants.maxSpeed;
+            if (lx < -Constants.SwerveConstants.maxSpeed) lx = -Constants.SwerveConstants.maxSpeed;
             lz = Constants.SwerveConstants.pidLol.calculate(Constants.SwerveConstants.zPosLeft - realZ);
+            if (lz > Constants.SwerveConstants.maxSpeed) lz = Constants.SwerveConstants.maxSpeed;
             thetaLeft = Constants.SwerveConstants.pidRot.calculate(Constants.SwerveConstants.leftThetaPos - realTheta);
             
             rx = Constants.SwerveConstants.pidLol.calculate(Constants.SwerveConstants.xPosRight - realX);
+            if (rx > Constants.SwerveConstants.maxSpeed) rx = Constants.SwerveConstants.maxSpeed;
+            if (rx < -Constants.SwerveConstants.maxSpeed) rx = -Constants.SwerveConstants.maxSpeed;
             rz = Constants.SwerveConstants.pidLol.calculate(Constants.SwerveConstants.zPosRight - realZ);
+            if (rz > Constants.SwerveConstants.maxSpeed) rz = Constants.SwerveConstants.maxSpeed;
             thetaRight = Constants.SwerveConstants.pidRot.calculate(realTheta - Constants.SwerveConstants.rightThetaPos);
 
             isFinishedLeft = Math.abs(Constants.SwerveConstants.leftThetaPos - realTheta) < Constants.SwerveConstants.rotationErrorLimelight && Math.abs(realX - Constants.SwerveConstants.xPosLeft) < Constants.SwerveConstants.xErrorLimelight && Math.abs(realZ - Constants.SwerveConstants.zPosLeft) < Constants.SwerveConstants.zErrorLimelight;
@@ -1701,109 +1707,6 @@ public class LimelightHelpers {
             rx = 0;
             rz = 0;
             thetaRight = 0;
-        }
-    }
-
-    public static void noPid() {
-        try {
-            double[] coords = getTargetPose_CameraSpace("limelight-noor");
-            // IMUData coords = getIMUData("limelight-noor");
-            lx = 0;
-            lz = 0;
-            thetaLeft = 0;
-
-            boolean isXDone = true;
-            boolean isZDone = true;
-            //double realX = LimelightHelpers.getTX("limelight-noor");
-            //double realY = LimelightHelpers.getTA("limelight-noor");
-            //x y z f y f
-            double realX = coords[0];
-            double realZ = coords[2];
-            double realTheta = coords[4];
-            if (realX == 0 && realZ == 0) return;
-            
-            if (!isThetaDone && Math.abs(realTheta - Constants.SwerveConstants.leftThetaPos) > Constants.SwerveConstants.rotationErrorLimelight) {
-                if (Constants.SwerveConstants.leftThetaPos > realTheta) thetaLeft = Constants.SwerveConstants.rotIncLimelight;
-                else thetaLeft = -Constants.SwerveConstants.rotIncLimelight;
-                isXDone = false;
-                isZDone = false;
-                isThetaDone = false;
-            }
-            else {
-                isThetaDone = true;
-                if (Math.abs(realX - Constants.SwerveConstants.xPosLeft) > Constants.SwerveConstants.xErrorLimelight) {
-                    isXDone = false;
-                    if (realX > Constants.SwerveConstants.xPosLeft) lx = Constants.SwerveConstants.xIncLimelight;
-                    else lx = -Constants.SwerveConstants.xIncLimelight;
-                }
-                else if (Math.abs(realZ - Constants.SwerveConstants.zPosLeft) > Constants.SwerveConstants.zErrorLimelight) {
-                    isXDone = false;
-                    if (realZ > Constants.SwerveConstants.zPosLeft) lz = Constants.SwerveConstants.zIncLimelight;
-                    else lz = -Constants.SwerveConstants.zIncLimelight;
-                }
-            }
-            SmartDashboard.putNumber("thetaPos", realTheta);
-            SmartDashboard.putNumber("xPos", realX);
-            SmartDashboard.putNumber("zPos", realZ);
-            SmartDashboard.putNumber("xSpeedLime", getLx());
-            SmartDashboard.putNumber("zSpeedLime", getLz());
-            SmartDashboard.putNumber("thetaSpeedLime", getThetaLeft());
-            SmartDashboard.putBooleanArray("progress check hehe", new boolean[]{isXDone, isZDone, isThetaDone});
-        }
-        catch(Exception e) {
-            lx = 0;
-            lz = 0;
-            thetaLeft = 0;
-        }
-        try {
-            double[] coords = getTargetPose_CameraSpace("limelight-noor");
-            // IMUData coords = getIMUData("limelight-noor");
-            rx = 0;
-            rz = 0;
-            thetaLeft = 0;
-
-            boolean isXDone = true;
-            boolean isZDone = true;
-            //double realX = LimelightHelpers.getTX("limelight-noor");
-            //double realY = LimelightHelpers.getTA("limelight-noor");
-            //x y z f y f
-            double realX = coords[0];
-            double realZ = coords[2];
-            double realTheta = coords[4];
-            if (realX == 0 && realZ == 0) return;
-            
-            if (!isThetaDone && Math.abs(realTheta - Constants.SwerveConstants.rightThetaPos) > SmartDashboard.getNumber("LimelightErrorTheta", Constants.SwerveConstants.rotationErrorLimelight)) {
-                if (Constants.SwerveConstants.rightThetaPos > realTheta) thetaRight = Constants.SwerveConstants.rotIncLimelight;
-                else thetaRight = -Constants.SwerveConstants.rotIncLimelight;
-                isXDone = false;
-                isZDone = false;
-                isThetaDone = false;
-            }
-            else {
-                isThetaDone = true;
-                if (Math.abs(realX - Constants.SwerveConstants.xPosRight) > SmartDashboard.getNumber("LimelightErrorX", Constants.SwerveConstants.xErrorLimelight)) {
-                    isXDone = false;
-                    if (realX > Constants.SwerveConstants.xPosRight) rx = Constants.SwerveConstants.xIncLimelight;
-                    else rx = -Constants.SwerveConstants.xIncLimelight;
-                }
-                else if (Math.abs(realZ - (Constants.SwerveConstants.zPosRight + SmartDashboard.getNumber("ZOffsetRight", 0))) > SmartDashboard.getNumber("LimelightErrorZ", Constants.SwerveConstants.zErrorLimelight)) {
-                    isZDone = false;
-                    if (realZ > Constants.SwerveConstants.zPosRight) rz = Constants.SwerveConstants.zIncLimelight;
-                    else rz = -Constants.SwerveConstants.zIncLimelight;
-                }
-            }
-            SmartDashboard.putNumber("thetaPos", realTheta);
-            SmartDashboard.putNumber("xPos", realX);
-            SmartDashboard.putNumber("zPos", realZ);
-            SmartDashboard.putNumber("xSpeedLime", getRx());
-            SmartDashboard.putNumber("zSpeedLime", getRz());
-            SmartDashboard.putNumber("thetaSpeedLime", getThetaRight());
-            SmartDashboard.putBooleanArray("progress check hehe", new boolean[]{isXDone, isZDone, isThetaDone});
-        }
-        catch(Exception e) {
-            rx = 0;
-            rz = 0;
-            thetaLeft = 0;
         }
     }
 

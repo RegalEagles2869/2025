@@ -59,7 +59,9 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.RobotContainer;
 import frc.robot.LimelightHelpers.RawFiducial;
+import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -209,13 +211,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private ChassisSpeeds setSpeeds(ChassisSpeeds speeds) {
-        // if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-        //     return speeds;
-        // }
-        // else {
-        //     return new ChassisSpeeds(speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
-        // }
-        return speeds;
+
+        if (!RobotContainer.isFlipped()) {
+            return speeds;
+        }
+        else {
+            return new ChassisSpeeds(speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, -speeds.omegaRadiansPerSecond);
+        }
     }
 
     private void configureAutoBuilder() {
@@ -227,7 +229,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 () -> getState().Speeds, // Supplier of current robot speeds
                 // Consumer of ChassisSpeeds and feedforwards to drive the robot
                 (speeds, feedforwards) -> setControl(
-                    m_pathApplyRobotSpeeds.withSpeeds(speeds)
+                    m_pathApplyRobotSpeeds.withSpeeds(setSpeeds(speeds))
                         .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
                         .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
                 ),
@@ -346,7 +348,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("limelightX", LimelightHelpers.getTX("noor"));
         SmartDashboard.putNumber("limelightY", LimelightHelpers.getTY(""));
         
-        SmartDashboard.putNumber("targetShown?", LimelightHelpers.getTA("limelight-noor"));
+        SmartDashboard.putNumber("targetShown?", LimelightHelpers.getFiducialID("limelight-noor"));
 
         SmartDashboard.putNumber("xSpeedLime", LimelightHelpers.getLx());
         SmartDashboard.putNumber("zSpeedLime", LimelightHelpers.getLz());

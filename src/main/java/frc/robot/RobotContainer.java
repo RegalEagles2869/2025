@@ -82,6 +82,9 @@ public class RobotContainer {
 	private enum Autos {
 		Nothing, Right, Left, MeetMeInTheMiddle
 	}
+
+	private static boolean flipped = false;
+
 	private SendableChooser<Autos> newautopick;
 	private Command autoCommand;
 	private Thread m_visionThread;
@@ -129,7 +132,6 @@ public class RobotContainer {
 		// startCamera();
 		drivetrain = TunerConstants.createDrivetrain();
 		elevator = ElevatorSubsystem.getInstance();
-		elevator.setEncoderPosition(0);
 		Field2d field = new Field2d();
 		stopSwerve = new ParallelDeadlineGroup(
 			new WaitCommand(.1),
@@ -153,7 +155,9 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("MoveToSource", 
 			new ParallelDeadlineGroup(
-				new WaitCommand(3),
+				new WaitCommand(1
+			),
+
 				// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
 				// new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
 				drivetrain.applyRequest(() -> limelightSwerve
@@ -168,8 +172,8 @@ public class RobotContainer {
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
-						new WaitForAlign(false),
-						new WaitCommand(3)
+						// new WaitForAlign(false),
+						new WaitCommand(.65)
 					),
 					drivetrain.applyRequest(() -> limelightSwerve
 							.withVelocityX(LimelightHelpers.getLz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
@@ -177,7 +181,8 @@ public class RobotContainer {
 							.withRotationalRate(LimelightHelpers.getThetaLeft() * MaxAngularRate * Constants.SwerveConstants.LimelightMultiplier)
 					)
 				),
-				new MoveSwerve(0, 0, 0),
+				//stopSwerve,
+				new SetElevatorPositionInstant(Constants.ElevatorConstants.l4Position),
 				new ParallelDeadlineGroup(
 					new WaitCommand((Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError)/(Constants.SwerveConstants.forwardForAuto * MaxSpeed)),
 					// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
@@ -188,15 +193,15 @@ public class RobotContainer {
 							.withRotationalRate(0)
 					)
 				),
-				new MoveSwerve(0, 0, 0)
+				stopSwerve
 			)
 		);
 		NamedCommands.registerCommand("LimelightRight", 
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
-						new WaitForAlign(true),
-						new WaitCommand(3)
+						// new WaitForAlign(true),
+						new WaitCommand(1)
 					),
 					new ParallelCommandGroup(
 						drivetrain.applyRequest(() -> limelightSwerve
@@ -206,12 +211,19 @@ public class RobotContainer {
 								// .withRotationalRate(-.1)
 						),
 						new SequentialCommandGroup(
-							new WaitCommand(1),
+							new WaitCommand(.2),
 							new SetElevatorPositionInstant(Constants.ElevatorConstants.l4Position)
 						)
 					)
 				),
-				stopSwerve
+				new ParallelDeadlineGroup(
+					new WaitCommand(.1),
+					drivetrain.applyRequest(() -> limelightSwerve
+						.withVelocityX(0)
+						.withVelocityY(0)
+						.withRotationalRate(0)
+					)
+				)
 			)
 		);
 		// NamedCommands.registerCommand("Order1", new L1Coral());
@@ -467,17 +479,22 @@ public class RobotContainer {
 	public Command generateAutoCommand(){
 		switch(newautopick.getSelected()){
 			case Left:
+				flipped = false;
 			//left from robot
 			    // start close to curtain (Blue DS right))
 				SmartDashboard.putString("AutonChoice", "Left");
 				generateTrajectories("TheSilly6WithLimelight");
 				return TunerConstants.createDrivetrain().getAuto("TheSilly6WithLimelight");
 			case Right:
+				flipped = true;
 			//Right from robot
 			//near audience (blue DS left, Red DS right side)
+				// SmartDashboard.putString("AutonChoice", "Right");
+				// generateTrajectories("BottomThreesome");
+				// return TunerConstants.createDrivetrain().getAuto("BottomThreesome");
 				SmartDashboard.putString("AutonChoice", "Right");
-				generateTrajectories("BottomThreesome");
-				return TunerConstants.createDrivetrain().getAuto("BottomThreesome");
+				generateTrajectories("TheSilly6WithLimelight");
+				return TunerConstants.createDrivetrain().getAuto("TheSilly6WithLimelight");
 			case MeetMeInTheMiddle:
 				SmartDashboard.putString("AutonChoice", "MeetMeInTheMiddle");
 				//middle pillar
@@ -562,5 +579,9 @@ public class RobotContainer {
 			});
 	m_visionThread.setDaemon(true);
 	m_visionThread.start();
+  }
+  
+  public static boolean isFlipped() {
+	return flipped;
   }
 }

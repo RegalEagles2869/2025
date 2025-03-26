@@ -58,7 +58,7 @@ public final class Constants {
 		public static final double l4Position = 70.19239807128906;
 		public static final double l4Position2 = l4Position + 1;
 		public static final double sourcePosition = 0;
-		public static final double error = 1.5;
+		public static final double error = 2;
 		public static final double stallDetectCur = 40.0;
 		public static final double slowPose = 5.0;
 		public static final double waitTime = .1;
@@ -97,9 +97,11 @@ public final class Constants {
 	}
 
 	public static class SwerveConstants {
+		public static final double xErrorLimelight = .07;
+		public static final double zErrorLimelight = .07;
 
-		public static final double xErrorLimelight = .04;
-		public static final double zErrorLimelight = .04;
+		public static final double maxSpeed = 3.5;
+		
 		// public static final double xErrorLimelight = 0;
 		// public static final double zErrorLimelight = 0;
 		public static final double rotationErrorLimelight = 10;
@@ -113,7 +115,7 @@ public final class Constants {
         // public static final double zPosLeft = .92;
         public static final double zPosLeft = .772;
 		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;
-        public static final double forwardForAuto = .1;
+        public static final double forwardForAuto = .4;
         // public static final double xPosRight = .0434;
         public static final double xPosRight = .08;
         // public static final double xPosRight = 0;
