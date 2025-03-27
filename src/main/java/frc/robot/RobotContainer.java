@@ -113,7 +113,9 @@ public class RobotContainer {
 	
 	/* Setting up bindings for necessary control of the swerve drive platform */
 	private final SwerveRequest.RobotCentric limelightSwerve = new SwerveRequest.RobotCentric()
-		.withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive
+	.withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive
+	private final SwerveRequest.RobotCentricFacingAngle limelightSwerve2 = new SwerveRequest.RobotCentricFacingAngle()
+		.withDriveRequestType(DriveRequestType.Velocity).withHeadingPID(.5, 0, 0); // Use open-loop control for drive
 
 	// motors
 	private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -136,6 +138,7 @@ public class RobotContainer {
 		stopSwerve = new ParallelDeadlineGroup(
 			new WaitCommand(.1),
 			drivetrain.applyRequest(() -> limelightSwerve
+
 				.withVelocityX(0)
 				.withVelocityY(0)
 				.withRotationalRate(0)
@@ -201,7 +204,7 @@ public class RobotContainer {
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
 						// new WaitForAlign(true),
-						new WaitCommand(1)
+						new WaitCommand(2)
 					),
 					new ParallelCommandGroup(
 						drivetrain.applyRequest(() -> limelightSwerve
@@ -278,6 +281,7 @@ public class RobotContainer {
 		// Inputs.getTest().onTrue(new SetIntakeSpeedWait(Constants.CoralConstants.intakeSpeed));
 		Inputs.getTest().onTrue(new L2Coral());
 		Inputs.getElevatorResetPosition().onTrue(new ElevatorResetPosition(0));
+		Inputs.getDealgify().onTrue(new SetElevatorPositionInstant(Constants.ElevatorConstants.algaePosition));
 
 		SmartDashboard.putNumber("LimelightErrorX", Constants.SwerveConstants.xErrorLimelight);
 		SmartDashboard.putNumber("LimelightErrorZ", Constants.SwerveConstants.zErrorLimelight);
@@ -379,7 +383,7 @@ public class RobotContainer {
 			// (left)
 			)
 		);
-			
+		SmartDashboard.putNumber("swerveError", Constants.SwerveConstants.swerveError);
 		joystick.povLeft().onTrue(
 			new SequentialCommandGroup(
 				new ParallelDeadlineGroup(
@@ -388,14 +392,14 @@ public class RobotContainer {
 						new WaitCommand(3)
 					),
 					drivetrain.applyRequest(() -> limelightSwerve
+							// .withTargetDirection(Rotation2d.fromDegrees(LimelightHelpers.getThetaLeft()))
 							.withVelocityX(LimelightHelpers.getLz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
 							.withVelocityY(LimelightHelpers.getLx() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
-							.withRotationalRate(LimelightHelpers.getThetaLeft() * MaxAngularRate * Constants.SwerveConstants.LimelightMultiplier)
+							.withRotationalRate(LimelightHelpers.getThetaLeft() * MaxAngularRate * Constants.SwerveConstants.LimelightMultiplierRot)
 					)
 				),
-				new MoveSwerve(0, 0, 0),
 				new ParallelDeadlineGroup(
-					new WaitCommand((Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError)/(SmartDashboard.getNumber("forwardForAuto", Constants.SwerveConstants.forwardForAuto) * MaxSpeed)),
+					new WaitCommand((Constants.SwerveConstants.zPosLeft + SmartDashboard.getNumber("swerveError", Constants.SwerveConstants.swerveError))/(SmartDashboard.getNumber("forwardForAuto", Constants.SwerveConstants.forwardForAuto) * MaxSpeed)),
 					// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
 					// new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
 					drivetrain.applyRequest(() -> limelightSwerve
@@ -404,7 +408,16 @@ public class RobotContainer {
 							.withRotationalRate(0)
 					)
 				),
-				new MoveSwerve(0, 0, 0)
+				new ParallelDeadlineGroup(
+					new WaitCommand(.01),
+					// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
+					// new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
+					drivetrain.applyRequest(() -> limelightSwerve
+							.withVelocityX(0)
+							.withVelocityY(0)
+							.withRotationalRate(0)
+					)
+				)
 			)
 		);
 		Inputs.getGo().onTrue(

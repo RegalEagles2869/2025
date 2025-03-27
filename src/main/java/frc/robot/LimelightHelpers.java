@@ -1674,18 +1674,24 @@ public class LimelightHelpers {
                 lx = 0;
                 lz = 0;
                 thetaLeft = 0;
-                rx = 0;
+                rx = 0;//-.28
                 rz = 0;
                 thetaRight = 0;
                 return;
             }
-            lx = Constants.SwerveConstants.pidLol.calculate(Constants.SwerveConstants.xPosLeft - realX);
+            lx = Constants.SwerveConstants.pidLol.calculate(SmartDashboard.getNumber("constantX", Constants.SwerveConstants.xPosLeft) - realX);
             if (lx > Constants.SwerveConstants.maxSpeed) lx = Constants.SwerveConstants.maxSpeed;
             if (lx < -Constants.SwerveConstants.maxSpeed) lx = -Constants.SwerveConstants.maxSpeed;
             lz = Constants.SwerveConstants.pidLol.calculate(SmartDashboard.getNumber("zPosLeft", Constants.SwerveConstants.zPosLeft) - realZ);
             if (lz > Constants.SwerveConstants.maxSpeed) lz = Constants.SwerveConstants.maxSpeed;
-            thetaLeft = Constants.SwerveConstants.pidRot.calculate(SmartDashboard.getNumber("leftThetaPos", Constants.SwerveConstants.leftThetaPos) - realTheta);
-            
+            if (Math.abs(realX - Constants.SwerveConstants.xPosLeft) < Constants.SwerveConstants.xErrorLimelightOther && Math.abs(realZ - Constants.SwerveConstants.zPosLeft) < Constants.SwerveConstants.zErrorLimelightOther) {
+                thetaLeft = Constants.SwerveConstants.pidRot.calculate(SmartDashboard.getNumber("leftThetaPos", Constants.SwerveConstants.leftThetaPos) - realTheta);
+            }
+            else {
+                thetaLeft = 0;
+            }
+            // thetaLeft = Constants.SwerveConstants.pidRot.getSetpoint();
+
             rx = Constants.SwerveConstants.pidLol.calculate(Constants.SwerveConstants.xPosRight - realX);
             if (rx > Constants.SwerveConstants.maxSpeed) rx = Constants.SwerveConstants.maxSpeed;
             if (rx < -Constants.SwerveConstants.maxSpeed) rx = -Constants.SwerveConstants.maxSpeed;

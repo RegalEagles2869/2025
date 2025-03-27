@@ -91,7 +91,7 @@ public class Inputs {
     public static Trigger getStartCamera() {
         return operatorBoard.button(19);
     }
-    public static Trigger getMovePivot() {
+    public static Trigger getDealgify() {
         return operatorBoard.button(20);
     }
     public static boolean getGenAuto() {

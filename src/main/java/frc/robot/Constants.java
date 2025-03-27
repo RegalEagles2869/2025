@@ -57,6 +57,9 @@ public final class Constants {
 		public static final double l3Position = 35.83300018310547;
 		// public static final double l4Position = 70.19239807128906;
 		public static final double l4Position = 70.19239807128906;
+
+		public static final double algaePosition = 41.26148223876953;
+
 		public static final double l4Position2 = l4Position + 1;
 		public static final double sourcePosition = 0;
 		public static final double error = 2;
@@ -101,6 +104,8 @@ public final class Constants {
 	public static class SwerveConstants {
 		public static final double xErrorLimelight = .05;
 		public static final double zErrorLimelight = .05;
+		public static final double xErrorLimelightOther = .15;
+		public static final double zErrorLimelightOther = .15;
 
 		public static final double maxSpeed = 3.5;
 		
@@ -113,7 +118,8 @@ public final class Constants {
 		public static final double[] ids = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
 		public static final double[] degrees = {300, 0, 60, 120, 180, 240, 300, 0, 60, 120, 180, 240};
         // public static final double xPosLeft = -.343;
-        public static final double xPosLeft = -.275;
+		public static final double leftThetaPos = 3;
+        public static final double xPosLeft = -.28;
         // public static final double zPosLeft = .92;
         public static final double zPosLeft = .772;
 		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;
@@ -126,13 +132,13 @@ public final class Constants {
         // public static final double zPosRight = .56;
         public static final double zPosRight = .452;
         // public static final double zPosRight = 1;
-		public static final double leftThetaPos = 3;
 		public static final double rightThetaPos = 1;
-		public static final double swerveError = -.48;
+		public static final double swerveError = -.3;
 
         // public static final PIDController pidLol = new PIDController(4.3, 0, .002);
         public static final PIDController pidLol = new PIDController(4.3, 0, 0.02);
         public static final PIDController pidRot = new PIDController(.03, 0, 0);
 		public static final double LimelightMultiplier = .1;
+		public static final double LimelightMultiplierRot = .07;
 	}
 }
