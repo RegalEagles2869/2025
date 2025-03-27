@@ -264,8 +264,8 @@ public class RobotContainer {
 		Inputs.getElevatorSpeedUp().whileTrue(new SetElevatorSpeed(.1));
 		Inputs.getElevatorSpeedDown().whileTrue(new SetElevatorSpeed(-.1));
 
-		Inputs.getIntakeIn().whileTrue(new SetIntakeSpeed(-.2));
-		Inputs.getIntakeOut().whileTrue(new SetIntakeSpeed(SmartDashboard.getNumber("IntakeSpeed", Constants.CoralConstants.intakeSpeed)));
+		Inputs.getIntakeIn().whileTrue(new SetIntakeSpeed(.05));
+		Inputs.getIntakeOut().whileTrue(new SetIntakeSpeed(-SmartDashboard.getNumber("IntakeSpeed", Constants.CoralConstants.intakeSpeed)));
 		Inputs.getIntakeOut().onFalse(new SequentialCommandGroup(new WaitCommand(.2), new ElevatorToFloor()));
 		Inputs.getSlowIntake().whileTrue(new SetIntakeSpeed(.1));
 
@@ -282,6 +282,9 @@ public class RobotContainer {
 		SmartDashboard.putNumber("LimelightErrorX", Constants.SwerveConstants.xErrorLimelight);
 		SmartDashboard.putNumber("LimelightErrorZ", Constants.SwerveConstants.zErrorLimelight);
 		SmartDashboard.putNumber("LimelightErrorTheta", Constants.SwerveConstants.rotationErrorLimelight);
+		SmartDashboard.putNumber("zPosLeft", Constants.SwerveConstants.zPosLeft);
+		SmartDashboard.putNumber("leftThetaPos", Constants.SwerveConstants.leftThetaPos);
+		SmartDashboard.putNumber("forwardForAuto", Constants.SwerveConstants.forwardForAuto);
 
 		Inputs.getStartCamera().onTrue(new Command() {
 			private boolean coolBool = true;
@@ -347,7 +350,7 @@ public class RobotContainer {
 					.withVelocityY(Inputs.getTranslationY() * MaxSpeed
 							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
 					.withRotationalRate(Inputs.getRotation() * MaxAngularRate
-							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+							* Constants.OperatorConstants.speedMultiplierSlowModeRot) // Drive
 			// counterclockwise
 			// with
 			// negative
@@ -368,7 +371,7 @@ public class RobotContainer {
 					.withVelocityY(Inputs.getTranslationY() * MaxSpeed
 							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
 					.withRotationalRate(Inputs.getRotation() * MaxAngularRate
-							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+							* Constants.OperatorConstants.speedMultiplierSlowModeRot) // Drive
 			// counterclockwise
 			// with
 			// negative
@@ -392,11 +395,11 @@ public class RobotContainer {
 				),
 				new MoveSwerve(0, 0, 0),
 				new ParallelDeadlineGroup(
-					new WaitCommand((Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError)/(Constants.SwerveConstants.forwardForAuto * MaxSpeed)),
+					new WaitCommand((Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError)/(SmartDashboard.getNumber("forwardForAuto", Constants.SwerveConstants.forwardForAuto) * MaxSpeed)),
 					// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
 					// new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
 					drivetrain.applyRequest(() -> limelightSwerve
-							.withVelocityX(Constants.SwerveConstants.forwardForAuto * MaxSpeed)
+							.withVelocityX(SmartDashboard.getNumber("forwardForAuto", Constants.SwerveConstants.forwardForAuto) * MaxSpeed)
 							.withVelocityY(0)
 							.withRotationalRate(0)
 					)

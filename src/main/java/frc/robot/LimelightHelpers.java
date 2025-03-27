@@ -1682,9 +1682,9 @@ public class LimelightHelpers {
             lx = Constants.SwerveConstants.pidLol.calculate(Constants.SwerveConstants.xPosLeft - realX);
             if (lx > Constants.SwerveConstants.maxSpeed) lx = Constants.SwerveConstants.maxSpeed;
             if (lx < -Constants.SwerveConstants.maxSpeed) lx = -Constants.SwerveConstants.maxSpeed;
-            lz = Constants.SwerveConstants.pidLol.calculate(Constants.SwerveConstants.zPosLeft - realZ);
+            lz = Constants.SwerveConstants.pidLol.calculate(SmartDashboard.getNumber("zPosLeft", Constants.SwerveConstants.zPosLeft) - realZ);
             if (lz > Constants.SwerveConstants.maxSpeed) lz = Constants.SwerveConstants.maxSpeed;
-            thetaLeft = Constants.SwerveConstants.pidRot.calculate(Constants.SwerveConstants.leftThetaPos - realTheta);
+            thetaLeft = Constants.SwerveConstants.pidRot.calculate(SmartDashboard.getNumber("leftThetaPos", Constants.SwerveConstants.leftThetaPos) - realTheta);
             
             rx = Constants.SwerveConstants.pidLol.calculate(Constants.SwerveConstants.xPosRight - realX);
             if (rx > Constants.SwerveConstants.maxSpeed) rx = Constants.SwerveConstants.maxSpeed;

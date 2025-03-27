@@ -27,6 +27,7 @@ public final class Constants {
 		public static final double speedMultiplier = 1;
 		public static final double speedMultiplierElev = .3;
 		public static final double speedMultiplierSlowMode = .1;
+		public static final double speedMultiplierSlowModeRot = .3;
 		public static final double driveDeadBand = .1;
 		public static final double rotationDeadBand = .1;
 	}
@@ -44,7 +45,7 @@ public final class Constants {
 		public static final int coralIntake = 14;
 		public static final int coralPivot = 15;
 	}
-
+//41.26148223876953
 	public static class ElevatorConstants {
 		public static final double floorPosition = 2;
 		public static final double maxPosition = 10000;
@@ -94,11 +95,12 @@ public final class Constants {
 		public static final double intakeSpeed = .9;
 		public static final double intakeTime = .5;
 		public static final double currentToStopIntaking = 10;
+		public static final double deltaMove = .25;
 	}
 
 	public static class SwerveConstants {
-		public static final double xErrorLimelight = .07;
-		public static final double zErrorLimelight = .07;
+		public static final double xErrorLimelight = .05;
+		public static final double zErrorLimelight = .05;
 
 		public static final double maxSpeed = 3.5;
 		
@@ -111,11 +113,11 @@ public final class Constants {
 		public static final double[] ids = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
 		public static final double[] degrees = {300, 0, 60, 120, 180, 240, 300, 0, 60, 120, 180, 240};
         // public static final double xPosLeft = -.343;
-        public static final double xPosLeft = -.25;
+        public static final double xPosLeft = -.275;
         // public static final double zPosLeft = .92;
         public static final double zPosLeft = .772;
 		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;
-        public static final double forwardForAuto = .4;
+        public static final double forwardForAuto = .3;
         // public static final double xPosRight = .0434;
         public static final double xPosRight = .08;
         // public static final double xPosRight = 0;
@@ -126,7 +128,7 @@ public final class Constants {
         // public static final double zPosRight = 1;
 		public static final double leftThetaPos = 3;
 		public static final double rightThetaPos = 1;
-		public static final double swerveError = -.45;
+		public static final double swerveError = -.48;
 
         // public static final PIDController pidLol = new PIDController(4.3, 0, .002);
         public static final PIDController pidLol = new PIDController(4.3, 0, 0.02);
