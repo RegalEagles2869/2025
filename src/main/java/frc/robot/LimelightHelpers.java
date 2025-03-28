@@ -1704,7 +1704,7 @@ public class LimelightHelpers {
             if (rz > Constants.SwerveConstants.maxSpeed) rz = Constants.SwerveConstants.maxSpeed;
             thetaRight = Constants.SwerveConstants.pidRot.calculate(realTheta - Constants.SwerveConstants.rightThetaPos);
 
-            isFinishedLeft = Math.abs(Constants.SwerveConstants.leftThetaPos - realTheta) < Constants.SwerveConstants.rotationErrorLimelight && Math.abs(realX - Constants.SwerveConstants.xPosLeft) < Constants.SwerveConstants.xErrorLimelightOtherOther && Math.abs(realZ - Constants.SwerveConstants.zPosLeft) < Constants.SwerveConstants.zErrorLimelight;
+            isFinishedLeft = Math.abs(realX - Constants.SwerveConstants.xPosLeft) < Constants.SwerveConstants.xErrorLimelightOtherOther && Math.abs(realZ - Constants.SwerveConstants.zPosLeft) < Constants.SwerveConstants.zErrorLimelight;
             isFinishedRight = Math.abs(realTheta - Constants.SwerveConstants.rightThetaPos) < Constants.SwerveConstants.rotationErrorLimelight && Math.abs(realX - Constants.SwerveConstants.xPosRight) < Constants.SwerveConstants.xErrorLimelight && Math.abs(realZ - Constants.SwerveConstants.zPosRight) < Constants.SwerveConstants.zErrorLimelight;
 
             SmartDashboard.putNumber("thetaPos", realTheta);

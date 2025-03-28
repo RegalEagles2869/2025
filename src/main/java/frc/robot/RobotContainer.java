@@ -391,7 +391,7 @@ public class RobotContainer {
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
 						new WaitForAlign(false),
-						new WaitCommand(3)
+						new WaitCommand(2)
 					),
 					drivetrain.applyRequest(() -> limelightSwerve
 							// .withTargetDirection(Rotation2d.fromDegrees(LimelightHelpers.getThetaLeft()))
@@ -410,16 +410,7 @@ public class RobotContainer {
 							.withRotationalRate(0)
 					)
 				),
-				new ParallelDeadlineGroup(
-					new WaitCommand(.01),
-					// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
-					// new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
-					drivetrain.applyRequest(() -> limelightSwerve
-							.withVelocityX(0)
-							.withVelocityY(0)
-							.withRotationalRate(0)
-					)
-				)
+				stopRobot()
 			)
 		);
 		Inputs.getGo().onTrue(
@@ -434,7 +425,7 @@ public class RobotContainer {
 							.withRotationalRate(0)
 					)
 				),
-				new MoveSwerve(0, 0, 0)
+				stopRobot()
 			)
 		);
 		//auto alignment on driver D-pad:
@@ -516,7 +507,7 @@ public class RobotContainer {
 				SmartDashboard.putString("AutonChoice", "MeetMeInTheMiddle");
 				//middle pillar
 				return new SequentialCommandGroup(
-					new WaitCommand(5),
+					new WaitCommand(7),
 					new ParallelDeadlineGroup(
 						new ParallelRaceGroup(
 							new WaitForAlign(true),

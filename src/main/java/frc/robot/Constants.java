@@ -125,19 +125,19 @@ public final class Constants {
 		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;
         public static final double forwardForAuto = .1;
         // public static final double xPosRight = .0434;
-        public static final double xPosRight = .08;
+        public static final double xPosRight = .081;
         // public static final double xPosRight = 0;
         // public static final double zPosRight = .427;
         // public static final double zPosRight = .507;
         // public static final double zPosRight = .56;
-        public static final double zPosRight = .452;
+        public static final double zPosRight = .48;
         // public static final double zPosRight = 1;
 		public static final double rightThetaPos = 1;
 		public static final double swerveError = -.25
 		;
 
         // public static final PIDController pidLol = new PIDController(4.3, 0, .002);
-        public static final PIDController pidLol = new PIDController(4.3, 0, 0.02);
+        public static final PIDController pidLol = new PIDController(4.3, 0, 0.002);
         public static final PIDController pidRot = new PIDController(.03, 0, 0);
 		public static final double LimelightMultiplier = .1;
 		public static final double LimelightMultiplierRot = .07;
