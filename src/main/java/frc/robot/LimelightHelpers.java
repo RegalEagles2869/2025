@@ -1679,12 +1679,17 @@ public class LimelightHelpers {
                 thetaRight = 0;
                 return;
             }
-            lx = Constants.SwerveConstants.pidLol.calculate(SmartDashboard.getNumber("constantX", Constants.SwerveConstants.xPosLeft) - realX);
+            if (Math.abs(realX - Constants.SwerveConstants.xPosLeft) > Constants.SwerveConstants.xErrorLimelightOtherOther) {
+                lx = Constants.SwerveConstants.pidLol.calculate(SmartDashboard.getNumber("constantX", Constants.SwerveConstants.xPosLeft) - realX);
+            }
+            else {
+                lx = 0;
+            }
             if (lx > Constants.SwerveConstants.maxSpeed) lx = Constants.SwerveConstants.maxSpeed;
             if (lx < -Constants.SwerveConstants.maxSpeed) lx = -Constants.SwerveConstants.maxSpeed;
             lz = Constants.SwerveConstants.pidLol.calculate(SmartDashboard.getNumber("zPosLeft", Constants.SwerveConstants.zPosLeft) - realZ);
             if (lz > Constants.SwerveConstants.maxSpeed) lz = Constants.SwerveConstants.maxSpeed;
-            if (Math.abs(realX - Constants.SwerveConstants.xPosLeft) < Constants.SwerveConstants.xErrorLimelightOther && Math.abs(realZ - Constants.SwerveConstants.zPosLeft) < Constants.SwerveConstants.zErrorLimelightOther) {
+            if (Math.abs(realX - Constants.SwerveConstants.xPosLeft) > Constants.SwerveConstants.xErrorLimelightOther && Math.abs(realZ - Constants.SwerveConstants.zPosLeft) > Constants.SwerveConstants.zErrorLimelightOther) {
                 thetaLeft = Constants.SwerveConstants.pidRot.calculate(SmartDashboard.getNumber("leftThetaPos", Constants.SwerveConstants.leftThetaPos) - realTheta);
             }
             else {
@@ -1699,7 +1704,7 @@ public class LimelightHelpers {
             if (rz > Constants.SwerveConstants.maxSpeed) rz = Constants.SwerveConstants.maxSpeed;
             thetaRight = Constants.SwerveConstants.pidRot.calculate(realTheta - Constants.SwerveConstants.rightThetaPos);
 
-            isFinishedLeft = Math.abs(Constants.SwerveConstants.leftThetaPos - realTheta) < Constants.SwerveConstants.rotationErrorLimelight && Math.abs(realX - Constants.SwerveConstants.xPosLeft) < Constants.SwerveConstants.xErrorLimelight && Math.abs(realZ - Constants.SwerveConstants.zPosLeft) < Constants.SwerveConstants.zErrorLimelight;
+            isFinishedLeft = Math.abs(Constants.SwerveConstants.leftThetaPos - realTheta) < Constants.SwerveConstants.rotationErrorLimelight && Math.abs(realX - Constants.SwerveConstants.xPosLeft) < Constants.SwerveConstants.xErrorLimelightOtherOther && Math.abs(realZ - Constants.SwerveConstants.zPosLeft) < Constants.SwerveConstants.zErrorLimelight;
             isFinishedRight = Math.abs(realTheta - Constants.SwerveConstants.rightThetaPos) < Constants.SwerveConstants.rotationErrorLimelight && Math.abs(realX - Constants.SwerveConstants.xPosRight) < Constants.SwerveConstants.xErrorLimelight && Math.abs(realZ - Constants.SwerveConstants.zPosRight) < Constants.SwerveConstants.zErrorLimelight;
 
             SmartDashboard.putNumber("thetaPos", realTheta);

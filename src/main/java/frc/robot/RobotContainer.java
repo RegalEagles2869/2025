@@ -80,7 +80,7 @@ public class RobotContainer {
 	private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
 	private ElevatorSubsystem elevator;
 	private enum Autos {
-		Nothing, Right, Left, MeetMeInTheMiddle
+		Nothing, Right, Left, MeetMeInTheMiddle, TheLeftWing
 	}
 
 	private static boolean flipped = false;
@@ -242,6 +242,7 @@ public class RobotContainer {
 		newautopick.addOption("Threesome", Autos.Right);
 		newautopick.addOption("Silly6", Autos.Left);
 		newautopick.addOption("MeetMeInTheMiddle", Autos.MeetMeInTheMiddle);
+		newautopick.addOption("TheLeftWing", Autos.TheLeftWing);
 		Shuffleboard.getTab("auto").add("auto", newautopick).withPosition(0, 0).withSize(3, 1);
 		
 		// Do this in either robot periodic or subsystem periodic
@@ -270,7 +271,8 @@ public class RobotContainer {
 		Inputs.getIntakeIn().whileTrue(new SetIntakeSpeed(.05));
 		Inputs.getIntakeOut().whileTrue(new SetIntakeSpeed(-SmartDashboard.getNumber("IntakeSpeed", Constants.CoralConstants.intakeSpeed)));
 		Inputs.getIntakeOut().onFalse(new SequentialCommandGroup(new WaitCommand(.2), new ElevatorToFloor()));
-		Inputs.getSlowIntake().whileTrue(new SetIntakeSpeed(.1));
+		Inputs.getSlowIntake().whileTrue(new SetIntakeSpeed(-.1));
+		Inputs.getSlowIntake().onFalse(new SequentialCommandGroup(new WaitCommand(.2), new ElevatorToFloor()));
 
 		Inputs.getClimberUp().whileTrue(new SetClimberSpeed(Constants.ClimberConstants.speed));
 		Inputs.getClimberDown().whileTrue(new SetClimberSpeed(-Constants.ClimberConstants.speed));
@@ -502,19 +504,19 @@ public class RobotContainer {
 				generateTrajectories("TheSilly6WithLimelight");
 				return TunerConstants.createDrivetrain().getAuto("TheSilly6WithLimelight");
 			case Right:
-				flipped = true;
 			//Right from robot
 			//near audience (blue DS left, Red DS right side)
 				// SmartDashboard.putString("AutonChoice", "Right");
 				// generateTrajectories("BottomThreesome");
 				// return TunerConstants.createDrivetrain().getAuto("BottomThreesome");
 				SmartDashboard.putString("AutonChoice", "Right");
-				generateTrajectories("TheSilly6WithLimelight");
-				return TunerConstants.createDrivetrain().getAuto("TheSilly6WithLimelight");
+				generateTrajectories("BottomThreesome");
+				return TunerConstants.createDrivetrain().getAuto("BottomThreesome");
 			case MeetMeInTheMiddle:
 				SmartDashboard.putString("AutonChoice", "MeetMeInTheMiddle");
 				//middle pillar
 				return new SequentialCommandGroup(
+					new WaitCommand(5),
 					new ParallelDeadlineGroup(
 						new ParallelRaceGroup(
 							new WaitForAlign(true),
@@ -530,6 +532,38 @@ public class RobotContainer {
 					new MoveSwerve(0, 0, 0),
 					new L4Coral()
 				);
+				
+			case TheLeftWing:
+				SmartDashboard.putString("AutonChoice", "TheLeft");
+				//middle pillar
+				return new SequentialCommandGroup(
+					new SequentialCommandGroup(
+						new ParallelDeadlineGroup(
+							new ParallelRaceGroup(
+								new WaitForAlign(false),
+								new WaitCommand(3)
+							),
+							drivetrain.applyRequest(() -> limelightSwerve
+									// .withTargetDirection(Rotation2d.fromDegrees(LimelightHelpers.getThetaLeft()))
+									.withVelocityX(LimelightHelpers.getLz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
+									.withVelocityY(LimelightHelpers.getLx() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
+									.withRotationalRate(LimelightHelpers.getThetaLeft() * MaxAngularRate * Constants.SwerveConstants.LimelightMultiplierRot)
+							)
+						),
+						new ParallelDeadlineGroup(
+							new WaitCommand((Constants.SwerveConstants.zPosLeft + SmartDashboard.getNumber("swerveError", Constants.SwerveConstants.swerveError))/(SmartDashboard.getNumber("forwardForAuto", Constants.SwerveConstants.forwardForAuto) * MaxSpeed)),
+							// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
+							// new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
+							drivetrain.applyRequest(() -> limelightSwerve
+									.withVelocityX(SmartDashboard.getNumber("forwardForAuto", Constants.SwerveConstants.forwardForAuto) * MaxSpeed)
+									.withVelocityY(0)
+									.withRotationalRate(0)
+							)
+						),
+						stopRobot()
+					),
+					new L4Coral()
+			);
 			case Nothing:
 				return new WaitCommand(1);
 			default: //Autos.Nothing
@@ -599,5 +633,18 @@ public class RobotContainer {
   
   public static boolean isFlipped() {
 	return flipped;
+  }
+  public Command stopRobot() {
+	return 
+		new ParallelDeadlineGroup(
+			new WaitCommand(.01),
+			// new WaitCommand(Constants.SwerveConstants.waitTheyDontLoveYouLikeILoveYou),
+			// new WaitUntilPositionReached(Constants.SwerveConstants.zPosLeft + Constants.SwerveConstants.swerveError),
+			drivetrain.applyRequest(() -> limelightSwerve
+					.withVelocityX(0)
+					.withVelocityY(0)
+					.withRotationalRate(0)
+			)
+		);
   }
 }

@@ -95,7 +95,7 @@ public final class Constants {
 
 	public static class CoralConstants {
 		public static final double minCurrentRunning = 0;
-		public static final double intakeSpeed = .9;
+		public static final double intakeSpeed = .85;
 		public static final double intakeTime = .5;
 		public static final double currentToStopIntaking = 10;
 		public static final double deltaMove = .25;
@@ -107,7 +107,7 @@ public final class Constants {
 		public static final double xErrorLimelightOther = .15;
 		public static final double zErrorLimelightOther = .15;
 
-		public static final double maxSpeed = 3.5;
+		public static final double maxSpeed = 2.9;
 		
 		// public static final double xErrorLimelight = 0;
 		// public static final double zErrorLimelight = 0;
@@ -119,11 +119,11 @@ public final class Constants {
 		public static final double[] degrees = {300, 0, 60, 120, 180, 240, 300, 0, 60, 120, 180, 240};
         // public static final double xPosLeft = -.343;
 		public static final double leftThetaPos = 3;
-        public static final double xPosLeft = -.28;
+        public static final double xPosLeft = -.3;
         // public static final double zPosLeft = .92;
-        public static final double zPosLeft = .772;
+        public static final double zPosLeft = .78;
 		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;
-        public static final double forwardForAuto = .3;
+        public static final double forwardForAuto = .1;
         // public static final double xPosRight = .0434;
         public static final double xPosRight = .08;
         // public static final double xPosRight = 0;
@@ -133,12 +133,14 @@ public final class Constants {
         public static final double zPosRight = .452;
         // public static final double zPosRight = 1;
 		public static final double rightThetaPos = 1;
-		public static final double swerveError = -.3;
+		public static final double swerveError = -.25
+		;
 
         // public static final PIDController pidLol = new PIDController(4.3, 0, .002);
         public static final PIDController pidLol = new PIDController(4.3, 0, 0.02);
         public static final PIDController pidRot = new PIDController(.03, 0, 0);
 		public static final double LimelightMultiplier = .1;
 		public static final double LimelightMultiplierRot = .07;
+		public static final double xErrorLimelightOtherOther = 0.07;
 	}
 }
