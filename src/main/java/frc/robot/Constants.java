@@ -54,7 +54,7 @@ public final class Constants {
 		//
 		//
 		// public static final double l2Position = 13.690503120422363;
-		public static final double l2Position = 19;
+		public static final double l2Position = 17;
 		public static final double l3Position = 35.83300018310547;
 		// public static final double l4Position = 70.19239807128906;
 		public static final double l4Position = 70.19239807128906;
@@ -103,8 +103,8 @@ public final class Constants {
 	}
 
 	public static class SwerveConstants {
-		public static final double xErrorLimelight = .05;
-		public static final double zErrorLimelight = .05;
+		public static final double xErrorLimelight = .06;
+		public static final double zErrorLimelight = .06;
 		public static final double xErrorLimelightOther = .15;
 		public static final double zErrorLimelightOther = .15;
 
@@ -122,7 +122,7 @@ public final class Constants {
 		public static final double leftThetaPos = 3;
 		//how far to the right the  april tag will be (meters)
 		//use when scoring on a reef to the left
-        public static final double xPosLeft = -.375;
+        public static final double xPosLeft = -.36;
         // public static final double zPosLeft = .92;
         public static final double zPosLeft = .78;
 		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;
