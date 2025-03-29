@@ -1665,10 +1665,14 @@ public class LimelightHelpers {
     public static void Pid() {
         try {
             double[] coords = getTargetPose_CameraSpace("limelight-noor");
+            // double[] coordsLEFT = getTargetPose_CameraSpace("limelight-jonny");
 
             double realX = coords[0];
             double realZ = coords[2];
             double realTheta = coords[4];
+            // double realXLeft = coords[0];
+            // double realZ = coords[2];
+            // double realTheta = coords[4];
 
             if (realX == 0 && realZ == 0) {
                 lx = 0;

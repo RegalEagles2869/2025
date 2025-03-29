@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -75,6 +76,7 @@ import frc.robot.commands.WaitUntilPositionReached;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ElevatorSubsystem;
+import pabeles.concurrency.IntOperatorTask.Max;
 
 public class RobotContainer {
 	private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
@@ -196,21 +198,22 @@ public class RobotContainer {
 							.withRotationalRate(0)
 					)
 				),
-				stopSwerve
+				stopRobot()
 			)
 		);
 		NamedCommands.registerCommand("LimelightRight", 
 			new SequentialCommandGroup(
+				stopRobot(),
 				new ParallelDeadlineGroup(
 					new ParallelRaceGroup(
 						// new WaitForAlign(true),
-						new WaitCommand(2)
+						new WaitCommand(1.2)
 					),
 					new ParallelCommandGroup(
 						drivetrain.applyRequest(() -> limelightSwerve
 								.withVelocityX(LimelightHelpers.getRz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
 								.withVelocityY(LimelightHelpers.getRx() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
-								.withRotationalRate(-LimelightHelpers.getThetaRight() * Constants.SwerveConstants.LimelightMultiplier)
+								.withRotationalRate(-LimelightHelpers.getThetaRight() * MaxAngularRate * Constants.SwerveConstants.LimelightMultiplier)
 								// .withRotationalRate(-.1)
 						),
 						new SequentialCommandGroup(
@@ -219,14 +222,7 @@ public class RobotContainer {
 						)
 					)
 				),
-				new ParallelDeadlineGroup(
-					new WaitCommand(.1),
-					drivetrain.applyRequest(() -> limelightSwerve
-						.withVelocityX(0)
-						.withVelocityY(0)
-						.withRotationalRate(0)
-					)
-				)
+				stopRobot()
 			)
 		);
 		// NamedCommands.registerCommand("Order1", new L1Coral());
@@ -281,7 +277,18 @@ public class RobotContainer {
 		// Inputs.getTest().onTrue(new SequentialCommandGroup(new MoveSwerve(0, 0, 0), new L2Coral()));
 		// Inputs.getTest().onTrue(new CenterAtAprilTag(true));
 		// Inputs.getTest().onTrue(new SetIntakeSpeedWait(Constants.CoralConstants.intakeSpeed));
-		Inputs.getTest().onTrue(new L2Coral());
+		Inputs.getTest().onTrue(new InstantCommand() {
+			@Override
+			public void execute() {
+				SmartDashboard.putNumber("constantX", SmartDashboard.getNumber("constantX", Constants.SwerveConstants.xPosLeft) + .01);
+			}
+		});
+		Inputs.getTest2().onTrue(new InstantCommand() {
+			@Override
+			public void execute() {
+				SmartDashboard.putNumber("constantX", SmartDashboard.getNumber("constantX", Constants.SwerveConstants.xPosLeft) - .01);
+			}
+		});
 		Inputs.getElevatorResetPosition().onTrue(new ElevatorResetPosition(0));
 		Inputs.getDealgify().onTrue(new SetElevatorPositionInstant(Constants.ElevatorConstants.algaePosition));
 
@@ -439,7 +446,7 @@ public class RobotContainer {
 					drivetrain.applyRequest(() -> limelightSwerve
 							.withVelocityX(LimelightHelpers.getRz() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
 							.withVelocityY(LimelightHelpers.getRx() * MaxSpeed * Constants.SwerveConstants.LimelightMultiplier)
-							.withRotationalRate(-LimelightHelpers.getThetaRight() * Constants.SwerveConstants.LimelightMultiplier)
+							.withRotationalRate(-LimelightHelpers.getThetaRight() * MaxAngularRate * Constants.SwerveConstants.LimelightMultiplier)
 							// .withRotationalRate(-.1)
 					)
 				),

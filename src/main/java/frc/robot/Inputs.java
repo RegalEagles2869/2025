@@ -94,6 +94,9 @@ public class Inputs {
     public static Trigger getDealgify() {
         return operatorBoard.button(20);
     }
+    public static Trigger getTest2() {
+        return operatorBoard.button(21);
+    }
     public static boolean getGenAuto() {
         return operatorBoard.button(16).getAsBoolean();
     }

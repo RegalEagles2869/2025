@@ -53,7 +53,8 @@ public final class Constants {
 		public static final double l1Position = 0;
 		//
 		//
-		public static final double l2Position = 13.690503120422363;
+		// public static final double l2Position = 13.690503120422363;
+		public static final double l2Position = 19;
 		public static final double l3Position = 35.83300018310547;
 		// public static final double l4Position = 70.19239807128906;
 		public static final double l4Position = 70.19239807128906;
@@ -107,7 +108,7 @@ public final class Constants {
 		public static final double xErrorLimelightOther = .15;
 		public static final double zErrorLimelightOther = .15;
 
-		public static final double maxSpeed = 2.9;
+		public static final double maxSpeed = 2.5;
 		
 		// public static final double xErrorLimelight = 0;
 		// public static final double zErrorLimelight = 0;
@@ -119,24 +120,26 @@ public final class Constants {
 		public static final double[] degrees = {300, 0, 60, 120, 180, 240, 300, 0, 60, 120, 180, 240};
         // public static final double xPosLeft = -.343;
 		public static final double leftThetaPos = 3;
-        public static final double xPosLeft = -.3;
+		//how far to the right the  april tag will be (meters)
+		//use when scoring on a reef to the left
+        public static final double xPosLeft = -.375;
         // public static final double zPosLeft = .92;
         public static final double zPosLeft = .78;
 		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;
         public static final double forwardForAuto = .1;
         // public static final double xPosRight = .0434;
-        public static final double xPosRight = .081;
+        public static final double xPosRight = .08;
         // public static final double xPosRight = 0;
         // public static final double zPosRight = .427;
         // public static final double zPosRight = .507;
         // public static final double zPosRight = .56;
-        public static final double zPosRight = .49;
+        public static final double zPosRight = .55;
         // public static final double zPosRight = 1;
 		public static final double rightThetaPos = 1;
 		public static final double swerveError = -.25;
 
         // public static final PIDController pidLol = new PIDController(4.3, 0, .002);
-        public static final PIDController pidLol = new PIDController(4.3, 0, 0.02);
+        public static final PIDController pidLol = new PIDController(4.3, 0, 0.002);
         public static final PIDController pidRot = new PIDController(.03, 0, 0);
 		public static final double LimelightMultiplier = .1;
 		public static final double LimelightMultiplierRot = .07;
