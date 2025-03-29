@@ -119,12 +119,15 @@ public final class Constants {
 		public static final double[] ids = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
 		public static final double[] degrees = {300, 0, 60, 120, 180, 240, 300, 0, 60, 120, 180, 240};
         // public static final double xPosLeft = -.343;
-		public static final double leftThetaPos = 3;
 		//how far to the right the  april tag will be (meters)
 		//use when scoring on a reef to the left
-        public static final double xPosLeft = -.375;
+        // public static final double xPosLeft = -.375;
+        // public static final double zPosLeft = .78;
+		// public static final double leftThetaPos = 3;
+        public static final double xPosLeft = .3;
+        public static final double zPosLeft = .5;
+		public static final double leftThetaPos = 3;
         // public static final double zPosLeft = .92;
-        public static final double zPosLeft = .78;
 		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;
         public static final double forwardForAuto = .1;
         // public static final double xPosRight = .0434;
