@@ -335,6 +335,29 @@ public class RobotContainer {
 
 		//UNCOMMENT THIS PLS PLS PLS DONT PROVE ME RIGHT
 		drivetrain.setDefaultCommand(
+			// joystick.x().whileTrue(
+			drivetrain.applyRequest(() -> driveSlow
+					.withVelocityX(Inputs.getTranslationX() * MaxSpeed
+							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+					// forward
+					// with
+					// negative
+					// Y
+					// (forward)
+					.withVelocityY(Inputs.getTranslationY() * MaxSpeed
+							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
+					.withRotationalRate(Inputs.getRotation() * MaxAngularRate
+							* Constants.OperatorConstants.speedMultiplierSlowModeRot) // Drive
+			// counterclockwise
+			// with
+			// negative
+			// X
+			// (left)
+			)
+		);
+
+		
+		/*elevatorAndSwerve.whileTrue(
 			// Drivetrain will execute this command periodically
 			drivetrain.applyRequest(() -> drive
 					.withVelocityX(
@@ -347,10 +370,8 @@ public class RobotContainer {
 							Inputs.getRotation() * MaxAngularRate * Constants.OperatorConstants.speedMultiplier)
 			// Drive counterclockwise with negative X (left)
 			)
-		);
-
-		
-		elevatorAndSwerve.whileTrue(
+		);*/
+		/*joystick.leftTrigger().whileTrue(
 			// joystick.x().whileTrue(
 			drivetrain.applyRequest(() -> driveSlow
 					.withVelocityX(Inputs.getTranslationX() * MaxSpeed
@@ -370,28 +391,7 @@ public class RobotContainer {
 			// X
 			// (left)
 			)
-		);
-		joystick.leftTrigger().whileTrue(
-			// joystick.x().whileTrue(
-			drivetrain.applyRequest(() -> driveSlow
-					.withVelocityX(Inputs.getTranslationX() * MaxSpeed
-							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
-					// forward
-					// with
-					// negative
-					// Y
-					// (forward)
-					.withVelocityY(Inputs.getTranslationY() * MaxSpeed
-							* Constants.OperatorConstants.speedMultiplierSlowMode) // Drive
-					.withRotationalRate(Inputs.getRotation() * MaxAngularRate
-							* Constants.OperatorConstants.speedMultiplierSlowModeRot) // Drive
-			// counterclockwise
-			// with
-			// negative
-			// X
-			// (left)
-			)
-		);
+		);*/
 		SmartDashboard.putNumber("swerveError", Constants.SwerveConstants.swerveError);
 		joystick.povLeft().onTrue(
 			new SequentialCommandGroup(
