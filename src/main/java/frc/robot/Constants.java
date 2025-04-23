@@ -122,7 +122,7 @@ public final class Constants {
 		public static final double leftThetaPos = 3;
 		//how far to the right the  april tag will be (meters)
 		//use when scoring on a reef to the left
-        public static final double xPosLeft = -.36;
+        public static final double xPosLeft = -.35;
         // public static final double zPosLeft = .92;
         public static final double zPosLeft = .78;
 		public static final double waitTheyDontLoveYouLikeILoveYou = 1.2;

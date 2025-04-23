@@ -267,7 +267,7 @@ public class RobotContainer {
 		Inputs.getIntakeIn().whileTrue(new SetIntakeSpeed(.05));
 		Inputs.getIntakeOut().whileTrue(new SetIntakeSpeed(-SmartDashboard.getNumber("IntakeSpeed", Constants.CoralConstants.intakeSpeed)));
 		Inputs.getIntakeOut().onFalse(new SequentialCommandGroup(new WaitCommand(.2), new ElevatorToFloor()));
-		Inputs.getSlowIntake().whileTrue(new SetIntakeSpeed(-.1));
+		Inputs.getSlowIntake().whileTrue(new SetIntakeSpeed(-.5));
 		Inputs.getSlowIntake().onFalse(new SequentialCommandGroup(new WaitCommand(.2), new ElevatorToFloor()));
 
 		Inputs.getClimberUp().whileTrue(new SetClimberSpeed(Constants.ClimberConstants.speed));
